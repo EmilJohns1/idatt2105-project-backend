@@ -8,10 +8,10 @@
 		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.IDATT2105</groupId>
-	<artifactId>IDATT2105-Backend</artifactId>
+	<groupId>com.idatt2105</groupId>
+	<artifactId>idatt2105-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>IDATT2105-Backend</name>
+	<name>idatt2105-backend</name>
 	<description>Backend for IDATT2105 Project</description>
 	<properties>
 		<java.version>17</java.version>

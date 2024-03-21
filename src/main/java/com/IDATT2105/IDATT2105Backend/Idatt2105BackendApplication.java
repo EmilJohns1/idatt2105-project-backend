@@ -1,13 +1,13 @@
-package com.IDATT2105.IDATT2105Backend;
+package com.idatt2105.idatt2105backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Idatt2105BackendApplication {
+public class idatt2105backendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Idatt2105BackendApplication.class, args);
+		SpringApplication.run(idatt2105backendApplication.class, args);
 	}
 
 }
