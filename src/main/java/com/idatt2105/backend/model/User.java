@@ -14,9 +14,12 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.persistence.JoinColumn;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Data
 @Table(name = "users")
@@ -39,4 +42,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "quiz_id", referencedColumnName = "id"))
     private Set<Quiz> quizzes = new HashSet<>();
+
+    public User (String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

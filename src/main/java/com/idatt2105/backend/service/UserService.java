@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
+import com.idatt2105.backend.repositories.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,10 +23,12 @@ import org.springframework.validation.annotation.Validated;
 @Service
 public class UserService {
   private final UserRepository userRepository;
+  private final QuizRepository quizRepository;
 
   @Autowired
-  public UserService(UserRepository userRepository) {
+  public UserService(UserRepository userRepository, QuizRepository quizRepository) {
     this.userRepository = userRepository;
+    this.quizRepository = quizRepository;
   }
 
   /**
@@ -140,12 +143,16 @@ public class UserService {
   public Set<Quiz> getQuizzesByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
         return user.getQuizzes();
-    }
+  }
 
-  public void addQuizToUser(Long userId, Quiz quiz) {
-      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-      user.getQuizzes().add(quiz);
-      userRepository.save(user);
+  public void addQuizToUser(Long userId, Long quizId) {
+    Quiz quiz = quizRepository.findById(quizId)
+                        .orElseThrow(() -> new IllegalArgumentException("Quiz with id " + quizId + " not found"));
+                        
+    User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+    user.getQuizzes().add(quiz);
+    userRepository.save(user);
   }
 
   public void removeQuizFromUser(Long userId, Long quizId) {

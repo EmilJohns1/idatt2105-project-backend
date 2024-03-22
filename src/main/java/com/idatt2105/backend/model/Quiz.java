@@ -1,6 +1,8 @@
 package com.idatt2105.backend.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -18,6 +20,8 @@ import jakarta.validation.constraints.NotEmpty;
 /**
  * Represents a quiz.
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Data
 @Table(name = "quizzes")
