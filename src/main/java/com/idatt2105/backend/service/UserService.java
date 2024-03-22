@@ -1,10 +1,13 @@
 package com.idatt2105.backend.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repositories.UserRepository;
 
@@ -21,7 +24,7 @@ public class UserService {
     return userRepository.findAll();
   }
   
-  public User getUser(Long id) {
+  public User getUserById(Long id) {
     return userRepository.findById(id).orElseThrow(() -> new IllegalStateException("User with id " + id + " not found"));
   }
 
@@ -49,5 +52,25 @@ public class UserService {
 
   public boolean userExists(String username) {
     return userRepository.findByUsername(username).isPresent();
+  }
+
+  public Set<Quiz> getQuizzesByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+        return user.getQuizzes();
+    }
+
+  public void addQuizToUser(Long userId, Quiz quiz) {
+      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+      user.getQuizzes().add(quiz);
+      userRepository.save(user);
+  }
+
+  public void removeQuizFromUser(Long userId, Long quizId) {
+      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+      Optional<Quiz> quizOptional = user.getQuizzes().stream().filter(q -> q.getId().equals(quizId)).findFirst();
+      quizOptional.ifPresent(quiz -> {
+          user.getQuizzes().remove(quiz);
+          userRepository.save(user);
+      });
   }
 }
