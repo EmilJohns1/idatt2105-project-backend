@@ -4,11 +4,14 @@ import com.idatt2105.backend.util.ExistingUserException;
 import com.idatt2105.backend.util.InvalidCredentialsException;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import com.idatt2105.backend.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.UserRepository;
 import org.springframework.validation.annotation.Validated;
@@ -41,7 +44,7 @@ public class UserService {
    * @return User with the given id.
    * @throws UserNotFoundException If no user with the given id is found.
    */
-  public User getUser(Long id) {
+  public User getUserById(Long id) {
     return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
   }
 
@@ -132,5 +135,25 @@ public class UserService {
   private boolean validateCredentials(@Validated @NotNull User user) {
     User existingUser = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFoundException("User with username " + user.getUsername() + " not found"));
     return existingUser.getPassword().equals(user.getPassword());
+  }
+
+  public Set<Quiz> getQuizzesByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+        return user.getQuizzes();
+    }
+
+  public void addQuizToUser(Long userId, Quiz quiz) {
+      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+      user.getQuizzes().add(quiz);
+      userRepository.save(user);
+  }
+
+  public void removeQuizFromUser(Long userId, Long quizId) {
+      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+      Optional<Quiz> quizOptional = user.getQuizzes().stream().filter(q -> q.getId().equals(quizId)).findFirst();
+      quizOptional.ifPresent(quiz -> {
+          user.getQuizzes().remove(quiz);
+          userRepository.save(user);
+      });
   }
 }
