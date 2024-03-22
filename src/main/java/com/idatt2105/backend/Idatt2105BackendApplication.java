@@ -1,4 +1,4 @@
-package com.idatt2105.idatt2105backend;
+package com.idatt2105.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
