@@ -1,5 +1,6 @@
 package com.idatt2105.backend.model;
 
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -42,4 +43,7 @@ public class Quiz {
 
   @ManyToMany(mappedBy = "quizzes")
   private Set<User> users = new HashSet<>();
+
+  @OneToMany(mappedBy = "quiz")
+  private Set<Question> questions = new HashSet<>();
 }
