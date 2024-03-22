@@ -37,6 +37,18 @@ public class QuizService {
         quizRepository.deleteById(id);
     }
 
+    public void updateQuiz(Long id, Quiz updatedQuiz) {
+      Quiz existingQuiz = quizRepository.findById(id)
+              .orElseThrow(() -> new IllegalStateException("Quiz with id " + id + " not found"));
+  
+      existingQuiz.setTitle(updatedQuiz.getTitle());
+      existingQuiz.setDescription(updatedQuiz.getDescription());
+      existingQuiz.setUsers(updatedQuiz.getUsers());
+      // add questions here
+
+      quizRepository.save(existingQuiz);
+    }
+
     public void addUserToQuiz(Long userId, Long quizId) {
         Optional<Quiz> quizOptional = quizRepository.findById(quizId);
         if (quizOptional.isPresent()) {
@@ -60,6 +72,26 @@ public class QuizService {
             User user = userService.getUserById(userId);
             if (user != null) {
                 quiz.getUsers().remove(user);
+                quizRepository.save(quiz);
+            } else {
+                // Handle user not found
+            }
+        } else {
+            // Handle quiz not found
+        }
+    }
+
+    public void editUsersInQuiz(Long userId, Long quizId) {
+        Optional<Quiz> quizOptional = quizRepository.findById(quizId);
+        if (quizOptional.isPresent()) {
+            Quiz quiz = quizOptional.get();
+            User user = userService.getUserById(userId);
+            if (user != null) {
+                if (quiz.getUsers().contains(user)) {
+                    quiz.getUsers().remove(user);
+                } else {
+                    quiz.getUsers().add(user);
+                }
                 quizRepository.save(quiz);
             } else {
                 // Handle user not found
