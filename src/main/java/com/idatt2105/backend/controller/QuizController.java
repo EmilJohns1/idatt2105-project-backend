@@ -66,4 +66,19 @@ public class QuizController {
         quizService.removeUserFromQuiz(userId, quizId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update quiz")
+    public ResponseEntity<Quiz> updateQuiz(@PathVariable("id") Long id, @RequestBody Quiz quiz) {
+        quizService.updateQuiz(id, quiz);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{quizId}/users/{userId}")
+    @Operation(summary = "Edit users in quiz")
+    public ResponseEntity<Void> editUsersInQuiz(@PathVariable("quizId") Long quizId, @PathVariable("userId") Long userId) {
+        quizService.editUsersInQuiz(userId, quizId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
