@@ -25,26 +25,26 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NotEmpty
-    @Column(name = "username", nullable = false)
-    private String username;
+  @NotEmpty
+  @Column(name = "username", nullable = false)
+  private String username;
 
-    @NotEmpty
-    @Column(name = "password", nullable = false)
-    private String password;
+  @NotEmpty
+  @Column(name = "password", nullable = false)
+  private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_quiz",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "quiz_id", referencedColumnName = "id"))
-    private Set<Quiz> quizzes = new HashSet<>();
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+  @JoinTable(name = "user_quiz",
+          joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+          inverseJoinColumns = @JoinColumn(name = "quiz_id", referencedColumnName = "id"))
+  private Set<Quiz> quizzes = new HashSet<>();
 
-    public User (String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+  public User (String username, String password) {
+      this.username = username;
+      this.password = password;
+  }
 }
