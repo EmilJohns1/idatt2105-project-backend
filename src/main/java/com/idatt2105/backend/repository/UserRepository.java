@@ -1,4 +1,4 @@
-package com.idatt2105.backend.repositories;
+package com.idatt2105.backend.repository;
 
 import com.idatt2105.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
