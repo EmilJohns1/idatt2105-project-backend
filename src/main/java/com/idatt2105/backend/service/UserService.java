@@ -1,5 +1,8 @@
 package com.idatt2105.backend.service;
 
+import com.idatt2105.backend.util.ExistingUserException;
+import com.idatt2105.backend.util.InvalidCredentialsException;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 import com.idatt2105.backend.util.UserNotFoundException;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.UserRepository;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Service class for User entities. Handles business logic for User entities.
@@ -46,8 +50,12 @@ public class UserService {
    *
    * @param user (User) User to add.
    * @return The added user.
+   * @throws ExistingUserException If a user with the same username already exists.
    */
-  public User addUser(User user) {
+  public User addUser(@Validated @NotNull User user) {
+    if (userExists(user.getUsername())) {
+      throw new ExistingUserException("Cannot add user with username " + user.getUsername() + " as it already exists");
+    }
     return userRepository.save(user);
   }
 
@@ -72,7 +80,7 @@ public class UserService {
    * @return The updated user.
    * @throws UserNotFoundException If no user with the given id is found.
    */
-  public User updateUser(Long id, User user) {
+  public User updateUser(Long id, @Validated @NotNull User user) {
     User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
     existingUser.setUsername(user.getUsername());
     existingUser.setPassword(user.getPassword());
@@ -98,5 +106,31 @@ public class UserService {
    */
   public boolean userExists(String username) {
     return userRepository.findByUsername(username).isPresent();
+  }
+
+  /**
+   * Logs a user in.
+   *
+   * @param user (User) The user to log in.
+   * @return A token for future authentication.
+   */
+  public String login(@Validated @NotNull User user) {
+    if (validateCredentials(user)) {
+      return "Token";
+    } else {
+      throw new InvalidCredentialsException("Invalid user credentials.");
+    }
+  }
+
+  /**
+   * Checks the credentials of the given user.
+   *
+   * @param user (User) The user to be validated.
+   * @return {@code true} if the credentials are valid, {@code false} otherwise.
+   * @throws UserNotFoundException If no user with the given username is found.
+   */
+  private boolean validateCredentials(@Validated @NotNull User user) {
+    User existingUser = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFoundException("User with username " + user.getUsername() + " not found"));
+    return existingUser.getPassword().equals(user.getPassword());
   }
 }
