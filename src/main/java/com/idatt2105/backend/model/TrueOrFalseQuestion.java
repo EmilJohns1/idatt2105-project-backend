@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 @Table(name = "true_or_false_questions")
 public class TrueOrFalseQuestion extends Question {
-  @Column(name = "correct_answer")
+  @Column(name = "correct_answer", nullable = false)
   private boolean correctAnswer;
 }

@@ -1,5 +1,6 @@
 package com.idatt2105.backend.model;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import lombok.Data;
 @Table(name = "users")
 public class User {
 
+    @Hidden
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,6 +36,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Hidden
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_quiz",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -3,6 +3,7 @@ package com.idatt2105.backend.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import lombok.Data;
 
@@ -11,5 +12,6 @@ import lombok.Data;
 @Table(name = "multiple_choice_questions")
 public class MultipleChoiceQuestion extends Question {
   @OneToMany(mappedBy = "question")
+  @NotEmpty
   private List<Alternative> alternatives;
 }

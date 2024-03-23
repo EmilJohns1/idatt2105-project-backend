@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Entity
@@ -18,9 +19,10 @@ public class Alternative {
   private Long id;
 
   @Column(name = "alternative_text")
+  @NotEmpty
   private String alternativeText;
 
-  @Column(name = "is_correct")
+  @Column(name = "is_correct", nullable = false)
   private boolean isCorrect;
 
   @ManyToOne

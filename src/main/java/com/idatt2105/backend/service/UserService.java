@@ -138,14 +138,8 @@ public class UserService {
   }
 
   public Set<Quiz> getQuizzesByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-        return user.getQuizzes();
-    }
-
-  public void addQuizToUser(Long userId, Quiz quiz) {
-      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-      user.getQuizzes().add(quiz);
-      userRepository.save(user);
+    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+    return user.getQuizzes();
   }
 
   public void removeQuizFromUser(Long userId, Long quizId) {

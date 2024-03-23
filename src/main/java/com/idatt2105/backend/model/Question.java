@@ -9,6 +9,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Entity
@@ -21,6 +22,7 @@ public class Question {
   private Long id;
 
   @Column(name = "question_text")
+  @NotEmpty
   private String questionText;
 
   @Column(name = "media_url")
