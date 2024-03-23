@@ -1,7 +1,6 @@
 package com.idatt2105.backend.dto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.idatt2105.backend.model.User;
 

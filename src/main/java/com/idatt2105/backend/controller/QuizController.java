@@ -1,6 +1,7 @@
 package com.idatt2105.backend.controller;
 
 import com.idatt2105.backend.dto.QuizDTO;
+import com.idatt2105.backend.dto.QuizUpdateRequestDTO;
 import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.service.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,8 +72,9 @@ public class QuizController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update quiz")
-    public ResponseEntity<Void> updateQuiz(@PathVariable("id") Long id, @RequestBody QuizDTO quizDTO) {
-        quizService.updateQuiz(id, quizDTO.toEntity());
+    public ResponseEntity<Void> updateQuiz(@PathVariable("id") Long id, @RequestBody QuizUpdateRequestDTO requestDTO) {
+        QuizDTO updatedQuiz = new QuizDTO(requestDTO.getTitle(), requestDTO.getDescription());
+        quizService.updateQuiz(id, updatedQuiz); 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

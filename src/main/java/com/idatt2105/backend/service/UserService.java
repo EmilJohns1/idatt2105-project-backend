@@ -132,11 +132,7 @@ public class UserService {
   public Optional<UserDTO> getUserByUsername(String username) {
     return userRepository.findByUsername(username)
         .map(user -> {
-          List<QuizDTO> quizDTOs = new ArrayList<>();
-          for (Quiz quiz : user.getQuizzes()) {
-            quizDTOs.add(new QuizDTO(quiz));
-          }
-          return new UserDTO(user.getId(), user.getUsername(), quizDTOs);
+          return new UserDTO(user.getId(), user.getUsername());
         });
     }
 

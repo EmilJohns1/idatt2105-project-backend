@@ -2,6 +2,7 @@ package com.idatt2105.backend.service;
 
 import com.idatt2105.backend.util.UserNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -64,13 +65,13 @@ public class QuizService {
         quizRepository.deleteById(id);
     }
 
-    public void updateQuiz(Long id, Quiz updatedQuiz) {
+    public void updateQuiz(Long id, QuizDTO updatedQuiz) {
         Quiz existingQuiz = quizRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Quiz not found with id: " + id));
 
         existingQuiz.setTitle(updatedQuiz.getTitle());
         existingQuiz.setDescription(updatedQuiz.getDescription());
-        existingQuiz.setUsers(updatedQuiz.getUsers());
+        existingQuiz.setLastModifiedDate(LocalDateTime.now());
         // add questions here
 
         quizRepository.save(existingQuiz);

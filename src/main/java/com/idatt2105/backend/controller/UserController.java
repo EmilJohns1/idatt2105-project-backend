@@ -51,6 +51,7 @@ public class UserController {
     return new ResponseEntity<>(userDTOs, HttpStatus.OK);
   }
 
+  //TODO implement hashing of password and secure login
   /**
    * Registers a new user.
    *
@@ -71,6 +72,7 @@ public class UserController {
       }
   }
 
+  //TODO implement hashing of password and secure login
   /**
    * Logs in a user.
    *
@@ -91,6 +93,7 @@ public class UserController {
       }
   }
 
+  //TODO implement 
   /**
    * Updates a user.
    *
