@@ -1,5 +1,6 @@
 package com.idatt2105.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,5 +26,6 @@ public class Tag {
 
   @ManyToMany(mappedBy = "tags")
   @Hidden
+  @JsonIgnore
   private Set<Question> questions = new HashSet<>();
 }

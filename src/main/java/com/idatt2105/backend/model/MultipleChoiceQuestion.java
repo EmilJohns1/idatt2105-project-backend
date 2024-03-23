@@ -12,6 +12,5 @@ import lombok.Data;
 @Table(name = "multiple_choice_questions")
 public class MultipleChoiceQuestion extends Question {
   @OneToMany(mappedBy = "question")
-  @NotEmpty
   private List<Alternative> alternatives;
 }

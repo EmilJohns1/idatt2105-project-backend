@@ -5,8 +5,9 @@ import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.repositories.QuizRepository;
 import com.idatt2105.backend.repository.QuestionRepository;
-import com.idatt2105.backend.util.QuizNotFoundException;
+import com.idatt2105.backend.util.InvalidIdException;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -27,11 +28,11 @@ public class QuestionService {
    *
    * @param questionDTO (QuestionDTO) Data transfer object for the question.
    * @return (Question) The added question.
-   * @throws QuizNotFoundException if the quiz with the given id is not found.
+   * @throws InvalidIdException if the quiz with the given id is not found.
    */
   public Question addQuestion(@Validated @NotNull QuestionDTO questionDTO) {
     Quiz quiz = quizRepository.findById(questionDTO.getQuizId())
-        .orElseThrow(() -> new QuizNotFoundException("Quiz with id " + questionDTO.getQuizId() + " not found"));
+        .orElseThrow(() -> new InvalidIdException("Quiz with id " + questionDTO.getQuizId() + " not found"));
     Question question = questionDTO.instantiateQuestion();
     question.setQuiz(quiz);
     question.setQuestionText(questionDTO.getQuestionText());
@@ -41,7 +42,53 @@ public class QuestionService {
     return questionRepository.save(question);
   }
 
-  public void deleteQuestion(@NotNull Question question) {
+  /**
+   * Gets the question with the given id.
+   *
+   * @param id (Long) The id of the question to get.
+   * @return (Question) The question with the given id.
+   * @throws InvalidIdException if the question with the given id is not found.
+   */
+  public Question getQuestionById(@NotNull Long id) {
+    return questionRepository.findById(id)
+        .orElseThrow(() -> new InvalidIdException("Question with id " + id + " not found"));
+  }
+
+  /**
+   * Deletes the question with the given id.
+   *
+   * @param id (Long) The id of the question to delete.
+   * @throws InvalidIdException if the question with the given id is not found.
+   */
+  public void deleteQuestion(@NotNull Long id) {
+    Question question = getQuestionById(id);
     questionRepository.delete(question);
+  }
+
+  /**
+   * Updates the question with the given id.
+   *
+   * @param id (Long) The id of the question to update.
+   * @param questionDTO (QuestionDTO) Data transfer object for the question.
+   * @return (Question) The updated question.
+   * @throws InvalidIdException if the question with the given id is not found.
+   */
+  public Question updateQuestion(@NotNull Long id, @Validated @NotNull QuestionDTO questionDTO) {
+    Question question = getQuestionById(id);
+    question.setQuestionText(questionDTO.getQuestionText());
+    question.setMediaUrl(questionDTO.getMediaUrl());
+    question.setCategory(questionDTO.getCategory());
+    question.setTags(questionDTO.getTags());
+    return questionRepository.save(question);
+  }
+
+  /**
+   * Gets all questions in the quiz with the given id.
+   *
+   * @param quizId (Long) The id of the quiz to get questions from.
+   * @return (Iterable&lt;Question&gt;) All questions in the quiz with the given id.
+   */
+  public List<Question> getQuestionsByQuizId(@NotNull Long quizId) {
+    return questionRepository.findQuestionsByQuizId(quizId);
   }
 }

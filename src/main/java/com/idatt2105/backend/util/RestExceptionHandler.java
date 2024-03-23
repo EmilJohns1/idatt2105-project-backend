@@ -35,8 +35,8 @@ public class RestExceptionHandler {
     return ResponseEntity.status(403).body(errorResponse);
   }
 
-  @ExceptionHandler(QuizNotFoundException.class)
-  ResponseEntity<ErrorResponse> handleQuizNotFoundException(QuizNotFoundException e) {
+  @ExceptionHandler(InvalidIdException.class)
+  ResponseEntity<ErrorResponse> handleQuizNotFoundException(InvalidIdException e) {
     ErrorResponse errorResponse = new ErrorResponse();
     errorResponse.setTitle(e.getMessage());
     errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
@@ -47,7 +47,7 @@ public class RestExceptionHandler {
   @ExceptionHandler(InvalidQuestionTypeException.class)
   ResponseEntity<ErrorResponse> handleInvalidQuestionTypeException(InvalidQuestionTypeException e) {
     ErrorResponse errorResponse = new ErrorResponse();
-    errorResponse.setTitle("Invalid question type");
+    errorResponse.setTitle(e.getMessage());
     errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
     errorResponse.setTimestamp(LocalDate.now().toString());
     return ResponseEntity.status(400).body(errorResponse);
