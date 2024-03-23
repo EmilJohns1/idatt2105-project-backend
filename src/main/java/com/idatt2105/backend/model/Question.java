@@ -7,9 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Data;
 
 @Entity
@@ -32,5 +37,12 @@ public class Question {
   private String category;
 
   @ManyToOne
+  @JoinColumn(name = "quiz_id", nullable = false)
   private Quiz quiz;
+
+  @ManyToMany
+  @JoinTable(name = "question_tag",
+      joinColumns = @JoinColumn(name = "question_id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id"))
+  private Set<Tag> tags = new HashSet<>();
 }

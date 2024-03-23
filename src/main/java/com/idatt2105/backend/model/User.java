@@ -29,7 +29,7 @@ public class User {
     private Long id;
 
     @NotEmpty
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     @NotEmpty
