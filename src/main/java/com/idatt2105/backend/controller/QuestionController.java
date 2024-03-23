@@ -1,5 +1,6 @@
 package com.idatt2105.backend.controller;
 
+import com.idatt2105.backend.model.AlternativeDTO;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.service.QuestionService;
@@ -62,5 +63,12 @@ public class QuestionController {
   public ResponseEntity<List<Question>> getQuestionsByQuizId(@PathVariable Long quizId) {
     List<Question> questions = questionService.getQuestionsByQuizId(quizId);
     return new ResponseEntity<>(questions, HttpStatus.OK);
+  }
+
+  @PostMapping("/add/alternative")
+  @Operation(summary = "Add an alternative to a question")
+  public ResponseEntity<Void> addAlternative(@RequestBody @NotNull AlternativeDTO alternative) {
+    questionService.addAlternative(alternative);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 }

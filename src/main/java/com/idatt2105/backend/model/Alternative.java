@@ -6,9 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.Objects;
 import lombok.Data;
 
 @Entity
@@ -28,5 +30,25 @@ public class Alternative {
 
   @ManyToOne
   @JsonIgnore
+  @JoinColumn(name = "question_id", nullable = false)
   private MultipleChoiceQuestion question;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Alternative that = (Alternative) o;
+    return isCorrect == that.isCorrect
+           && id.equals(that.id)
+           && alternativeText.equals(that.alternativeText);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, alternativeText, isCorrect, question.getId());
+  }
 }

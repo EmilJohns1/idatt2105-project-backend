@@ -1,5 +1,7 @@
 package com.idatt2105.backend.service;
 
+import com.idatt2105.backend.model.AlternativeDTO;
+import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Quiz;
@@ -90,5 +92,23 @@ public class QuestionService {
    */
   public List<Question> getQuestionsByQuizId(@NotNull Long quizId) {
     return questionRepository.findQuestionsByQuizId(quizId);
+  }
+
+  /**
+   * Adds an alternative to the question with the given id.
+   *
+   * @param alternativeDTO (AlternativeDTO) Data transfer object for the alternative.
+   * @throws InvalidIdException if the question with the given id is not found.
+   */
+  public void addAlternative(@Validated @NotNull AlternativeDTO alternativeDTO) {
+    Question q = getQuestionById(alternativeDTO.getQuestionId());
+    MultipleChoiceQuestion question;
+    try {
+      question = (MultipleChoiceQuestion) q;
+    } catch (ClassCastException e) {
+      throw new InvalidIdException("Question with id " + alternativeDTO.getQuestionId() + " is not a multiple choice question");
+    }
+    question.addAlternative(alternativeDTO);
+    questionRepository.save(question);
   }
 }
