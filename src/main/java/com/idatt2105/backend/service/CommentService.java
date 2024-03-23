@@ -3,7 +3,8 @@ package com.idatt2105.backend.service;
 import com.idatt2105.backend.model.Comment;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
-import com.idatt2105.backend.repositories.CommentRepository;
+import com.idatt2105.backend.repository.CommentRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

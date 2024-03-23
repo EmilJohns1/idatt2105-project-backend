@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
-import com.idatt2105.backend.repositories.QuizRepository;
+import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import org.springframework.validation.annotation.Validated;
 
@@ -23,12 +23,10 @@ import org.springframework.validation.annotation.Validated;
 @Service
 public class UserService {
   private final UserRepository userRepository;
-  private final QuizRepository quizRepository;
 
   @Autowired
-  public UserService(UserRepository userRepository, QuizRepository quizRepository) {
+  public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.quizRepository = quizRepository;
   }
 
   /**
@@ -44,12 +42,17 @@ public class UserService {
    * Gets a user by a unique id.
    *
    * @param id (Long) Unique id of the user.
-   * @return User with the given id.
+   * @return Optional of the user with the given id.
    * @throws UserNotFoundException If no user with the given id is found.
    */
-  public User getUserById(Long id) {
-    return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
-  }
+  public Optional<User> getUserById(Long id) {
+    return userRepository.findById(id)
+        .map(user -> {
+          // Perform any additional checks or transformations on the user here
+          return user;
+        })
+        .or(() -> Optional.<User>empty());
+    }
 
   /**
    * Adds a new user to the database.
@@ -140,31 +143,18 @@ public class UserService {
     return existingUser.getPassword().equals(user.getPassword());
   }
 
+  /*
+   * Gets all quizzes created by a user.
+   * @param userId (Long) Id of the user.
+   * @return Set of quizzes created by the user.
+   */
   public Set<Quiz> getQuizzesByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-        return user.getQuizzes();
+    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+    return user.getQuizzes();
   }
 
-  public void addQuizToUser(Long userId, Long quizId) {
-    Quiz quiz = quizRepository.findById(quizId)
-                        .orElseThrow(() -> new IllegalArgumentException("Quiz with id " + quizId + " not found"));
-                        
-    User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-    user.getQuizzes().add(quiz);
-    userRepository.save(user);
-  }
-
-  public void removeQuizFromUser(Long userId, Long quizId) {
-    User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-    Quiz quiz = quizRepository.findById(quizId)
-            .orElseThrow(() -> new IllegalStateException("Quiz with id " + quizId + " not found"));
-      
-    user.getQuizzes().remove(quiz);
-    quiz.getUsers().remove(user);
-    userRepository.save(user);
-    quizRepository.save(quiz);
+  public User save(User user) {
+    return userRepository.save(user);
   }
 
 }

@@ -72,32 +72,16 @@ public class UserController {
   }
 
   /**
-   * Adds a quiz to a user
+   * Deletes a user.
    *
-   * @param userId (Long) Id of the user to add the quiz to, quizId (Long) Id of the quiz to add to the user.
+   * @param id (Long) Id of the user to delete.
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
-  @PostMapping("/addQuiz/{userId}/{quizId}")
-  public ResponseEntity<String> addQuiz(@PathVariable Long userId, @PathVariable Long quizId) {
+  @DeleteMapping("/{id}")
+  public ResponseEntity<String> delete(@PathVariable("id") Long id) {
     try {
-      userService.addQuizToUser(userId, quizId);
-      return ResponseEntity.ok("Quiz added successfully");
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
-  }
-
-  /**
-   * Removes a quiz from a user
-   *
-   * @param userId (Long) Id of the user to remove the quiz from, quizId (Long) Id of the quiz to remove from the user.
-   * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
-   */
-  @DeleteMapping("/removeQuiz/{userId}/{quizId}")
-  public ResponseEntity<String> removeQuiz(@PathVariable Long userId, @PathVariable Long quizId) {
-    try {
-      userService.removeQuizFromUser(userId, quizId);
-      return ResponseEntity.ok("Quiz removed successfully");
+      userService.deleteUser(id);
+      return ResponseEntity.ok("User deleted successfully");
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }

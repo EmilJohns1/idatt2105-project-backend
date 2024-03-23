@@ -118,66 +118,32 @@ class UserControllerTest {
     }
 
     @Test
-    void testAddQuizToUser_Success() {
+    void testDeleteUser_Success() {
         // Arrange
-        Long userId = 1L;
-        Long quizId = 1L;
-        doNothing().when(userService).addQuizToUser(userId, quizId);
+        Long id = 1L;
 
         // Act
-        ResponseEntity<String> response = userController.addQuiz(userId, quizId);
+        ResponseEntity<String> response = userController.delete(id);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Quiz added successfully", response.getBody());
-        verify(userService, times(1)).addQuizToUser(userId, quizId);
+        assertEquals("User deleted successfully", response.getBody());
+        verify(userService, times(1)).deleteUser(id);
     }
 
     @Test
-    void testAddQuizToUser_Failure() {
+    void testDeleteUser_Failure() {
         // Arrange
-        Long userId = 1L;
-        Long quizId = 1L;
-        doThrow(new RuntimeException("User not found")).when(userService).addQuizToUser(userId, quizId);
+        Long id = 1L;
+        doThrow(new RuntimeException("User not found")).when(userService).deleteUser(id);
 
         // Act
-        ResponseEntity<String> response = userController.addQuiz(userId, quizId);
+        ResponseEntity<String> response = userController.delete(id);
 
         // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals("User not found", response.getBody());
-        verify(userService, times(1)).addQuizToUser(userId, quizId);
+        verify(userService, times(1)).deleteUser(id);
     }
 
-    @Test
-    void testRemoveQuizFromUser_Success() {
-        // Arrange
-        Long userId = 1L;
-        Long quizId = 1L;
-        doNothing().when(userService).removeQuizFromUser(userId, quizId);
-
-        // Act
-        ResponseEntity<String> response = userController.removeQuiz(userId, quizId);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Quiz removed successfully", response.getBody());
-        verify(userService, times(1)).removeQuizFromUser(userId, quizId);
-    }
-
-    @Test
-    void testRemoveQuizFromUser_Failure() {
-        // Arrange
-        Long userId = 1L;
-        Long quizId = 1L;
-        doThrow(new RuntimeException("User not found")).when(userService).removeQuizFromUser(userId, quizId);
-
-        // Act
-        ResponseEntity<String> response = userController.removeQuiz(userId, quizId);
-
-        // Assert
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("User not found", response.getBody());
-        verify(userService, times(1)).removeQuizFromUser(userId, quizId);
-    }
 }

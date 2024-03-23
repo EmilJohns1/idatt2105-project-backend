@@ -2,7 +2,7 @@ package com.idatt2105.backend.user.service;
 
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
-import com.idatt2105.backend.repositories.QuizRepository;
+import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import com.idatt2105.backend.service.UserService;
 import com.idatt2105.backend.util.ExistingUserException;
@@ -95,25 +95,20 @@ class UserServiceTest {
 
   @Test
   void testGetUserById() {
-    User user = new User("testUser", "password");
-    user.setId(1L);
+      User user = new User("testUser", "password");
+      user.setId(1L);
 
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+      when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-    User foundUser = userService.getUserById(1L);
-
-    assertNotNull(foundUser);
-    assertEquals("testUser", foundUser.getUsername());
-    assertEquals("password", foundUser.getPassword());
-    verify(userRepository, times(1)).findById(1L);
-  }
-
-  @Test
-  void testGetUserById_userNotFound() {
-    when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
-    assertThrows(UserNotFoundException.class, () -> userService.getUserById(1L));
-    verify(userRepository, times(1)).findById(1L);
+      Optional<User> foundUserOptional = userService.getUserById(1L);
+    
+      assertTrue(foundUserOptional.isPresent(), "User should be present");
+      User foundUser = foundUserOptional.get();
+    
+      assertNotNull(foundUser);
+      assertEquals("testUser", foundUser.getUsername());
+      assertEquals("password", foundUser.getPassword());
+      verify(userRepository, times(1)).findById(1L);
   }
 
   @Test 
@@ -127,6 +122,15 @@ class UserServiceTest {
 
     verify(userRepository, times(1)).existsById(1L);
     verify(userRepository, times(1)).deleteById(1L);
+  }
+
+  @Test
+  void testDeleteUser_userNotFound() {
+    when(userRepository.existsById(1L)).thenReturn(false);
+
+    assertThrows(UserNotFoundException.class, () -> userService.deleteUser(1L));
+    verify(userRepository, times(1)).existsById(1L);
+    verify(userRepository, never()).deleteById(1L);
   }
 
   @Test
@@ -188,51 +192,6 @@ class UserServiceTest {
     assertNotNull(foundUser);
     assertEquals(foundUser, "Token");
     verify(userRepository, times(1)).findByUsername("testUser");
-  }
-
-  @Test
-  public void testAddQuizToUser() {
-      Long userId = 1L;
-      Long quizId = 1L;
-
-      User user = new User();
-      user.setId(userId);
-
-      Quiz quiz = new Quiz();
-      quiz.setId(quizId);
-
-      when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-      when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
-
-      userService.addQuizToUser(userId, quizId);
-
-      verify(userRepository, times(1)).save(user);
-
-      assertEquals(1, user.getQuizzes().size());
-      assertEquals(quiz, user.getQuizzes().iterator().next());
-  }
-
-  @Test
-  public void removeQuizFromUser() {
-    Long userId = 1L;
-    Long quizId = 1L;
-
-    User user = new User();
-    user.setId(userId);
-
-    Quiz quiz = new Quiz();
-    quiz.setId(quizId);
-
-    user.getQuizzes().add(quiz);
-
-    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-    when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
-
-    userService.removeQuizFromUser(userId, quizId);
-
-    verify(userRepository, times(1)).save(user);
-
-    assertEquals(0, user.getQuizzes().size());
   }
 
   @Test

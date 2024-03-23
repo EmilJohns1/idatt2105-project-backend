@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Table(name = "users")
+@EqualsAndHashCode(exclude = "quizzes")
 public class User {
 
   @Id

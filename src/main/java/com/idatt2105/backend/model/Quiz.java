@@ -2,6 +2,7 @@ package com.idatt2105.backend.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ import jakarta.validation.constraints.NotEmpty;
 @Entity
 @Data
 @Table(name = "quizzes")
+@EqualsAndHashCode(exclude = "users")
 public class Quiz {
 
   @Id

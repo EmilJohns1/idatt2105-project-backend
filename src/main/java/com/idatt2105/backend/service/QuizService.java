@@ -2,7 +2,9 @@ package com.idatt2105.backend.service;
 
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
-import com.idatt2105.backend.repositories.QuizRepository;
+import com.idatt2105.backend.repository.QuizRepository;
+import com.idatt2105.backend.util.UserNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ public class QuizService {
         return quizRepository.findById(id);
     }
 
-    public Quiz saveQuiz(Quiz quiz) {
+    public Quiz save(Quiz quiz) {
         return quizRepository.save(quiz);
     }
 
@@ -50,34 +52,40 @@ public class QuizService {
     }
 
     public void addUserToQuiz(Long userId, Long quizId) {
-        Optional<Quiz> quizOptional = quizRepository.findById(quizId);
-        if (quizOptional.isPresent()) {
-            Quiz quiz = quizOptional.get();
-            User user = userService.getUserById(userId);
-            if (user != null) {
-                quiz.getUsers().add(user);
-                quizRepository.save(quiz);
-            } else {
-                // Handle user not found
-            }
-        } else {
-            // Handle quiz not found
-        }
+      Optional<Quiz> quizOptional = quizRepository.findById(quizId);
+      if (quizOptional.isPresent()) {
+          Quiz quiz = quizOptional.get();
+          Optional<User> userOptional = userService.getUserById(userId);
+          if (userOptional.isPresent()) {
+              User user = userOptional.get();
+              quiz.getUsers().add(user);
+              user.getQuizzes().add(quiz);
+              quizRepository.save(quiz);
+              userService.save(user);
+          } else {
+              throw new UserNotFoundException("User with id " + userId + " not found");
+          }
+      } else {
+          throw new IllegalStateException("Quiz with id " + quizId + " not found");
+      }
     }
 
     public void removeUserFromQuiz(Long userId, Long quizId) {
         Optional<Quiz> quizOptional = quizRepository.findById(quizId);
         if (quizOptional.isPresent()) {
             Quiz quiz = quizOptional.get();
-            User user = userService.getUserById(userId);
-            if (user != null) {
+            Optional<User> userOptional = userService.getUserById(userId);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
                 quiz.getUsers().remove(user);
+                user.getQuizzes().remove(quiz);
                 quizRepository.save(quiz);
+                userService.save(user);
             } else {
-                // Handle user not found
+                throw new UserNotFoundException("User with id " + userId + " not found");
             }
         } else {
-            // Handle quiz not found
+            throw new IllegalStateException("Quiz with id " + quizId + " not found");
         }
     }
 
@@ -85,19 +93,23 @@ public class QuizService {
         Optional<Quiz> quizOptional = quizRepository.findById(quizId);
         if (quizOptional.isPresent()) {
             Quiz quiz = quizOptional.get();
-            User user = userService.getUserById(userId);
-            if (user != null) {
+            Optional<User> userOptional = userService.getUserById(userId);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
                 if (quiz.getUsers().contains(user)) {
                     quiz.getUsers().remove(user);
+                    user.getQuizzes().remove(quiz);
                 } else {
                     quiz.getUsers().add(user);
+                    user.getQuizzes().add(quiz);
                 }
                 quizRepository.save(quiz);
+                userService.save(user);
             } else {
-                // Handle user not found
+                throw new UserNotFoundException("User with id " + userId + " not found");
             }
         } else {
-            // Handle quiz not found
+            throw new IllegalStateException("Quiz with id " + quizId + " not found");
         }
     }
 
