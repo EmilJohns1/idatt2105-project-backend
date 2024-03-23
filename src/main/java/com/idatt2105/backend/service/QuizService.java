@@ -13,6 +13,8 @@ import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.QuizRepository;
+import com.idatt2105.backend.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,28 +23,41 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public QuizService(QuizRepository quizRepository, UserService userService) {
+    public QuizService(QuizRepository quizRepository, UserService userService, UserRepository userRepository) {
         this.quizRepository = quizRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public List<QuizDTO> getAllQuizzes() {
-        List<Quiz> quizzes = quizRepository.findAll();
-        return quizzes.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+      List<Quiz> quizzes = quizRepository.findAll();
+      return quizzes.stream()
+              .map(quiz -> {
+                  QuizDTO quizDTO = convertToDTO(quiz);
+                  quizDTO.setCreationDate(quiz.getCreationDate());
+                  quizDTO.setLastModifiedDate(quiz.getLastModifiedDate());
+                  return quizDTO;
+              })
+              .collect(Collectors.toList());
     }
 
     public Optional<QuizDTO> getQuizById(Long id) {
-        return quizRepository.findById(id)
-                .map(this::convertToDTO);
+      Optional<Quiz> quizOptional = quizRepository.findById(id);
+      return quizOptional.map(quiz -> {
+        QuizDTO quizDTO = convertToDTO(quiz);
+        quizDTO.setCreationDate(quiz.getCreationDate());
+        quizDTO.setLastModifiedDate(quiz.getLastModifiedDate());
+        return quizDTO;
+      });
     }
+          
 
     public QuizDTO save(Quiz quiz) {
-        Quiz savedQuiz = quizRepository.save(quiz);
-        return convertToDTO(savedQuiz);
+      Quiz savedQuiz = quizRepository.save(quiz);
+      return convertToDTO(savedQuiz);
     }
 
     public void deleteQuiz(Long id) {
@@ -65,14 +80,15 @@ public class QuizService {
       Optional<Quiz> quizOptional = quizRepository.findById(quizId);
       if (quizOptional.isPresent()) {
           Quiz quiz = quizOptional.get();
-          Optional<UserDTO> userOptional = userService.getUserById(userId);
+          Optional<UserDTO> userOptional = userService.getUserByIdDTO(userId);
           if (userOptional.isPresent()) {
               UserDTO userDTO = userOptional.get();
-              User user = new User();
-              user.setId(userDTO.getId());
-              user.setUsername(userDTO.getUsername());
+              User user = userRepository.findByUsername(userDTO.getUsername()).get();
               quiz.getUsers().add(user);
               quizRepository.save(quiz);
+  
+              user.getQuizzes().add(quiz);
+              userService.save(user);
           } else {
               throw new UserNotFoundException("User with id " + userId + " not found");
           }
@@ -80,25 +96,26 @@ public class QuizService {
           throw new IllegalStateException("Quiz with id " + quizId + " not found");
       }
     }
-
+    
     public void removeUserFromQuiz(Long userId, Long quizId) {
-        Optional<Quiz> quizOptional = quizRepository.findById(quizId);
-        if (quizOptional.isPresent()) {
-            Quiz quiz = quizOptional.get();
-            Optional<UserDTO> userOptional = userService.getUserById(userId);
-            if (userOptional.isPresent()) {
-                UserDTO userDTO = userOptional.get();
-                User user = new User();
-                user.setId(userDTO.getId());
-                user.setUsername(userDTO.getUsername());
-                quiz.getUsers().remove(user);
-                quizRepository.save(quiz);
-            } else {
-                throw new UserNotFoundException("User with id " + userId + " not found");
-            }
-        } else {
-            throw new IllegalStateException("Quiz with id " + quizId + " not found");
-        }
+      Optional<Quiz> quizOptional = quizRepository.findById(quizId);
+      if (quizOptional.isPresent()) {
+          Quiz quiz = quizOptional.get();
+          Optional<UserDTO> userOptional = userService.getUserByIdDTO(userId);
+          if (userOptional.isPresent()) {
+              UserDTO userDTO = userOptional.get();
+              User user = userRepository.findByUsername(userDTO.getUsername()).get();
+              quiz.getUsers().remove(user);
+              quizRepository.save(quiz);
+  
+              user.getQuizzes().remove(quiz);
+              userService.save(user);
+          } else {
+              throw new UserNotFoundException("User with id " + userId + " not found");
+          }
+      } else {
+          throw new IllegalStateException("Quiz with id " + quizId + " not found");
+      }
     }
 
     public Optional<QuizDTO> getQuizByTitle(String title) {
@@ -111,5 +128,14 @@ public class QuizService {
                 .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()))
                 .collect(Collectors.toSet());
         return new QuizDTO(quiz.getId(), quiz.getTitle(), quiz.getDescription(), userDTOs);
+    }
+
+    public Set<UserDTO> getUsersByQuizId(Long quizId) {
+      Quiz quiz = quizRepository.findById(quizId)
+              .orElseThrow(() -> new IllegalStateException("Quiz with id " + quizId + " not found"));
+      Set<UserDTO> userDTOs = quiz.getUsers().stream()
+              .map(user -> new UserDTO(user.getId(), user.getUsername()))
+              .collect(Collectors.toSet());
+      return userDTOs;
     }
 }

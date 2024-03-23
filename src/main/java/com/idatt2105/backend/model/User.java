@@ -37,8 +37,7 @@ public class User {
   @Column(name = "username", nullable = false)
   private String username;
 
-  @NotEmpty
-  @Column(name = "password", nullable = false)
+  @Column(name = "password")
   private String password;
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
@@ -52,5 +51,15 @@ public class User {
   public User (String username, String password) {
       this.username = username;
       this.password = password;
+  }
+
+  public User(Long id, String username) {
+    this.id = id;
+    this.username = username;
+  }
+
+  public void addQuiz(Quiz quiz) {
+      this.quizzes.add(quiz);
+      quiz.getUsers().add(this);
   }
 }

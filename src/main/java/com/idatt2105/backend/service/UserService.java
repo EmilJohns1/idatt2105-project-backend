@@ -190,8 +190,25 @@ public class UserService {
     return quizDTOs;
   }
 
+  /**
+   * Saves a user to the database.
+   *
+   * @param user (User) User to save.
+   * @return The saved user.
+   */
   public UserDTO save(User user) {
     User savedUser = userRepository.save(user);
     return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
+  }
+  
+  /**
+   * Gets a user by id.
+   *
+   * @param id (Long) Id of the user to get.
+   * @return Optional of the user with the given id.
+   */
+  public Optional<UserDTO> getUserByIdDTO(Long id) {
+    return userRepository.findById(id)
+            .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()));
   }
 }

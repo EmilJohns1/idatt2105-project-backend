@@ -6,6 +6,9 @@ import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/user")
+@Tag(name = "User", description = "Operations related to users")
 public class UserController {
   private final UserService userService;
 
@@ -41,6 +45,7 @@ public class UserController {
    * @return List of all registered users.
    */
   @GetMapping
+  @Operation(summary = "Get all users")
   public ResponseEntity<List<UserDTO>> getUsers() {
     List<UserDTO> userDTOs = userService.getUsers();
     return new ResponseEntity<>(userDTOs, HttpStatus.OK);
@@ -53,6 +58,7 @@ public class UserController {
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @PostMapping("/register")
+  @Operation(summary = "Register a new user")
   public ResponseEntity<String> register(@RequestBody @Validated LoginRequestDTO registrationRequest) {
       try {
           User user = new User();
@@ -72,6 +78,7 @@ public class UserController {
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @PostMapping("/login")
+  @Operation(summary = "Log in a user")
   public ResponseEntity<String> login(@RequestBody @Validated LoginRequestDTO loginRequest) {
       try {
           User user = new User();
@@ -91,6 +98,7 @@ public class UserController {
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @PostMapping("/update")
+  @Operation(summary = "Update a user")
   public ResponseEntity<String> update(@RequestBody @Validated User user) {
     try {
       userService.updateUser(user.getId(), user);
@@ -107,6 +115,7 @@ public class UserController {
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @DeleteMapping("/{id}")
+  @Operation(summary = "Delete a user")
   public ResponseEntity<String> delete(@PathVariable("id") Long id) {
     try {
       userService.deleteUser(id);
@@ -123,6 +132,7 @@ public class UserController {
    * @return ResponseEntity with the user, or an ErrorResponse if an error occurs.
    */
   @GetMapping("/{id}")
+  @Operation(summary = "Get user by id")
   public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
     try {
       UserDTO userDTO = userService.getUserById(id).orElseThrow();
@@ -139,6 +149,7 @@ public class UserController {
    * @return ResponseEntity with the user, or an ErrorResponse if an error occurs.
    */
   @GetMapping("/username")
+  @Operation(summary = "Get user by username")
   public ResponseEntity<UserDTO> getUserByUsername(@RequestParam("username") String username) {
     try {
       UserDTO userDTO = userService.getUserByUsername(username).orElseThrow();
@@ -155,6 +166,7 @@ public class UserController {
    * @return ResponseEntity with the user's quizzes, or an ErrorResponse if an error occurs.
    */
   @GetMapping("/{id}/quizzes")
+  @Operation(summary = "Get quizzes by user id")
   public ResponseEntity<Set<QuizDTO>> getUserQuizzes(@PathVariable("id") Long id) {
     try {
       Set<QuizDTO> quizDTOs = userService.getQuizzesByUserId(id);

@@ -22,16 +22,24 @@ public class UserDTO {
     public UserDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.quizzes = user.getQuizzes()
-                .stream()
-                .map(QuizDTO::new)
-                .collect(Collectors.toList());
+    }
+
+    public UserDTO(Long id, String username) {
+        this.id = id;
+        this.username = username;
     }
 
     public UserDTO(Long id, String username, List<QuizDTO> quizzes) {
         this.id = id;
         this.username = username;
         this.quizzes = quizzes;
+    }
+
+    public User toEntity() {
+        User user = new User();
+        user.setId(this.id);
+        user.setUsername(this.username);
+        return user;
     }
 
 }

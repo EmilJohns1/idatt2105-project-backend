@@ -16,6 +16,7 @@ public class QuizDTO {
     private String description;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
+    private Set<UserDTO> userDTOs;
 
     public QuizDTO(Quiz quiz) {
         this.id = quiz.getId();
@@ -33,9 +34,27 @@ public class QuizDTO {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public QuizDTO(Long id, String title, String description, LocalDateTime creationDate, LocalDateTime lastModifiedDate, Set<UserDTO> userDTOs) {
+      this.id = id;
+      this.title = title;
+      this.description = description;
+      this.creationDate = creationDate;
+      this.lastModifiedDate = lastModifiedDate;
+      this.userDTOs = userDTOs;
+    }
+
     public QuizDTO(Long id, String title, String description, Set<UserDTO> userDTOs) {
         this.id = id;
         this.title = title;
         this.description = description;
     }
+
+    public Quiz toEntity() {
+      Quiz quiz = new Quiz();
+      quiz.setId(this.id);
+      quiz.setTitle(this.title);
+      quiz.setDescription(this.description);
+      return quiz;
+  }
+    
 }
