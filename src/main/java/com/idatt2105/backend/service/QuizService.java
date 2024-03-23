@@ -1,15 +1,20 @@
 package com.idatt2105.backend.service;
 
+import com.idatt2105.backend.util.UserNotFoundException;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.idatt2105.backend.dto.QuizDTO;
+import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.QuizRepository;
-import com.idatt2105.backend.util.UserNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class QuizService {
@@ -23,16 +28,21 @@ public class QuizService {
         this.userService = userService;
     }
 
-    public List<Quiz> getAllQuizzes() {
-        return quizRepository.findAll();
+    public List<QuizDTO> getAllQuizzes() {
+        List<Quiz> quizzes = quizRepository.findAll();
+        return quizzes.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Quiz> getQuizById(Long id) {
-        return quizRepository.findById(id);
+    public Optional<QuizDTO> getQuizById(Long id) {
+        return quizRepository.findById(id)
+                .map(this::convertToDTO);
     }
 
-    public Quiz save(Quiz quiz) {
-        return quizRepository.save(quiz);
+    public QuizDTO save(Quiz quiz) {
+        Quiz savedQuiz = quizRepository.save(quiz);
+        return convertToDTO(savedQuiz);
     }
 
     public void deleteQuiz(Long id) {
@@ -40,28 +50,29 @@ public class QuizService {
     }
 
     public void updateQuiz(Long id, Quiz updatedQuiz) {
-      Quiz existingQuiz = quizRepository.findById(id)
-              .orElseThrow(() -> new IllegalStateException("Quiz with id " + id + " not found"));
-  
-      existingQuiz.setTitle(updatedQuiz.getTitle());
-      existingQuiz.setDescription(updatedQuiz.getDescription());
-      existingQuiz.setUsers(updatedQuiz.getUsers());
-      // add questions here
+        Quiz existingQuiz = quizRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Quiz not found with id: " + id));
 
-      quizRepository.save(existingQuiz);
+        existingQuiz.setTitle(updatedQuiz.getTitle());
+        existingQuiz.setDescription(updatedQuiz.getDescription());
+        existingQuiz.setUsers(updatedQuiz.getUsers());
+        // add questions here
+
+        quizRepository.save(existingQuiz);
     }
 
     public void addUserToQuiz(Long userId, Long quizId) {
       Optional<Quiz> quizOptional = quizRepository.findById(quizId);
       if (quizOptional.isPresent()) {
           Quiz quiz = quizOptional.get();
-          Optional<User> userOptional = userService.getUserById(userId);
+          Optional<UserDTO> userOptional = userService.getUserById(userId);
           if (userOptional.isPresent()) {
-              User user = userOptional.get();
+              UserDTO userDTO = userOptional.get();
+              User user = new User();
+              user.setId(userDTO.getId());
+              user.setUsername(userDTO.getUsername());
               quiz.getUsers().add(user);
-              user.getQuizzes().add(quiz);
               quizRepository.save(quiz);
-              userService.save(user);
           } else {
               throw new UserNotFoundException("User with id " + userId + " not found");
           }
@@ -74,13 +85,14 @@ public class QuizService {
         Optional<Quiz> quizOptional = quizRepository.findById(quizId);
         if (quizOptional.isPresent()) {
             Quiz quiz = quizOptional.get();
-            Optional<User> userOptional = userService.getUserById(userId);
+            Optional<UserDTO> userOptional = userService.getUserById(userId);
             if (userOptional.isPresent()) {
-                User user = userOptional.get();
+                UserDTO userDTO = userOptional.get();
+                User user = new User();
+                user.setId(userDTO.getId());
+                user.setUsername(userDTO.getUsername());
                 quiz.getUsers().remove(user);
-                user.getQuizzes().remove(quiz);
                 quizRepository.save(quiz);
-                userService.save(user);
             } else {
                 throw new UserNotFoundException("User with id " + userId + " not found");
             }
@@ -89,31 +101,15 @@ public class QuizService {
         }
     }
 
-    public void editUsersInQuiz(Long userId, Long quizId) {
-        Optional<Quiz> quizOptional = quizRepository.findById(quizId);
-        if (quizOptional.isPresent()) {
-            Quiz quiz = quizOptional.get();
-            Optional<User> userOptional = userService.getUserById(userId);
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                if (quiz.getUsers().contains(user)) {
-                    quiz.getUsers().remove(user);
-                    user.getQuizzes().remove(quiz);
-                } else {
-                    quiz.getUsers().add(user);
-                    user.getQuizzes().add(quiz);
-                }
-                quizRepository.save(quiz);
-                userService.save(user);
-            } else {
-                throw new UserNotFoundException("User with id " + userId + " not found");
-            }
-        } else {
-            throw new IllegalStateException("Quiz with id " + quizId + " not found");
-        }
+    public Optional<QuizDTO> getQuizByTitle(String title) {
+        return quizRepository.findByTitle(title)
+                .map(this::convertToDTO);
     }
 
-    public Optional<Quiz> getQuizByTitle(String title) {
-        return quizRepository.findByTitle(title);
+    private QuizDTO convertToDTO(Quiz quiz) {
+        Set<UserDTO> userDTOs = quiz.getUsers().stream()
+                .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()))
+                .collect(Collectors.toSet());
+        return new QuizDTO(quiz.getId(), quiz.getTitle(), quiz.getDescription(), userDTOs);
     }
 }
