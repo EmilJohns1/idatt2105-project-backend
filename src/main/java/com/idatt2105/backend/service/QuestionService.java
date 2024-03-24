@@ -1,5 +1,11 @@
 package com.idatt2105.backend.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
 import com.idatt2105.backend.model.Alternative;
 import com.idatt2105.backend.model.AlternativeDTO;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
@@ -8,23 +14,15 @@ import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
-import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.AlternativeRepository;
 import com.idatt2105.backend.repository.QuestionRepository;
+import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.util.InvalidIdException;
-import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
-/**
- * Service for handling operations related to questions.
- */
+import jakarta.validation.constraints.NotNull;
+
+/** Service for handling operations related to questions. */
 @Service
 public class QuestionService {
   private final QuestionRepository questionRepository;
@@ -39,10 +37,11 @@ public class QuestionService {
    * @param quizRepository (QuizRepository) Repository for handling operations on quizzes.
    */
   @Autowired
-  public QuestionService(QuestionRepository questionRepository,
-                         QuizRepository quizRepository,
-                         AlternativeRepository alternativeRepository,
-                         TagRepository tagRepository) {
+  public QuestionService(
+      QuestionRepository questionRepository,
+      QuizRepository quizRepository,
+      AlternativeRepository alternativeRepository,
+      TagRepository tagRepository) {
     this.questionRepository = questionRepository;
     this.quizRepository = quizRepository;
     this.alternativeRepository = alternativeRepository;
@@ -57,8 +56,13 @@ public class QuestionService {
    * @throws InvalidIdException if the quiz with the given id is not found.
    */
   public Question addQuestion(@Validated @NotNull QuestionDTO questionDTO) {
-    Quiz quiz = quizRepository.findById(questionDTO.getQuizId())
-        .orElseThrow(() -> new InvalidIdException("Quiz with id " + questionDTO.getQuizId() + " not found"));
+    Quiz quiz =
+        quizRepository
+            .findById(questionDTO.getQuizId())
+            .orElseThrow(
+                () ->
+                    new InvalidIdException(
+                        "Quiz with id " + questionDTO.getQuizId() + " not found"));
     Question question = questionDTO.instantiateQuestion();
     question.setQuiz(quiz);
     question.setQuestionText(questionDTO.getQuestionText());
@@ -76,7 +80,8 @@ public class QuestionService {
    * @throws InvalidIdException if the question with the given id is not found.
    */
   public Question getQuestionById(@NotNull Long id) {
-    return questionRepository.findById(id)
+    return questionRepository
+        .findById(id)
         .orElseThrow(() -> new InvalidIdException("Question with id " + id + " not found"));
   }
 
@@ -113,13 +118,15 @@ public class QuestionService {
    * @param questionDTO (QuestionDTO) Data transfer object for the question.
    * @return (TrueOrFalseQuestion) The updated true or false question.
    */
-  public TrueOrFalseQuestion updateTrueOrFalseQuestion(@Validated @NotNull QuestionDTO questionDTO) {
+  public TrueOrFalseQuestion updateTrueOrFalseQuestion(
+      @Validated @NotNull QuestionDTO questionDTO) {
     Question question = getQuestionById(questionDTO.getQuestionId());
     TrueOrFalseQuestion trueOrFalseQuestion;
     try {
       trueOrFalseQuestion = (TrueOrFalseQuestion) question;
     } catch (ClassCastException e) {
-      throw new InvalidIdException("Question with id " + questionDTO.getQuestionId() + " is not a true or false question");
+      throw new InvalidIdException(
+          "Question with id " + questionDTO.getQuestionId() + " is not a true or false question");
     }
     trueOrFalseQuestion.setCorrectAnswer(questionDTO.getIsCorrect());
     return questionRepository.save(trueOrFalseQuestion);
@@ -139,7 +146,8 @@ public class QuestionService {
    * Adds an alternative to the question with the given id.
    *
    * @param alternativeDTO (AlternativeDTO) Data transfer object for the alternative.
-   * @throws InvalidIdException if the question with the given id is not found or is not a multiple choice question.
+   * @throws InvalidIdException if the question with the given id is not found or is not a multiple
+   *     choice question.
    */
   public Alternative addAlternative(@Validated @NotNull AlternativeDTO alternativeDTO) {
     Question q = getQuestionById(alternativeDTO.getQuestionId());
@@ -147,7 +155,10 @@ public class QuestionService {
     try {
       question = (MultipleChoiceQuestion) q;
     } catch (ClassCastException e) {
-      throw new InvalidIdException("Question with id " + alternativeDTO.getQuestionId() + " is not a multiple choice question");
+      throw new InvalidIdException(
+          "Question with id "
+              + alternativeDTO.getQuestionId()
+              + " is not a multiple choice question");
     }
     Alternative alt = question.addAlternative(alternativeDTO);
     questionRepository.save(question);
@@ -166,14 +177,15 @@ public class QuestionService {
   public Question addTags(@Validated @NotNull QuestionDTO dto) {
     Question question = getQuestionById(dto.getQuestionId());
 
-    //Verify that all tags exist
+    // Verify that all tags exist
     List<Long> allIds = dto.getAllTagIds();
     List<Tag> existingTags = tagRepository.findAllById(allIds);
-    allIds.forEach(id -> {
-      if (existingTags.stream().noneMatch(tag -> tag.getId().equals(id))) {
-        throw new InvalidIdException("Tag with id " + id + " not found");
-      }
-    });
+    allIds.forEach(
+        id -> {
+          if (existingTags.stream().noneMatch(tag -> tag.getId().equals(id))) {
+            throw new InvalidIdException("Tag with id " + id + " not found");
+          }
+        });
     question.addTags(dto.getTags());
     return questionRepository.save(question);
   }

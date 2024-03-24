@@ -6,8 +6,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 /**
- * Entity representing a True or False question.
- * This class extends the Question class and adds a field for the correct answer.
+ * Entity representing a True or False question. This class extends the Question class and adds a
+ * field for the correct answer.
  */
 @Entity
 @Data

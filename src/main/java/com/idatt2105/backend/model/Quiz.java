@@ -1,11 +1,5 @@
 package com.idatt2105.backend.model;
 
-import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,12 +13,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-/**
- * Represents a quiz.
- */
+/** Represents a quiz. */
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -50,7 +47,9 @@ public class Quiz {
   @Column(name = "last_modified_date")
   private LocalDateTime lastModifiedDate;
 
-  @ManyToMany(mappedBy = "quizzes", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+  @ManyToMany(
+      mappedBy = "quizzes",
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   @JsonBackReference
   private Set<User> users = new HashSet<>();
 

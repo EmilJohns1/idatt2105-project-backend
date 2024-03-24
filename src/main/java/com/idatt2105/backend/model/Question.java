@@ -1,6 +1,13 @@
 package com.idatt2105.backend.model;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,15 +22,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
-/**
- * Entity representing a question for a quiz.
- */
+/** Entity representing a question for a quiz. */
 @Entity
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -49,7 +50,8 @@ public class Question {
   private Quiz quiz;
 
   @ManyToMany
-  @JoinTable(name = "question_tag",
+  @JoinTable(
+      name = "question_tag",
       joinColumns = @JoinColumn(name = "question_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private Set<Tag> tags = new HashSet<>();

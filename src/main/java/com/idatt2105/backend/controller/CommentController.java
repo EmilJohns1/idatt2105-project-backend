@@ -1,22 +1,19 @@
 package com.idatt2105.backend.controller;
 
-import com.idatt2105.backend.dto.CommentDTO;
-import com.idatt2105.backend.service.CommentService;
-
-import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.idatt2105.backend.dto.CommentDTO;
+import com.idatt2105.backend.service.CommentService;
 
-/**
- * The CommentController class handles HTTP requests related to comments.
- */
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+/** The CommentController class handles HTTP requests related to comments. */
 @RestController
 @RequestMapping("/api/comments")
 @Tag(name = "Comments", description = "Operations related to comments")
@@ -75,13 +72,14 @@ public class CommentController {
   /**
    * Updates an existing comment.
    *
-   * @param id          the ID of the comment to update
-   * @param commentDTO  the CommentDTO object representing the updated comment
+   * @param id the ID of the comment to update
+   * @param commentDTO the CommentDTO object representing the updated comment
    * @return a ResponseEntity containing the updated CommentDTO object and the HTTP status code
    */
   @PutMapping("/{id}")
   @Operation(summary = "Update comment")
-  public ResponseEntity<CommentDTO> updateComment(@PathVariable Long id, @RequestBody String content) {
+  public ResponseEntity<CommentDTO> updateComment(
+      @PathVariable Long id, @RequestBody String content) {
     CommentDTO updatedComment = new CommentDTO(content);
     commentService.updateComment(id, updatedComment);
     return new ResponseEntity<>(HttpStatus.OK);
@@ -100,10 +98,9 @@ public class CommentController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-
   /*
    * Gets comments by quiz id
-   * 
+   *
    * @param quizId (Long) Id of the quiz to get comments for
    * @return List of comments for the quiz
    */
@@ -116,7 +113,7 @@ public class CommentController {
 
   /*
    * Gets comments by user id
-   * 
+   *
    * @param userId (Long) Id of the user to get comments for
    * @return List of comments for the user
    */
@@ -126,5 +123,4 @@ public class CommentController {
     List<CommentDTO> comments = commentService.getCommentsByUserId(userId);
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
-
 }
