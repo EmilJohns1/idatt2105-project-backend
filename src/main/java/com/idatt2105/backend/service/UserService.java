@@ -3,16 +3,24 @@ package com.idatt2105.backend.service;
 import com.idatt2105.backend.util.ExistingUserException;
 import com.idatt2105.backend.util.InvalidCredentialsException;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.idatt2105.backend.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.idatt2105.backend.dto.QuizDTO;
+import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
+import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import org.springframework.validation.annotation.Validated;
 
@@ -33,20 +41,38 @@ public class UserService {
    *
    * @return List of all registered users.
    */
-  public List<User> getUsers() {
-    return userRepository.findAll();
+  public List<UserDTO> getUsers() {
+    List<User> users = userRepository.findAll();
+    List<UserDTO> userDTOs = new ArrayList<>();
+
+    for (User user : users) {
+        List<QuizDTO> quizDTOs = new ArrayList<>();
+        for (Quiz quiz : user.getQuizzes()) {
+            quizDTOs.add(new QuizDTO(quiz));
+        }
+        userDTOs.add(new UserDTO(user.getId(), user.getUsername(), quizDTOs));
+    }
+    return userDTOs;
   }
 
   /**
    * Gets a user by a unique id.
    *
    * @param id (Long) Unique id of the user.
-   * @return User with the given id.
+   * @return Optional of the user with the given id.
    * @throws UserNotFoundException If no user with the given id is found.
    */
-  public User getUserById(Long id) {
-    return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
-  }
+  public Optional<UserDTO> getUserById(Long id) {
+    return userRepository.findById(id)
+      .map(user -> {
+        List<QuizDTO> quizDTOs = new ArrayList<>();
+        for (Quiz quiz : user.getQuizzes()) {
+          quizDTOs.add(new QuizDTO(quiz));
+        }
+        return new UserDTO(user.getId(), user.getUsername(), quizDTOs);
+      })
+      .or(() -> Optional.<UserDTO>empty());
+    }
 
   /**
    * Adds a new user to the database.
@@ -55,11 +81,12 @@ public class UserService {
    * @return The added user.
    * @throws ExistingUserException If a user with the same username already exists.
    */
-  public User addUser(@Validated @NotNull User user) {
+  public UserDTO addUser(@Validated @NotNull User user) {
     if (userExists(user.getUsername())) {
-      throw new ExistingUserException("Cannot add user with username " + user.getUsername() + " as it already exists");
+      throw new ExistingUserException("User with username " + user.getUsername() + " already exists");
     }
-    return userRepository.save(user);
+    User savedUser = userRepository.save(user);
+    return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
   }
 
   /**
@@ -83,11 +110,16 @@ public class UserService {
    * @return The updated user.
    * @throws UserNotFoundException If no user with the given id is found.
    */
-  public User updateUser(Long id, @Validated @NotNull User user) {
+  public UserDTO updateUser(Long id, @Validated @NotNull User user) {
     User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
     existingUser.setUsername(user.getUsername());
     existingUser.setPassword(user.getPassword());
-    return userRepository.save(existingUser);
+    User updatedUser = userRepository.save(existingUser);
+    List<QuizDTO> quizDTOs = new ArrayList<>();
+    for (Quiz quiz : updatedUser.getQuizzes()) {
+      quizDTOs.add(new QuizDTO(quiz));
+    }
+    return new UserDTO(updatedUser.getId(), updatedUser.getUsername(), quizDTOs);
   }
 
   /**
@@ -97,9 +129,12 @@ public class UserService {
    * @return User with the given username.
    * @throws UserNotFoundException If no user with the given username is found.
    */
-  public User getUserByUsername(String username) {
-    return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
-  }
+  public Optional<UserDTO> getUserByUsername(String username) {
+    return userRepository.findByUsername(username)
+        .map(user -> {
+          return new UserDTO(user.getId(), user.getUsername());
+        });
+    }
 
   /**
    * Checks if a user with the given username exists.
@@ -137,23 +172,39 @@ public class UserService {
     return existingUser.getPassword().equals(user.getPassword());
   }
 
-  public Set<Quiz> getQuizzesByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-        return user.getQuizzes();
+  /*
+   * Gets all quizzes created by a user.
+   * @param userId (Long) Id of the user.
+   * @return Set of quizzes created by the user.
+   */
+  public Set<QuizDTO> getQuizzesByUserId(Long userId) {
+    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+    Set<QuizDTO> quizDTOs = new HashSet<>();
+    for (Quiz quiz : user.getQuizzes()) {
+        quizDTOs.add(new QuizDTO(quiz));
     }
-
-  public void addQuizToUser(Long userId, Quiz quiz) {
-      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-      user.getQuizzes().add(quiz);
-      userRepository.save(user);
+    return quizDTOs;
   }
 
-  public void removeQuizFromUser(Long userId, Long quizId) {
-      User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
-      Optional<Quiz> quizOptional = user.getQuizzes().stream().filter(q -> q.getId().equals(quizId)).findFirst();
-      quizOptional.ifPresent(quiz -> {
-          user.getQuizzes().remove(quiz);
-          userRepository.save(user);
-      });
+  /**
+   * Saves a user to the database.
+   *
+   * @param user (User) User to save.
+   * @return The saved user.
+   */
+  public UserDTO save(User user) {
+    User savedUser = userRepository.save(user);
+    return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
+  }
+  
+  /**
+   * Gets a user by id.
+   *
+   * @param id (Long) Id of the user to get.
+   * @return Optional of the user with the given id.
+   */
+  public Optional<UserDTO> getUserByIdDTO(Long id) {
+    return userRepository.findById(id)
+            .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()));
   }
 }

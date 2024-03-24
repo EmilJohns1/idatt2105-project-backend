@@ -1,84 +1,130 @@
 package com.idatt2105.backend.controller;
 
-import com.idatt2105.backend.model.Comment;
-import com.idatt2105.backend.model.Quiz;
-import com.idatt2105.backend.model.User;
+import com.idatt2105.backend.dto.CommentDTO;
 import com.idatt2105.backend.service.CommentService;
+
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * The CommentController class handles HTTP requests related to comments.
+ */
 @RestController
 @RequestMapping("/api/comments")
 @Tag(name = "Comments", description = "Operations related to comments")
 public class CommentController {
 
-    private final CommentService commentService;
+  private final CommentService commentService;
 
-    @Autowired
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
+  /**
+   * Constructs a new CommentController with the specified CommentService.
+   *
+   * @param commentService the CommentService to be used
+   */
+  @Autowired
+  public CommentController(CommentService commentService) {
+    this.commentService = commentService;
+  }
 
-    @GetMapping
-    @Operation(summary = "Get all comments")
-    public ResponseEntity<List<Comment>> getAllComments() {
-        List<Comment> comments = commentService.getAllComments();
-        return new ResponseEntity<>(comments, HttpStatus.OK);
-    }
+  /**
+   * Retrieves all comments.
+   *
+   * @return a ResponseEntity containing a list of CommentDTO objects and the HTTP status code
+   */
+  @GetMapping
+  @Operation(summary = "Get all comments")
+  public ResponseEntity<List<CommentDTO>> getAllComments() {
+    List<CommentDTO> comments = commentService.getAllComments();
+    return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get comment by id")
-    public ResponseEntity<Comment> getCommentById(@PathVariable("id") Long id) {
-        Optional<Comment> comment = commentService.getCommentById(id);
-        return comment.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+  /**
+   * Retrieves a comment by its ID.
+   *
+   * @param id the ID of the comment to retrieve
+   * @return a ResponseEntity containing the CommentDTO object and the HTTP status code
+   */
+  @GetMapping("/{id}")
+  @Operation(summary = "Get comment by id")
+  public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long id) {
+    CommentDTO comment = commentService.getCommentById(id);
+    return new ResponseEntity<>(comment, HttpStatus.OK);
+  }
 
-    @PostMapping
-    @Operation(summary = "Create comment")
-    public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
-        Comment createdComment = commentService.saveComment(comment);
-        return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
-    }
+  /**
+   * Creates a new comment.
+   *
+   * @param commentDTO the CommentDTO object representing the comment to be created
+   * @return a ResponseEntity containing the created CommentDTO object and the HTTP status code
+   */
+  @PostMapping
+  @Operation(summary = "Create comment")
+  public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO) {
+    CommentDTO createdComment = commentService.saveComment(commentDTO);
+    return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
+  }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Update comment")
-    public ResponseEntity<Comment> updateComment(@PathVariable("id") Long id, @RequestBody Comment comment) {
-        commentService.updateComment(id, comment);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+  /**
+   * Updates an existing comment.
+   *
+   * @param id          the ID of the comment to update
+   * @param commentDTO  the CommentDTO object representing the updated comment
+   * @return a ResponseEntity containing the updated CommentDTO object and the HTTP status code
+   */
+  @PutMapping("/{id}")
+  @Operation(summary = "Update comment")
+  public ResponseEntity<CommentDTO> updateComment(@PathVariable Long id, @RequestBody String content) {
+    CommentDTO updatedComment = new CommentDTO(content);
+    commentService.updateComment(id, updatedComment);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete comment")
-    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
-        commentService.deleteComment(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+  /**
+   * Deletes a comment by its ID.
+   *
+   * @param id the ID of the comment to delete
+   * @return a ResponseEntity with no content and the HTTP status code
+   */
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete comment")
+  public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+    commentService.deleteComment(id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 
-    @PutMapping("/{commentId}/users/{userId}")
-    @Operation(summary = "Set user to comment")
-    public ResponseEntity<Comment> setUserToComment(@PathVariable("commentId") Long commentId, @PathVariable("userId") Long userId) {
-        User user = new User();
-        user.setId(userId);
-        Comment updatedComment = commentService.addUserToComment(commentId, user);
-        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
-    }
 
-    @PutMapping("/{commentId}/quizzes/{quizId}")
-    @Operation(summary = "Set quiz to comment")
-    public ResponseEntity<Comment> setQuizToComment(@PathVariable("commentId") Long commentId, @PathVariable("quizId") Long quizId) {
-        Quiz quiz = new Quiz();
-        quiz.setId(quizId);
-        Comment updatedComment = commentService.addQuizToComment(commentId, quiz);
-        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
-    }
+  /*
+   * Gets comments by quiz id
+   * 
+   * @param quizId (Long) Id of the quiz to get comments for
+   * @return List of comments for the quiz
+   */
+  @GetMapping("/quiz/{quizId}")
+  @Operation(summary = "Get comments by quiz id")
+  public ResponseEntity<List<CommentDTO>> getCommentsByQuizId(@PathVariable Long quizId) {
+    List<CommentDTO> comments = commentService.getCommentsByQuizId(quizId);
+    return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
 
-    // Add other endpoints as needed
+  /*
+   * Gets comments by user id
+   * 
+   * @param userId (Long) Id of the user to get comments for
+   * @return List of comments for the user
+   */
+  @GetMapping("/user/{userId}")
+  @Operation(summary = "Get comments by user id")
+  public ResponseEntity<List<CommentDTO>> getCommentsByUserId(@PathVariable Long userId) {
+    List<CommentDTO> comments = commentService.getCommentsByUserId(userId);
+    return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
+
 }

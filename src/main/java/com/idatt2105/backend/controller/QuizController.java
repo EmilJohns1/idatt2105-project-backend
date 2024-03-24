@@ -1,6 +1,8 @@
 package com.idatt2105.backend.controller;
 
-import com.idatt2105.backend.model.Quiz;
+import com.idatt2105.backend.dto.QuizDTO;
+import com.idatt2105.backend.dto.QuizUpdateRequestDTO;
+import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.service.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/quizzes")
@@ -26,23 +29,23 @@ public class QuizController {
 
     @GetMapping
     @Operation(summary = "Get all quizzes")
-    public ResponseEntity<List<Quiz>> getAllQuizzes() {
-        List<Quiz> quizzes = quizService.getAllQuizzes();
+    public ResponseEntity<List<QuizDTO>> getAllQuizzes() {
+        List<QuizDTO> quizzes = quizService.getAllQuizzes();
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get quiz by id")
-    public ResponseEntity<Quiz> getQuizById(@PathVariable("id") Long id) {
-        Optional<Quiz> quiz = quizService.getQuizById(id);
+    public ResponseEntity<QuizDTO> getQuizById(@PathVariable("id") Long id) {
+        Optional<QuizDTO> quiz = quizService.getQuizById(id);
         return quiz.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @Operation(summary = "Create quiz")
-    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
-        Quiz createdQuiz = quizService.saveQuiz(quiz);
+    public ResponseEntity<QuizDTO> createQuiz(@RequestBody QuizDTO quizDTO) {
+        QuizDTO createdQuiz = quizService.save(quizDTO.toEntity());
         return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
     }
 
@@ -69,16 +72,17 @@ public class QuizController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update quiz")
-    public ResponseEntity<Quiz> updateQuiz(@PathVariable("id") Long id, @RequestBody Quiz quiz) {
-        quizService.updateQuiz(id, quiz);
+    public ResponseEntity<Void> updateQuiz(@PathVariable("id") Long id, @RequestBody QuizUpdateRequestDTO requestDTO) {
+        QuizDTO updatedQuiz = new QuizDTO(requestDTO.getTitle(), requestDTO.getDescription());
+        quizService.updateQuiz(id, updatedQuiz); 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{quizId}/users/{userId}")
-    @Operation(summary = "Edit users in quiz")
-    public ResponseEntity<Void> editUsersInQuiz(@PathVariable("quizId") Long quizId, @PathVariable("userId") Long userId) {
-        quizService.editUsersInQuiz(userId, quizId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/users/{quizId}")
+    @Operation(summary = "Get users by quiz id")
+    public ResponseEntity<Set<UserDTO>> getUsersByQuizId(@PathVariable("quizId") Long quizId) {
+        Set<UserDTO> users = quizService.getUsersByQuizId(quizId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
-}
+    
+  }
