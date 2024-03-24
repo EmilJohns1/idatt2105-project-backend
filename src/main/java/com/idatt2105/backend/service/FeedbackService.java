@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.dto.FeedbackDTO;
 import com.idatt2105.backend.model.Feedback;
+import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.FeedbackRepository;
 import com.idatt2105.backend.repository.UserRepository;
 
@@ -125,6 +126,8 @@ public class FeedbackService {
     feedback.setEmail(dto.getEmail());
     feedback.setFeedbackType(dto.getFeedbackType());
     feedback.setContent(dto.getContent());
+    User user = userRepository.findById(dto.getUserId()).orElseThrow();
+    feedback.setUser(user);
     // You may set the user here if needed
     return feedback;
   }
