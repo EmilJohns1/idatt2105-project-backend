@@ -1,6 +1,10 @@
-package com.idatt2105.backend.model;
+package com.idatt2105.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.idatt2105.backend.model.MultipleChoiceQuestion;
+import com.idatt2105.backend.model.Question;
+import com.idatt2105.backend.model.Tag;
+import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.util.InvalidQuestionTypeException;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
