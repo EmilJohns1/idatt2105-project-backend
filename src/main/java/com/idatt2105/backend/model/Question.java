@@ -43,6 +43,9 @@ public class Question {
   @Column(name = "category")
   private String category;
 
+  @Column(name = "points")
+  private int points;
+
   @ManyToOne
   @JoinColumn(name = "quiz_id", nullable = false)
   @JsonIgnore

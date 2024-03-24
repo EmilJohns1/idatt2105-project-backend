@@ -1,5 +1,6 @@
 package com.idatt2105.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,4 +57,8 @@ public class Quiz {
 
   @OneToMany(mappedBy = "quiz")
   private Set<Question> questions = new HashSet<>();
+
+  @OneToMany(mappedBy = "quiz")
+  @JsonIgnore
+  private Set<QuizAttempt> quizAttempts = new HashSet<>();
 }

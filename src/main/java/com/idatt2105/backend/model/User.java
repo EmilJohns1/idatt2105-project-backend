@@ -1,6 +1,7 @@
 package com.idatt2105.backend.model;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,6 +48,9 @@ public class User {
           inverseJoinColumns = @JoinColumn(name = "quiz_id", referencedColumnName = "id"))
   @JsonManagedReference
   private Set<Quiz> quizzes = new HashSet<>();
+
+  @OneToMany(mappedBy = "user")
+  Set<QuizAttempt> quizAttempts = new HashSet<>();
 
   public User (String username, String password) {
       this.username = username;
