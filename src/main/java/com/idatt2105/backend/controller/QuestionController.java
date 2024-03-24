@@ -125,4 +125,11 @@ public class QuestionController {
     questionService.addAlternative(alternative);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
+
+  @DeleteMapping("/delete/alternative/{id}")
+  @Operation(summary = "Delete an alternative")
+  public ResponseEntity<Void> deleteAlternative(@PathVariable Long id) {
+    questionService.deleteAlternative(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

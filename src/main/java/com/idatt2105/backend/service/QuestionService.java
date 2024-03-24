@@ -1,15 +1,18 @@
 package com.idatt2105.backend.service;
 
+import com.idatt2105.backend.model.Alternative;
 import com.idatt2105.backend.model.AlternativeDTO;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.repositories.QuizRepository;
+import com.idatt2105.backend.repository.AlternativeRepository;
 import com.idatt2105.backend.repository.QuestionRepository;
 import com.idatt2105.backend.util.InvalidIdException;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 public class QuestionService {
   private QuestionRepository questionRepository;
   private QuizRepository quizRepository;
+  private AlternativeRepository alternativeRepository;
 
   /**
    * Constructor for the QuestionService class.
@@ -29,9 +33,12 @@ public class QuestionService {
    * @param quizRepository (QuizRepository) Repository for handling operations on quizzes.
    */
   @Autowired
-  public QuestionService(QuestionRepository questionRepository, QuizRepository quizRepository) {
+  public QuestionService(QuestionRepository questionRepository,
+                         QuizRepository quizRepository,
+                         AlternativeRepository alternativeRepository) {
     this.questionRepository = questionRepository;
     this.quizRepository = quizRepository;
+    this.alternativeRepository = alternativeRepository;
   }
 
   /**
@@ -119,5 +126,14 @@ public class QuestionService {
     }
     question.addAlternative(alternativeDTO);
     questionRepository.save(question);
+  }
+
+  /**
+   * Deletes the alternative with the given id.
+   *
+   * @param id (Long) The id of the alternative to delete.
+   */
+  public void deleteAlternative(@Validated @NotNull Long id) {
+    alternativeRepository.deleteById(id);
   }
 }
