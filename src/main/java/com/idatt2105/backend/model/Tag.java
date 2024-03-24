@@ -13,6 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 
+/**
+ * Entity representing a tag.
+ * This class represents a tag that can be added to questions.
+ */
 @Entity
 @Data
 @Table(name = "tags")

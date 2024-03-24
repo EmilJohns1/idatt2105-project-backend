@@ -14,11 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * Service for handling operations related to questions.
+ */
 @Service
 public class QuestionService {
   private QuestionRepository questionRepository;
   private QuizRepository quizRepository;
 
+  /**
+   * Constructor for the QuestionService class.
+   *
+   * @param questionRepository (QuestionRepository) Repository for handling operations on questions.
+   * @param quizRepository (QuizRepository) Repository for handling operations on quizzes.
+   */
   @Autowired
   public QuestionService(QuestionRepository questionRepository, QuizRepository quizRepository) {
     this.questionRepository = questionRepository;
@@ -88,7 +97,7 @@ public class QuestionService {
    * Gets all questions in the quiz with the given id.
    *
    * @param quizId (Long) The id of the quiz to get questions from.
-   * @return (Iterable&lt;Question&gt;) All questions in the quiz with the given id.
+   * @return (List&lt;Question&gt;) All questions in the quiz with the given id.
    */
   public List<Question> getQuestionsByQuizId(@NotNull Long quizId) {
     return questionRepository.findQuestionsByQuizId(quizId);
@@ -98,7 +107,7 @@ public class QuestionService {
    * Adds an alternative to the question with the given id.
    *
    * @param alternativeDTO (AlternativeDTO) Data transfer object for the alternative.
-   * @throws InvalidIdException if the question with the given id is not found.
+   * @throws InvalidIdException if the question with the given id is not found or is not a multiple choice question.
    */
   public void addAlternative(@Validated @NotNull AlternativeDTO alternativeDTO) {
     Question q = getQuestionById(alternativeDTO.getQuestionId());

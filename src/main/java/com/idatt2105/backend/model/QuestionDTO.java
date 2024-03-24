@@ -6,7 +6,8 @@ import java.util.Set;
 import lombok.Data;
 
 /**
- * Data transfer object for questions.
+ * Data Transfer Object (DTO) for questions. Contains an enum for question types.
+
  */
 @Data
 public class QuestionDTO {
@@ -18,10 +19,18 @@ public class QuestionDTO {
     MULTIPLE_CHOICE("multiple_choice");
 
     private final String value;
+
     Type(String value) {
       this.value = value;
     }
 
+    /**
+     * Gets the enum from a string value.
+     *
+     * @param value (String) The string value to get the enum from.
+     * @return (Type) The enum corresponding to the value.
+     * @throws InvalidQuestionTypeException if the value is not a valid question type.
+     */
     @JsonCreator
     public static Type fromValue(String value) {
       return switch (value) {
@@ -36,6 +45,7 @@ public class QuestionDTO {
       return value;
     }
   }
+
   private Long quizId;
   private String questionText;
   private Type type;
@@ -45,9 +55,10 @@ public class QuestionDTO {
   private Set<Tag> tags;
 
   /**
-   * Gets a new instance of the class specified by the type field.
+   * Instantiates a Question object based on the type.
    *
-   * @return A new instance of the class specified by the type field.
+   * @return (Question) A new instance of the class specified by the type field.
+   * @see Question
    */
   public Question instantiateQuestion() {
     return switch (type) {

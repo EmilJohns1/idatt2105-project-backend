@@ -13,6 +13,9 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Objects;
 import lombok.Data;
 
+/**
+ * Entity representing an alternative to a Multiple Choice question.
+ */
 @Entity
 @Data
 @Table(name = "alternatives")

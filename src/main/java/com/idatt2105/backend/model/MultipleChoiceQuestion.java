@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 
+/**
+ * Entity representing a Multiple Choice question, with a number of alternatives.
+ */
 @Entity
 @Data
 @Table(name = "multiple_choice_questions")
@@ -16,7 +19,7 @@ public class MultipleChoiceQuestion extends Question {
   private Set<Alternative> alternatives = new HashSet<>();
 
   /**
-   * Adds a new alternative with the information from the parameter DTO.
+   * Adds an alternative to the Multiple Choice question.
    *
    * @param alternative (AlternativeDTO) The alternative to add.
    */

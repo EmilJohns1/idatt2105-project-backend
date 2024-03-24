@@ -18,6 +18,9 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 
+/**
+ * Entity representing a question for a quiz.
+ */
 @Entity
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)

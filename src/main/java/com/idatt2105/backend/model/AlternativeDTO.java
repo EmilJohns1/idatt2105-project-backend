@@ -2,6 +2,9 @@ package com.idatt2105.backend.model;
 
 import lombok.Data;
 
+/**
+ * Data Transfer Object (DTO) for Alternative.
+ */
 @Data
 public class AlternativeDTO {
   private Long id;
