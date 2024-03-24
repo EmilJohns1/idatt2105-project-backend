@@ -5,13 +5,17 @@ import java.time.LocalDateTime;
 import com.idatt2105.backend.model.Comment;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * A Data Transfer Object (DTO) class representing a comment. This class is used to transfer comment
  * data between different layers of the application.
  */
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
 public class CommentDTO {
   private String content;
