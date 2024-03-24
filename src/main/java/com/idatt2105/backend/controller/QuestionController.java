@@ -5,6 +5,7 @@ import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,15 +88,13 @@ public class QuestionController {
    * Updates a question.
    * This endpoint updates a question with the given id using the provided QuestionDTO object.
    *
-   * @param id       (Long) The id of the question to update.
    * @param question (QuestionDTO) The updated question.
    * @return (ResponseEntity < Question >) The updated question.
    */
-  @PostMapping("/update/{id}")
+  @PostMapping("/update")
   @Operation(summary = "Update a question")
-  public ResponseEntity<Question> updateQuestion(@PathVariable Long id,
-                                                 @RequestBody QuestionDTO question) {
-    Question q = questionService.updateQuestion(id, question);
+  public ResponseEntity<Question> updateQuestion(@RequestBody QuestionDTO question) {
+    Question q = questionService.updateQuestion(question);
     return new ResponseEntity<>(q, HttpStatus.OK);
   }
 
@@ -126,10 +126,33 @@ public class QuestionController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  /**
+   * Deletes the alternative with the given id.
+   *
+   * @param id (Long) The id of the alternative to delete.
+   * @return (ResponseEntity < Void >) Response entity with status OK.
+   */
   @DeleteMapping("/delete/alternative/{id}")
   @Operation(summary = "Delete an alternative")
   public ResponseEntity<Void> deleteAlternative(@PathVariable Long id) {
     questionService.deleteAlternative(id);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
+   * Updates the correct answer for a true or false question.
+   *
+   * @param questionId (Long) The id of the question to update.
+   * @param isCorrect (Boolean) The correct answer for the question.
+   * @return (ResponseEntity < Question >) The updated question.
+   */
+  @PatchMapping("/update/true-or-false/{questionId}&&{isCorrect}")
+  @Operation(summary = "Set the correct answer for true or false question")
+  public ResponseEntity<Question> updateTrueOrFalseQuestion(@PathVariable Long questionId, @PathVariable Boolean isCorrect) {
+    QuestionDTO question = new QuestionDTO();
+    question.setQuestionId(questionId);
+    question.setIsCorrect(isCorrect);
+    Question q = questionService.updateTrueOrFalseQuestion(question);
+    return new ResponseEntity<>(q, HttpStatus.OK);
   }
 }

@@ -53,6 +53,7 @@ public class QuestionDTO {
   private String mediaUrl;
   private String category;
   private Set<Tag> tags;
+  private Boolean isCorrect;
 
   /**
    * Instantiates a Question object based on the type.
