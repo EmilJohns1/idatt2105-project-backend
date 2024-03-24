@@ -8,7 +8,7 @@ import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
-import com.idatt2105.backend.repositories.QuizRepository;
+import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.AlternativeRepository;
 import com.idatt2105.backend.repository.QuestionRepository;
 import com.idatt2105.backend.repository.TagRepository;
