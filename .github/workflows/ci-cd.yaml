@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Install Docker Compose
-        run: 
-          |
+      - name: Install Docker
+        run: |
           sudo apt-get update
-          sudo apt-get install -y docker-compose
+          sudo apt-get install -y docker.io
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -27,6 +27,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
+
+      - name: Start Docker services
+        run: docker-compose up -d
+
+      - name: Wait for Docker services to start
+        run: sleep 30s
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
@@ -37,18 +43,8 @@ jobs:
       - name: Check code
         run: mvn clean process-sources
 
-      - name: Set up Docker
-        uses: docker/setup-docker@v3
-
-      - name: Build the Docker image
-        run: |
-          docker build . -t my-backend-image
-
-      - name: Run the database container
-        run: |
-          docker-compose up -d
-          docker-compose ps
-          docker-compose exec mysql bash -c 'mysql -v'
-
       - name: Run the application
         run: docker run -p 8080:8080 -e "SPRING_DATASOURCE_URL=jdbc:mysql://mysql_prosjekt:3306/prosjekt" my-backend-image
+
+      - name: Stop Docker services
+        run: docker-compose down
