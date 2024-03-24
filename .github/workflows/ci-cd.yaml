@@ -14,11 +14,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Docker Compose
-        uses: docker/setup-compose@v2
-
-      - name: Start database container
-        run: docker-compose up -d mysql
+      - name: Install Docker Compose
+        run: 
+          |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
       - name: Set up Java
         uses: actions/setup-java@v4
