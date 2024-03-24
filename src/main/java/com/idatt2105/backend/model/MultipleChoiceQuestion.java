@@ -24,11 +24,12 @@ public class MultipleChoiceQuestion extends Question {
    *
    * @param alternative (AlternativeDTO) The alternative to add.
    */
-  public void addAlternative(AlternativeDTO alternative) {
+  public Alternative addAlternative(AlternativeDTO alternative) {
     Alternative newAlternative = new Alternative();
     newAlternative.setAlternativeText(alternative.getAlternativeText());
     newAlternative.setCorrect(alternative.isCorrect());
     newAlternative.setQuestion(this);
     alternatives.add(newAlternative);
+    return newAlternative;
   }
 }

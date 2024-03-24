@@ -2,8 +2,13 @@ package com.idatt2105.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.idatt2105.backend.util.InvalidQuestionTypeException;
+import jakarta.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Data Transfer Object (DTO) for questions. Contains an enum for question types.
@@ -52,8 +57,26 @@ public class QuestionDTO {
   private Long questionId;
   private String mediaUrl;
   private String category;
-  private Set<Tag> tags;
+  private Set<Tag> tags = new HashSet<>();
   private Boolean isCorrect;
+
+  /**
+   * Adds all the tags from a given Collection.
+   *
+   * @param tags (Collection &lt;Tag&gt;) The tags to add.
+   */
+  public void addAllTags(@Validated @NotNull Collection<Tag> tags) {
+    this.tags.addAll(tags);
+  }
+
+  /**
+   * Gets the ids of all tags.
+   *
+   * @return The ids of all tags.
+   */
+  public List<Long> getAllTagIds() {
+    return tags.stream().map(Tag::getId).toList();
+  }
 
   /**
    * Instantiates a Question object based on the type.

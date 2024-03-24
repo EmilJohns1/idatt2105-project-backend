@@ -14,9 +14,12 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Entity representing a question for a quiz.
@@ -50,4 +53,12 @@ public class Question {
       joinColumns = @JoinColumn(name = "question_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private Set<Tag> tags = new HashSet<>();
+
+  public void addTags(@Validated @NotNull Collection<Tag> tags) {
+    this.tags.addAll(tags);
+  }
+
+  public void removeTags(@Validated @NotNull Collection<Tag> tags) {
+    this.tags.removeAll(tags);
+  }
 }

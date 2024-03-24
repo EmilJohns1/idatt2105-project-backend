@@ -6,14 +6,18 @@ import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Quiz;
+import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.repositories.QuizRepository;
 import com.idatt2105.backend.repository.AlternativeRepository;
 import com.idatt2105.backend.repository.QuestionRepository;
+import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.util.InvalidIdException;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -23,9 +27,10 @@ import org.springframework.validation.annotation.Validated;
  */
 @Service
 public class QuestionService {
-  private QuestionRepository questionRepository;
-  private QuizRepository quizRepository;
-  private AlternativeRepository alternativeRepository;
+  private final QuestionRepository questionRepository;
+  private final QuizRepository quizRepository;
+  private final AlternativeRepository alternativeRepository;
+  private final TagRepository tagRepository;
 
   /**
    * Constructor for the QuestionService class.
@@ -36,10 +41,12 @@ public class QuestionService {
   @Autowired
   public QuestionService(QuestionRepository questionRepository,
                          QuizRepository quizRepository,
-                         AlternativeRepository alternativeRepository) {
+                         AlternativeRepository alternativeRepository,
+                         TagRepository tagRepository) {
     this.questionRepository = questionRepository;
     this.quizRepository = quizRepository;
     this.alternativeRepository = alternativeRepository;
+    this.tagRepository = tagRepository;
   }
 
   /**
@@ -134,7 +141,7 @@ public class QuestionService {
    * @param alternativeDTO (AlternativeDTO) Data transfer object for the alternative.
    * @throws InvalidIdException if the question with the given id is not found or is not a multiple choice question.
    */
-  public void addAlternative(@Validated @NotNull AlternativeDTO alternativeDTO) {
+  public Alternative addAlternative(@Validated @NotNull AlternativeDTO alternativeDTO) {
     Question q = getQuestionById(alternativeDTO.getQuestionId());
     MultipleChoiceQuestion question;
     try {
@@ -142,8 +149,9 @@ public class QuestionService {
     } catch (ClassCastException e) {
       throw new InvalidIdException("Question with id " + alternativeDTO.getQuestionId() + " is not a multiple choice question");
     }
-    question.addAlternative(alternativeDTO);
+    Alternative alt = question.addAlternative(alternativeDTO);
     questionRepository.save(question);
+    return alt;
   }
 
   /**
@@ -153,5 +161,26 @@ public class QuestionService {
    */
   public void deleteAlternative(@Validated @NotNull Long id) {
     alternativeRepository.deleteById(id);
+  }
+
+  public Question addTags(@Validated @NotNull QuestionDTO dto) {
+    Question question = getQuestionById(dto.getQuestionId());
+
+    //Verify that all tags exist
+    List<Long> allIds = dto.getAllTagIds();
+    List<Tag> existingTags = tagRepository.findAllById(allIds);
+    allIds.forEach(id -> {
+      if (existingTags.stream().noneMatch(tag -> tag.getId().equals(id))) {
+        throw new InvalidIdException("Tag with id " + id + " not found");
+      }
+    });
+    question.addTags(dto.getTags());
+    return questionRepository.save(question);
+  }
+
+  public Question deleteTags(@Validated @NotNull QuestionDTO dto) {
+    Question question = getQuestionById(dto.getQuestionId());
+    question.removeTags(dto.getTags());
+    return questionRepository.save(question);
   }
 }
