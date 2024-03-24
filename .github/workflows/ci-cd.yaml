@@ -13,13 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -27,12 +20,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
-
-      - name: Start Docker services
-        run: docker-compose up -d
-
-      - name: Wait for Docker services to start
-        run: sleep 30s
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
@@ -42,9 +29,4 @@ jobs:
 
       - name: Check code
         run: mvn clean process-sources
-
-      - name: Run the application
-        run: docker run -p 8080:8080 -e "SPRING_DATASOURCE_URL=jdbc:mysql://mysql_prosjekt:3306/prosjekt" my-backend-image
-
-      - name: Stop Docker services
-        run: docker-compose down
+        
