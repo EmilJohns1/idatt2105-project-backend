@@ -124,6 +124,21 @@
           </java>
         </configuration>
         </plugin>
+				<plugin>
+					<groupId>com.cosium.code</groupId>
+					<artifactId>git-code-format-maven-plugin</artifactId>
+					<version>5.3</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>install-hooks</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
 		</plugins>
 	</build>
 
