@@ -1,6 +1,9 @@
 package com.idatt2105.backend.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,12 +13,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.Objects;
 import lombok.Data;
 
-/**
- * Entity representing an alternative to a Multiple Choice question.
- */
+/** Entity representing an alternative to a Multiple Choice question. */
 @Entity
 @Data
 @Table(name = "alternatives")
@@ -46,8 +46,8 @@ public class Alternative {
     }
     Alternative that = (Alternative) o;
     return isCorrect == that.isCorrect
-           && id.equals(that.id)
-           && alternativeText.equals(that.alternativeText);
+        && id.equals(that.id)
+        && alternativeText.equals(that.alternativeText);
   }
 
   @Override

@@ -14,31 +14,30 @@ import lombok.Setter;
 @Setter
 @Data
 public class UserDTO {
-    private Long id;
-    private String username;
-    private List<QuizDTO> quizzes;
+  private Long id;
+  private String username;
+  private List<QuizDTO> quizzes;
 
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-    }
+  public UserDTO(User user) {
+    this.id = user.getId();
+    this.username = user.getUsername();
+  }
 
-    public UserDTO(Long id, String username) {
-        this.id = id;
-        this.username = username;
-    }
+  public UserDTO(Long id, String username) {
+    this.id = id;
+    this.username = username;
+  }
 
-    public UserDTO(Long id, String username, List<QuizDTO> quizzes) {
-        this.id = id;
-        this.username = username;
-        this.quizzes = quizzes;
-    }
+  public UserDTO(Long id, String username, List<QuizDTO> quizzes) {
+    this.id = id;
+    this.username = username;
+    this.quizzes = quizzes;
+  }
 
-    public User toEntity() {
-        User user = new User();
-        user.setId(this.id);
-        user.setUsername(this.username);
-        return user;
-    }
-
+  public User toEntity() {
+    User user = new User();
+    user.setId(this.id);
+    user.setUsername(this.username);
+    return user;
+  }
 }

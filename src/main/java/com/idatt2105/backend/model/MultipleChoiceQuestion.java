@@ -1,17 +1,15 @@
 package com.idatt2105.backend.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 import lombok.Data;
 
-/**
- * Entity representing a Multiple Choice question, with a number of alternatives.
- */
+/** Entity representing a Multiple Choice question, with a number of alternatives. */
 @Entity
 @Data
 @Table(name = "multiple_choice_questions")

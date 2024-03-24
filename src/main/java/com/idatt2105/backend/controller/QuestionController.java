@@ -1,14 +1,7 @@
 package com.idatt2105.backend.controller;
 
-import com.idatt2105.backend.model.Alternative;
-import com.idatt2105.backend.model.AlternativeDTO;
-import com.idatt2105.backend.model.Question;
-import com.idatt2105.backend.model.QuestionDTO;
-import com.idatt2105.backend.model.Tag;
-import com.idatt2105.backend.service.QuestionService;
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +14,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.idatt2105.backend.model.Alternative;
+import com.idatt2105.backend.model.AlternativeDTO;
+import com.idatt2105.backend.model.Question;
+import com.idatt2105.backend.model.QuestionDTO;
+import com.idatt2105.backend.model.Tag;
+import com.idatt2105.backend.service.QuestionService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.NotNull;
+
 /**
- * Controller for handling questions.
- * This controller provides endpoints for CRUD operations on questions.
+ * Controller for handling questions. This controller provides endpoints for CRUD operations on
+ * questions.
  */
 @RestController
 @RequestMapping("/api/question")
-@io.swagger.v3.oas.annotations.tags.Tag(name = "Questions", description = "Operations related to questions")
+@io.swagger.v3.oas.annotations.tags.Tag(
+    name = "Questions",
+    description = "Operations related to questions")
 public class QuestionController {
   private final QuestionService questionService;
 
   /**
-   * Constructor for the QuestionController class.
-   * It initializes the questionService which will be used to perform operations on questions.
+   * Constructor for the QuestionController class. It initializes the questionService which will be
+   * used to perform operations on questions.
    *
    * @param questionService (QuestionService) Service for handling questions.
    */
@@ -43,8 +48,7 @@ public class QuestionController {
   }
 
   /**
-   * Adds a question to a quiz.
-   * This endpoint accepts a QuestionDTO object and adds it to a quiz.
+   * Adds a question to a quiz. This endpoint accepts a QuestionDTO object and adds it to a quiz.
    *
    * @param question (QuestionDTO) The question to add.
    * @return (ResponseEntity < Question >) The added question.
@@ -57,8 +61,7 @@ public class QuestionController {
   }
 
   /**
-   * Gets a question by id.
-   * This endpoint returns a question with the given id.
+   * Gets a question by id. This endpoint returns a question with the given id.
    *
    * @param id (Long) The id of the question to get.
    * @return (ResponseEntity < Question >) The question with the given id.
@@ -71,8 +74,7 @@ public class QuestionController {
   }
 
   /**
-   * Deletes a question.
-   * This endpoint deletes a question with the given id.
+   * Deletes a question. This endpoint deletes a question with the given id.
    *
    * @param id (Long) The id of the question to delete.
    * @return (ResponseEntity < Void >) Response entity with status OK.
@@ -85,8 +87,8 @@ public class QuestionController {
   }
 
   /**
-   * Updates a question.
-   * This endpoint updates a question with the given id using the provided QuestionDTO object.
+   * Updates a question. This endpoint updates a question with the given id using the provided
+   * QuestionDTO object.
    *
    * @param question (QuestionDTO) The updated question.
    * @return (ResponseEntity < Question >) The updated question.
@@ -99,8 +101,7 @@ public class QuestionController {
   }
 
   /**
-   * Gets all questions in a quiz.
-   * This endpoint returns all questions in a quiz with the given id.
+   * Gets all questions in a quiz. This endpoint returns all questions in a quiz with the given id.
    *
    * @param quizId (Long) The id of the quiz to get questions from.
    * @return (ResponseEntity < List < Question > >) List of questions in the quiz.
@@ -113,15 +114,16 @@ public class QuestionController {
   }
 
   /**
-   * Adds an alternative to a question.
-   * This endpoint accepts an AlternativeDTO object and adds it as an alternative to a question.
+   * Adds an alternative to a question. This endpoint accepts an AlternativeDTO object and adds it
+   * as an alternative to a question.
    *
    * @param alternative (AlternativeDTO) The alternative to add.
    * @return (ResponseEntity < Void >) Response entity with status CREATED.
    */
   @PostMapping("/add/alternative")
   @Operation(summary = "Add an alternative to a question")
-  public ResponseEntity<Alternative> addAlternative(@RequestBody @NotNull AlternativeDTO alternative) {
+  public ResponseEntity<Alternative> addAlternative(
+      @RequestBody @NotNull AlternativeDTO alternative) {
     Alternative alt = questionService.addAlternative(alternative);
     return new ResponseEntity<>(alt, HttpStatus.CREATED);
   }
@@ -148,7 +150,8 @@ public class QuestionController {
    */
   @PatchMapping("/update/true-or-false/{questionId}&&{isCorrect}")
   @Operation(summary = "Set the correct answer for true or false question")
-  public ResponseEntity<Question> updateTrueOrFalseQuestion(@PathVariable Long questionId, @PathVariable Boolean isCorrect) {
+  public ResponseEntity<Question> updateTrueOrFalseQuestion(
+      @PathVariable Long questionId, @PathVariable Boolean isCorrect) {
     QuestionDTO question = new QuestionDTO();
     question.setQuestionId(questionId);
     question.setIsCorrect(isCorrect);
@@ -158,7 +161,8 @@ public class QuestionController {
 
   @PatchMapping("/add/tags/{questionId}")
   @Operation(summary = "Adds one or more tags to a question")
-  public ResponseEntity<Question> addTags(@PathVariable Long questionId, @RequestBody List<Tag> tags) {
+  public ResponseEntity<Question> addTags(
+      @PathVariable Long questionId, @RequestBody List<Tag> tags) {
     QuestionDTO dto = new QuestionDTO();
     dto.setQuestionId(questionId);
     dto.addAllTags(tags);
@@ -168,7 +172,8 @@ public class QuestionController {
 
   @DeleteMapping("/delete/tags/{questionId}")
   @Operation(summary = "Deletes the given tags from a question")
-  public ResponseEntity<Question> deleteTags(@PathVariable Long questionId, @RequestBody List<Tag> tags) {
+  public ResponseEntity<Question> deleteTags(
+      @PathVariable Long questionId, @RequestBody List<Tag> tags) {
     QuestionDTO dto = new QuestionDTO();
     dto.setQuestionId(questionId);
     dto.addAllTags(tags);

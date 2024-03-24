@@ -1,24 +1,22 @@
 package com.idatt2105.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.idatt2105.backend.util.InvalidQuestionTypeException;
-import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import lombok.Data;
+
 import org.springframework.validation.annotation.Validated;
 
-/**
- * Data Transfer Object (DTO) for questions. Contains an enum for question types.
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.idatt2105.backend.util.InvalidQuestionTypeException;
 
- */
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+/** Data Transfer Object (DTO) for questions. Contains an enum for question types. */
 @Data
 public class QuestionDTO {
-  /**
-   * Enum for question types.
-   */
+  /** Enum for question types. */
   private enum Type {
     TRUE_OR_FALSE("true_or_false"),
     MULTIPLE_CHOICE("multiple_choice");

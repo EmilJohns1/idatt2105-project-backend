@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Represents a login request data transfer object.
- */
+/** Represents a login request data transfer object. */
 @Data
 @Getter
 @Setter

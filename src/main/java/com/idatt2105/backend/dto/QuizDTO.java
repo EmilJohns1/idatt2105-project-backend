@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Represents a Data Transfer Object (DTO) for a Quiz.
- * This class is used to transfer Quiz data between different layers of the application.
+ * Represents a Data Transfer Object (DTO) for a Quiz. This class is used to transfer Quiz data
+ * between different layers of the application.
  */
 @NoArgsConstructor
 @Getter
@@ -28,6 +28,7 @@ public class QuizDTO {
 
   /**
    * Constructs a QuizDTO object from a Quiz entity.
+   *
    * @param quiz The Quiz entity to construct the DTO from.
    */
   public QuizDTO(Quiz quiz) {
@@ -40,13 +41,19 @@ public class QuizDTO {
 
   /**
    * Constructs a QuizDTO object with the specified attributes.
+   *
    * @param id The ID of the quiz.
    * @param title The title of the quiz.
    * @param description The description of the quiz.
    * @param creationDate The creation date of the quiz.
    * @param lastModifiedDate The last modified date of the quiz.
    */
-  public QuizDTO(Long id, String title, String description, LocalDateTime creationDate, LocalDateTime lastModifiedDate) {
+  public QuizDTO(
+      Long id,
+      String title,
+      String description,
+      LocalDateTime creationDate,
+      LocalDateTime lastModifiedDate) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -56,6 +63,7 @@ public class QuizDTO {
 
   /**
    * Constructs a QuizDTO object with the specified attributes.
+   *
    * @param id The ID of the quiz.
    * @param title The title of the quiz.
    * @param description The description of the quiz.
@@ -63,7 +71,13 @@ public class QuizDTO {
    * @param lastModifiedDate The last modified date of the quiz.
    * @param userDTOs The set of UserDTOs associated with the quiz.
    */
-  public QuizDTO(Long id, String title, String description, LocalDateTime creationDate, LocalDateTime lastModifiedDate, Set<UserDTO> userDTOs) {
+  public QuizDTO(
+      Long id,
+      String title,
+      String description,
+      LocalDateTime creationDate,
+      LocalDateTime lastModifiedDate,
+      Set<UserDTO> userDTOs) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -74,6 +88,7 @@ public class QuizDTO {
 
   /**
    * Constructs a QuizDTO object with the specified attributes.
+   *
    * @param id The ID of the quiz.
    * @param title The title of the quiz.
    * @param description The description of the quiz.
@@ -97,6 +112,7 @@ public class QuizDTO {
 
   /**
    * Converts the QuizDTO object to a Quiz entity.
+   *
    * @return The Quiz entity.
    */
   public Quiz toEntity() {
