@@ -1,5 +1,6 @@
 package com.idatt2105.backend.model;
 
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,4 +53,7 @@ public class Quiz {
   @ManyToMany(mappedBy = "quizzes", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   @JsonBackReference
   private Set<User> users = new HashSet<>();
+
+  @OneToMany(mappedBy = "quiz")
+  private Set<Question> questions = new HashSet<>();
 }

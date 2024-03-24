@@ -5,15 +5,12 @@ import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.service.UserService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("/user")
-@Tag(name = "User", description = "Operations related to users")
+@RequestMapping("/api/user")
+@Tag(name = "Users", description = "Operations related to users")
 public class UserController {
   private final UserService userService;
 

@@ -1,5 +1,6 @@
 package com.idatt2105.backend.model;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +45,6 @@ public class User {
   @JoinTable(name = "user_quiz",
           joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
           inverseJoinColumns = @JoinColumn(name = "quiz_id", referencedColumnName = "id"))
-  
   @JsonManagedReference
   private Set<Quiz> quizzes = new HashSet<>();
 
