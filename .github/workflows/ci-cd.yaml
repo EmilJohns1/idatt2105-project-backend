@@ -14,6 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Install Docker Compose
         run: 
           |
@@ -36,5 +37,18 @@ jobs:
       - name: Check code
         run: mvn clean process-sources
 
-      - name: Stop database container
-        run: docker-compose down
+      - name: Set up Docker
+        uses: docker/setup-docker@v3
+
+      - name: Build the Docker image
+        run: |
+          docker build . -t my-backend-image
+
+      - name: Run the database container
+        run: |
+          docker-compose up -d
+          docker-compose ps
+          docker-compose exec mysql bash -c 'mysql -v'
+
+      - name: Run the application
+        run: docker run -p 8080:8080 -e "SPRING_DATASOURCE_URL=jdbc:mysql://mysql_prosjekt:3306/prosjekt" my-backend-image
