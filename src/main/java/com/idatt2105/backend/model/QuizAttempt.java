@@ -32,10 +32,7 @@ public class QuizAttempt {
   @JsonIgnore
   private User user;
 
-  @ManyToOne
-  @JoinColumn(name = "quiz_id", nullable = false)
-  @JsonIgnore
-  private Quiz quiz;
+  private Long quizId;
 
   @OneToMany(mappedBy = "quizAttempt")
   private Set<QuestionAttempt> questionAttempts = new HashSet<>();
