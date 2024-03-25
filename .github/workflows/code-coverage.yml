@@ -51,8 +51,13 @@ jobs:
         run: |
           pandoc -f html -t markdown -o coverage-report/README.md index.html
 
+      - name: Set Git identity
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
       - name: Push changes to coverage-report branch
         run: |
           git add coverage-report/README.md
           git commit -m "Update README with code coverage report"
-          git push origin coverage-report:coverage-report
+          git push origin gh-pages:coverage-report
