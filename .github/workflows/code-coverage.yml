@@ -44,6 +44,9 @@ jobs:
       - name: Install Pandoc
         run: sudo apt-get install -y pandoc
 
+      - name: Create coverage-report directory
+        run: mkdir -p coverage-report
+
       - name: Convert HTML to Markdown with Pandoc
         run: |
           pandoc -f html -t markdown -o coverage-report/README.md index.html
