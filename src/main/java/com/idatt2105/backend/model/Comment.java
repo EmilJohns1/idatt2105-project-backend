@@ -1,11 +1,5 @@
 package com.idatt2105.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -17,10 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * Represents a comment made by a user on a quiz.
- */
+/** Represents a comment made by a user on a quiz. */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -54,7 +51,7 @@ public class Comment {
 
   /**
    * Sets the ID of the user who made the comment.
-   * 
+   *
    * @param userId The ID of the user
    */
   public void setUserId(Long userId) {
@@ -64,7 +61,7 @@ public class Comment {
 
   /**
    * Sets the ID of the quiz that the comment is made on.
-   * 
+   *
    * @param quizId The ID of the quiz
    */
   public void setQuizId(Long quizId) {

@@ -1,12 +1,14 @@
 package com.idatt2105.backend.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.idatt2105.backend.model.AlternativeRecord;
 import com.idatt2105.backend.model.MultipleChoiceQuestionAttempt;
 import com.idatt2105.backend.model.QuestionAttempt;
 import com.idatt2105.backend.model.QuestionType;
 import com.idatt2105.backend.model.TrueOrFalseQuestionAttempt;
-import java.util.HashSet;
-import java.util.Set;
+
 import lombok.Data;
 
 @Data

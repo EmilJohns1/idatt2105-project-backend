@@ -1,6 +1,9 @@
 package com.idatt2105.backend.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -43,9 +45,10 @@ public class AlternativeRecord {
       return false;
     }
     AlternativeRecord that = (AlternativeRecord) o;
-    return wasCorrect == that.wasCorrect && wasSelected == that.wasSelected &&
-           Objects.equals(id, that.id) &&
-           Objects.equals(alternativeText, that.alternativeText);
+    return wasCorrect == that.wasCorrect
+        && wasSelected == that.wasSelected
+        && Objects.equals(id, that.id)
+        && Objects.equals(alternativeText, that.alternativeText);
   }
 
   @Override

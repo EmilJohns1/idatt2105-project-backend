@@ -3,9 +3,7 @@ package com.idatt2105.backend.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.idatt2105.backend.util.InvalidQuestionTypeException;
 
-/**
- * Enum for question types.
- */
+/** Enum for question types. */
 public enum QuestionType {
   TRUE_OR_FALSE("true_or_false"),
   MULTIPLE_CHOICE("multiple_choice");

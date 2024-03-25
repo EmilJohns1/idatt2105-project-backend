@@ -1,11 +1,7 @@
 package com.idatt2105.backend.controller;
 
-import com.idatt2105.backend.dto.QuizAttemptDTO;
-import com.idatt2105.backend.model.QuizAttempt;
-import com.idatt2105.backend.service.AttemptService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.idatt2105.backend.dto.QuizAttemptDTO;
+import com.idatt2105.backend.model.QuizAttempt;
+import com.idatt2105.backend.service.AttemptService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @Tag(name = "Attempts", description = "Operations related to attempts")
 @RequestMapping("/api/attempts")
@@ -24,7 +27,7 @@ public class AttemptController {
 
   @Autowired
   public AttemptController(AttemptService attemptService) {
-      this.attemptService = attemptService;
+    this.attemptService = attemptService;
   }
 
   @PostMapping("/add")

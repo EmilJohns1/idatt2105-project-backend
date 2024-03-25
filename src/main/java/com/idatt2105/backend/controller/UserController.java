@@ -1,16 +1,9 @@
 package com.idatt2105.backend.controller;
 
-import com.idatt2105.backend.dto.LoginRequestDTO;
-import com.idatt2105.backend.dto.QuizDTO;
-import com.idatt2105.backend.dto.UserDTO;
-import com.idatt2105.backend.model.User;
-import com.idatt2105.backend.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +14,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.idatt2105.backend.dto.LoginRequestDTO;
+import com.idatt2105.backend.dto.QuizDTO;
+import com.idatt2105.backend.dto.UserDTO;
+import com.idatt2105.backend.model.User;
+import com.idatt2105.backend.service.UserService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/user")
@@ -48,49 +49,50 @@ public class UserController {
     return new ResponseEntity<>(userDTOs, HttpStatus.OK);
   }
 
-  //TODO implement hashing of password and secure login
+  // TODO implement hashing of password and secure login
   /**
    * Registers a new user.
    *
-   * @param user (User) User to register.
+   * @param registrationRequest (LoginRequestDTO) User to register.
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @PostMapping("/register")
   @Operation(summary = "Register a new user")
-  public ResponseEntity<String> register(@RequestBody @Validated LoginRequestDTO registrationRequest) {
-      try {
-          User user = new User();
-          user.setUsername(registrationRequest.getUsername());
-          user.setPassword(registrationRequest.getPassword());
-          userService.addUser(user);
-          return ResponseEntity.ok("Registered successfully");
-      } catch (RuntimeException e) {
-          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-      }
+  public ResponseEntity<String> register(
+      @RequestBody @Validated LoginRequestDTO registrationRequest) {
+    try {
+      User user = new User();
+      user.setUsername(registrationRequest.getUsername());
+      user.setPassword(registrationRequest.getPassword());
+      userService.addUser(user);
+      return ResponseEntity.ok("Registered successfully");
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
   }
 
-  //TODO implement hashing of password and secure login
+  // TODO implement hashing of password and secure login
   /**
    * Logs in a user.
    *
-   * @param user (User) User to log in.
+   * @param loginRequest (LoginRequestDTO) User to log in.
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @PostMapping("/login")
   @Operation(summary = "Log in a user")
   public ResponseEntity<String> login(@RequestBody @Validated LoginRequestDTO loginRequest) {
-      try {
-          User user = new User();
-          user.setUsername(loginRequest.getUsername());
-          user.setPassword(loginRequest.getPassword());
-          userService.login(user);
-          return ResponseEntity.ok("Logged in successfully");
-      } catch (RuntimeException e) {
-          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-      }
+    try {
+      User user = new User();
+      user.setUsername(loginRequest.getUsername());
+      user.setPassword(loginRequest.getPassword());
+      userService.login(user);
+      return ResponseEntity.ok("Logged in successfully");
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
   }
 
-  //TODO implement 
+  // TODO implement
   /**
    * Updates a user.
    *
@@ -161,7 +163,7 @@ public class UserController {
 
   /**
    * Get user quizzes by user id.
-   * 
+   *
    * @param id (Long) Id of the user to get quizzes for.
    * @return ResponseEntity with the user's quizzes, or an ErrorResponse if an error occurs.
    */
@@ -175,7 +177,4 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptySet());
     }
   }
-  
-  
-
 }

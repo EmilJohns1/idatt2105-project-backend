@@ -1,32 +1,28 @@
 package com.idatt2105.backend.service;
 
-import com.idatt2105.backend.util.ExistingUserException;
-import com.idatt2105.backend.util.InvalidCredentialsException;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.idatt2105.backend.util.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
-import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
-import org.springframework.validation.annotation.Validated;
+import com.idatt2105.backend.util.ExistingUserException;
+import com.idatt2105.backend.util.InvalidCredentialsException;
+import com.idatt2105.backend.util.UserNotFoundException;
 
-/**
- * Service class for User entities. Handles business logic for User entities.
- */
+import jakarta.validation.constraints.NotNull;
+
+/** Service class for User entities. Handles business logic for User entities. */
 @Service
 public class UserService {
   private final UserRepository userRepository;
@@ -46,11 +42,11 @@ public class UserService {
     List<UserDTO> userDTOs = new ArrayList<>();
 
     for (User user : users) {
-        List<QuizDTO> quizDTOs = new ArrayList<>();
-        for (Quiz quiz : user.getQuizzes()) {
-            quizDTOs.add(new QuizDTO(quiz));
-        }
-        userDTOs.add(new UserDTO(user.getId(), user.getUsername(), quizDTOs));
+      List<QuizDTO> quizDTOs = new ArrayList<>();
+      for (Quiz quiz : user.getQuizzes()) {
+        quizDTOs.add(new QuizDTO(quiz));
+      }
+      userDTOs.add(new UserDTO(user.getId(), user.getUsername(), quizDTOs));
     }
     return userDTOs;
   }
@@ -63,16 +59,18 @@ public class UserService {
    * @throws UserNotFoundException If no user with the given id is found.
    */
   public Optional<UserDTO> getUserById(Long id) {
-    return userRepository.findById(id)
-      .map(user -> {
-        List<QuizDTO> quizDTOs = new ArrayList<>();
-        for (Quiz quiz : user.getQuizzes()) {
-          quizDTOs.add(new QuizDTO(quiz));
-        }
-        return new UserDTO(user.getId(), user.getUsername(), quizDTOs);
-      })
-      .or(() -> Optional.<UserDTO>empty());
-    }
+    return userRepository
+        .findById(id)
+        .map(
+            user -> {
+              List<QuizDTO> quizDTOs = new ArrayList<>();
+              for (Quiz quiz : user.getQuizzes()) {
+                quizDTOs.add(new QuizDTO(quiz));
+              }
+              return new UserDTO(user.getId(), user.getUsername(), quizDTOs);
+            })
+        .or(() -> Optional.<UserDTO>empty());
+  }
 
   /**
    * Adds a new user to the database.
@@ -83,7 +81,8 @@ public class UserService {
    */
   public UserDTO addUser(@Validated @NotNull User user) {
     if (userExists(user.getUsername())) {
-      throw new ExistingUserException("User with username " + user.getUsername() + " already exists");
+      throw new ExistingUserException(
+          "User with username " + user.getUsername() + " already exists");
     }
     User savedUser = userRepository.save(user);
     return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
@@ -111,7 +110,10 @@ public class UserService {
    * @throws UserNotFoundException If no user with the given id is found.
    */
   public UserDTO updateUser(Long id, @Validated @NotNull User user) {
-    User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+    User existingUser =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
     existingUser.setUsername(user.getUsername());
     existingUser.setPassword(user.getPassword());
     User updatedUser = userRepository.save(existingUser);
@@ -130,11 +132,13 @@ public class UserService {
    * @throws UserNotFoundException If no user with the given username is found.
    */
   public Optional<UserDTO> getUserByUsername(String username) {
-    return userRepository.findByUsername(username)
-        .map(user -> {
-          return new UserDTO(user.getId(), user.getUsername());
-        });
-    }
+    return userRepository
+        .findByUsername(username)
+        .map(
+            user -> {
+              return new UserDTO(user.getId(), user.getUsername());
+            });
+  }
 
   /**
    * Checks if a user with the given username exists.
@@ -168,7 +172,13 @@ public class UserService {
    * @throws UserNotFoundException If no user with the given username is found.
    */
   private boolean validateCredentials(@Validated @NotNull User user) {
-    User existingUser = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFoundException("User with username " + user.getUsername() + " not found"));
+    User existingUser =
+        userRepository
+            .findByUsername(user.getUsername())
+            .orElseThrow(
+                () ->
+                    new UserNotFoundException(
+                        "User with username " + user.getUsername() + " not found"));
     return existingUser.getPassword().equals(user.getPassword());
   }
 
@@ -178,10 +188,13 @@ public class UserService {
    * @return Set of quizzes created by the user.
    */
   public Set<QuizDTO> getQuizzesByUserId(Long userId) {
-    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
     Set<QuizDTO> quizDTOs = new HashSet<>();
     for (Quiz quiz : user.getQuizzes()) {
-        quizDTOs.add(new QuizDTO(quiz));
+      quizDTOs.add(new QuizDTO(quiz));
     }
     return quizDTOs;
   }
@@ -196,7 +209,7 @@ public class UserService {
     User savedUser = userRepository.save(user);
     return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
   }
-  
+
   /**
    * Gets a user by id.
    *
@@ -204,7 +217,8 @@ public class UserService {
    * @return Optional of the user with the given id.
    */
   public Optional<UserDTO> getUserByIdDTO(Long id) {
-    return userRepository.findById(id)
-            .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()));
+    return userRepository
+        .findById(id)
+        .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()));
   }
 }

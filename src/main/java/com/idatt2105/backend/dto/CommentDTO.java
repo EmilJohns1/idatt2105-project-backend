@@ -1,16 +1,21 @@
 package com.idatt2105.backend.dto;
 
-import com.idatt2105.backend.model.Comment;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
+import com.idatt2105.backend.model.Comment;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
- * A Data Transfer Object (DTO) class representing a comment.
- * This class is used to transfer comment data between different layers of the application.
+ * A Data Transfer Object (DTO) class representing a comment. This class is used to transfer comment
+ * data between different layers of the application.
  */
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
 public class CommentDTO {
   private String content;
@@ -34,6 +39,7 @@ public class CommentDTO {
 
   /**
    * Constructs a CommentDTO object with the specified attributes.
+   *
    * @param content The content of the comment.
    * @param userId The ID of the user who made the comment.
    * @param quizId The ID of the quiz the comment is made on.
@@ -46,6 +52,7 @@ public class CommentDTO {
 
   /**
    * Constructs a CommentDTO object with the specified attributes.
+   *
    * @param content The content of the comment.
    */
   public CommentDTO(String content) {
@@ -62,5 +69,5 @@ public class CommentDTO {
     comment.setCreationDate(this.creationDate);
     comment.setLastModifiedDate(this.lastModifiedDate);
     return comment;
-  } 
+  }
 }
