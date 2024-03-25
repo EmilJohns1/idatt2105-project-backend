@@ -36,14 +36,20 @@ jobs:
           publish_branch: gh-pages
           permalink_path: coverage-report/index.html
 
-      - name: Convert HTML to Markdown
-        uses: mike-engel/jekyll-converter-action@v2
-        with:
-          html_files: 'target/site/jacoco/index.html'
-
-      - name: Update README.md in main branch
+      - name: Checkout gh-pages branch
         run: |
-          echo "$(<target/site/jacoco/index.md)" > README.md
-          git add README.md
+          git fetch
+          git checkout gh-pages
+
+      - name: Install Pandoc
+        run: sudo apt-get install -y pandoc
+
+      - name: Convert HTML to Markdown with Pandoc
+        run: |
+          pandoc -f html -t markdown -o coverage-report/README.md index.html
+
+      - name: Push changes to coverage-report branch
+        run: |
+          git add coverage-report/README.md
           git commit -m "Update README with code coverage report"
-          git push origin main
+          git push origin coverage-report:coverage-report
