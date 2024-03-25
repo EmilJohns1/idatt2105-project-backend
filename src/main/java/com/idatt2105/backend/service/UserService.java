@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -26,10 +28,12 @@ import jakarta.validation.constraints.NotNull;
 @Service
 public class UserService {
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
+    this.passwordEncoder = new BCryptPasswordEncoder();
   }
 
   /**
@@ -79,12 +83,17 @@ public class UserService {
    * @return The added user.
    * @throws ExistingUserException If a user with the same username already exists.
    */
-  public UserDTO addUser(@Validated @NotNull User user) {
+  public UserDTO addUser(User user) {
     if (userExists(user.getUsername())) {
       throw new ExistingUserException(
           "User with username " + user.getUsername() + " already exists");
     }
+    String hashedPassword = passwordEncoder.encode(user.getPassword());
+    user.setPassword(hashedPassword);
     User savedUser = userRepository.save(user);
+    if (savedUser == null) {
+      throw new RuntimeException("Failed to save user");
+    }
     return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
   }
 
@@ -156,12 +165,15 @@ public class UserService {
    * @param user (User) The user to log in.
    * @return A token for future authentication.
    */
-  public String login(@Validated @NotNull User user) {
-    if (validateCredentials(user)) {
-      return "Token";
-    } else {
-      throw new InvalidCredentialsException("Invalid user credentials.");
+  public String login(User user) {
+    Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
+    if (optionalUser.isPresent()) {
+      User existingUser = optionalUser.get();
+      if (passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+        return "Token";
+      }
     }
+    throw new InvalidCredentialsException("Invalid user credentials.");
   }
 
   /**
@@ -179,7 +191,8 @@ public class UserService {
                 () ->
                     new UserNotFoundException(
                         "User with username " + user.getUsername() + " not found"));
-    return existingUser.getPassword().equals(user.getPassword());
+    // Use the password encoder to verify the password
+    return passwordEncoder.matches(user.getPassword(), existingUser.getPassword());
   }
 
   /*
@@ -206,6 +219,8 @@ public class UserService {
    * @return The saved user.
    */
   public UserDTO save(User user) {
+    String hashedPassword = passwordEncoder.encode(user.getPassword());
+    user.setPassword(hashedPassword);
     User savedUser = userRepository.save(user);
     return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
   }
