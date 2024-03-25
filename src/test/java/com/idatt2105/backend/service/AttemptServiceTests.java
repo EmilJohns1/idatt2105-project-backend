@@ -98,6 +98,16 @@ class AttemptServiceTests {
     assertThrows(InvalidIdException.class, () -> attemptService.getAllAttemptsForUser(1L));
   }
 
+  @Test
+  void addQuizAttemptWithNullAsParameterThrowsException() {
+    assertThrows(IllegalArgumentException.class, () -> attemptService.addQuizAttempt(null));
+  }
+
+  @Test
+  void getAllAttemptsForUserWithNullAsParameterThrowsException() {
+    assertThrows(InvalidIdException.class, () -> attemptService.getAllAttemptsForUser(null));
+  }
+
   @Nested
   class AttemptParsingTests {
     private QuizAttemptDTO input;

@@ -30,11 +30,17 @@ public class AttemptService {
   }
 
   public QuizAttempt addQuizAttempt(QuizAttemptDTO quizAttemptDTO) {
+    if (quizAttemptDTO == null) {
+      throw new IllegalArgumentException("Quiz attempt cannot be null");
+    }
     QuizAttempt quizAttempt = parseQuizAttemptDTO(quizAttemptDTO);
     return quizAttemptRepository.save(quizAttempt);
   }
 
   public Collection<QuizAttempt> getAllAttemptsForUser(Long userId) {
+    if (userId == null) {
+      throw new InvalidIdException("User id cannot be null");
+    }
     if (!userRepository.existsById(userId)) {
       throw new InvalidIdException("User with id " + userId + " not found");
     }
