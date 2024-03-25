@@ -36,20 +36,12 @@ jobs:
           publish_branch: gh-pages
           permalink_path: coverage-report/index.html
 
-      - name: Checkout gh-pages branch
-        run: |
-          git fetch
-          git checkout gh-pages
-
       - name: Install Pandoc
         run: sudo apt-get install -y pandoc
 
-      - name: Create coverage-report directory
-        run: mkdir -p coverage-report
-
       - name: Convert HTML to Markdown with Pandoc
         run: |
-          pandoc -f html -t markdown -o coverage-report/README.md index.html
+          pandoc -f html -t markdown -o README.md index.html
 
       - name: Set Git identity
         run: |
@@ -57,17 +49,14 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config pull.rebase true
 
-      - name: Switch to coverage-report branch
-        run: git checkout --track origin/coverage-report
-
       - name: Fetch changes from remote gh-pages branch
         run: git fetch origin gh-pages
 
       - name: Merge changes from gh-pages branch
         run: git pull origin gh-pages
 
-      - name: Push changes to coverage-report branch
+      - name: Push changes to gh-pages branch
         run: |
-          git add coverage-report/README.md
+          git add README.md
           git commit -m "Update README with code coverage report"
-          git push origin coverage-report
+          git push origin gh-pages
