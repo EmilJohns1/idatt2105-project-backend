@@ -33,3 +33,21 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/site/jacoco
+
+      - name: Clone Wiki Repository
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/1Cezzo/idatt2105-project-backend.wiki.git
+          path: wiki
+
+      - name: Copy Coverage Report to Wiki
+        run: cp -r ./target/site/jacoco/* ./wiki/
+
+      - name: Commit and Push Changes
+        run: |
+          cd ./wiki
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add .
+          git commit -m "Update coverage report"
+          git push origin master
