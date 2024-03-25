@@ -22,6 +22,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/** Represents a user. */
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -52,18 +53,37 @@ public class User {
   @OneToMany(mappedBy = "user")
   Set<QuizAttempt> quizAttempts = new HashSet<>();
 
+  /**
+   * Constructor for User with username and password.
+   *
+   * @param username the username of the user
+   * @param password the password of the user
+   */
   public User(String username, String password) {
     this.username = username;
     this.password = password;
   }
 
+  /**
+   * Constructor for User with id and username.
+   *
+   * @param id the id of the user
+   * @param username the username of the user
+   */
   public User(Long id, String username) {
     this.id = id;
     this.username = username;
   }
 
+  /**
+   * Add a quiz to the user.
+   *
+   * @param quiz the quiz to add
+   */
   public void addQuiz(Quiz quiz) {
-    this.quizzes.add(quiz);
-    quiz.getUsers().add(this);
+    if (quiz != null) {
+      this.quizzes.add(quiz);
+      quiz.getUsers().add(this);
+    }
   }
 }
