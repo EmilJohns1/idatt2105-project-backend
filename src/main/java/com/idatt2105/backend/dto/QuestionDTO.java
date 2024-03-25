@@ -3,9 +3,8 @@ package com.idatt2105.backend.dto;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-
-import org.springframework.validation.annotation.Validated;
 
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
@@ -15,6 +14,7 @@ import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.util.NoNullElements;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /** Data Transfer Object (DTO) for questions. Contains an enum for question types. */
 @Data
@@ -25,7 +25,9 @@ public class QuestionDTO {
   private Long questionId;
   private String mediaUrl;
   private String category;
-  private Set<Tag> tags = new HashSet<>();
+  @NoNullElements private Set<Tag> tags = new HashSet<>();
+
+  @Accessors(fluent = true)
   private Boolean isCorrect;
 
   /**
@@ -33,8 +35,8 @@ public class QuestionDTO {
    *
    * @param tags (Collection &lt;Tag&gt;) The tags to add.
    */
-  public void addAllTags(@Validated @NoNullElements Collection<Tag> tags) {
-    this.tags.addAll(tags);
+  public void addAllTags(Collection<Tag> tags) {
+    tags.stream().filter(Objects::nonNull).forEach(this.tags::add);
   }
 
   /**

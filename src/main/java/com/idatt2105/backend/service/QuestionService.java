@@ -55,7 +55,14 @@ public class QuestionService {
    * @return (Question) The added question.
    * @throws InvalidIdException if the quiz with the given id is not found.
    */
-  public Question addQuestion(@Validated @NotNull QuestionDTO questionDTO) {
+  public Question addQuestion(QuestionDTO questionDTO) {
+    if (questionDTO == null) {
+      throw new IllegalArgumentException("Question parameter cannot be null.");
+    }
+    if (questionDTO.getQuizId() == null) {
+      throw new InvalidIdException("Quiz id cannot be null.");
+    }
+
     Quiz quiz =
         quizRepository
             .findById(questionDTO.getQuizId())
@@ -128,7 +135,7 @@ public class QuestionService {
       throw new InvalidIdException(
           "Question with id " + questionDTO.getQuestionId() + " is not a true or false question");
     }
-    trueOrFalseQuestion.setCorrectAnswer(questionDTO.getIsCorrect());
+    trueOrFalseQuestion.setCorrectAnswer(questionDTO.isCorrect());
     return questionRepository.save(trueOrFalseQuestion);
   }
 

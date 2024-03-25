@@ -22,7 +22,6 @@ import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.service.QuestionService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Controller for handling questions. This controller provides endpoints for CRUD operations on
@@ -55,7 +54,7 @@ public class QuestionController {
    */
   @PostMapping("/add")
   @Operation(summary = "Add a question to a quiz")
-  public ResponseEntity<Question> addQuestion(@RequestBody @NotNull QuestionDTO question) {
+  public ResponseEntity<Question> addQuestion(@RequestBody QuestionDTO question) {
     Question q = questionService.addQuestion(question);
     return new ResponseEntity<>(q, HttpStatus.CREATED);
   }
@@ -122,8 +121,7 @@ public class QuestionController {
    */
   @PostMapping("/add/alternative")
   @Operation(summary = "Add an alternative to a question")
-  public ResponseEntity<Alternative> addAlternative(
-      @RequestBody @NotNull AlternativeDTO alternative) {
+  public ResponseEntity<Alternative> addAlternative(@RequestBody AlternativeDTO alternative) {
     Alternative alt = questionService.addAlternative(alternative);
     return new ResponseEntity<>(alt, HttpStatus.CREATED);
   }
@@ -154,7 +152,7 @@ public class QuestionController {
       @PathVariable Long questionId, @PathVariable Boolean isCorrect) {
     QuestionDTO question = new QuestionDTO();
     question.setQuestionId(questionId);
-    question.setIsCorrect(isCorrect);
+    question.isCorrect(isCorrect);
     Question q = questionService.updateTrueOrFalseQuestion(question);
     return new ResponseEntity<>(q, HttpStatus.OK);
   }

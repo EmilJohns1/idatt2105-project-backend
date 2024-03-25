@@ -9,11 +9,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idatt2105.backend.dto.QuizAttemptDTO;
 import com.idatt2105.backend.model.QuizAttempt;
 import com.idatt2105.backend.service.AttemptService;
 
+import static com.idatt2105.backend.util.TestUtils.asJsonString;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -59,13 +59,5 @@ class AttemptControllerTests {
         .perform(get("/api/attempts/all/1"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value(1));
-  }
-
-  private static String asJsonString(final Object obj) {
-    try {
-      return new ObjectMapper().writeValueAsString(obj);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 }

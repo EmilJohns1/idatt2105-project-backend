@@ -18,7 +18,6 @@ import lombok.experimental.Accessors;
 @Entity
 @Data
 @NoArgsConstructor
-@Accessors(fluent = true)
 public class AlternativeRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +27,11 @@ public class AlternativeRecord {
   private String alternativeText;
 
   @Column(name = "was_correct", nullable = false)
+  @Accessors(fluent = true)
   private boolean wasCorrect;
 
   @Column(name = "was_selected", nullable = false)
+  @Accessors(fluent = true)
   private boolean wasSelected;
 
   @ManyToOne
