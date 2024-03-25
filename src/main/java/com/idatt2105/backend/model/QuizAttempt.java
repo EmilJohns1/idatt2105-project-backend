@@ -1,6 +1,7 @@
 package com.idatt2105.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +35,6 @@ public class QuizAttempt {
 
   private Long quizId;
 
-  @OneToMany(mappedBy = "quizAttempt")
+  @OneToMany(mappedBy = "quizAttempt", cascade = CascadeType.ALL)
   private Set<QuestionAttempt> questionAttempts = new HashSet<>();
 }

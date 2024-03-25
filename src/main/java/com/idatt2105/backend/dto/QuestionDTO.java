@@ -5,7 +5,7 @@ import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.QuestionType;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
-import jakarta.validation.constraints.NotNull;
+import com.idatt2105.backend.util.NoNullElements;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +33,7 @@ public class QuestionDTO {
    *
    * @param tags (Collection &lt;Tag&gt;) The tags to add.
    */
-  public void addAllTags(@Validated @NotNull Collection<Tag> tags) {
+  public void addAllTags(@Validated @NoNullElements Collection<Tag> tags) {
     this.tags.addAll(tags);
   }
 

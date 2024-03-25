@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
@@ -58,7 +59,7 @@ public class Question {
   private Set<Tag> tags = new HashSet<>();
 
   public void addTags(@Validated @NotNull Collection<Tag> tags) {
-    this.tags.addAll(tags);
+    tags.stream().filter(Objects::nonNull).forEach(this.tags::add);
   }
 
   public void removeTags(@Validated @NotNull Collection<Tag> tags) {

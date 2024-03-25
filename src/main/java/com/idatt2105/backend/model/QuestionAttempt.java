@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -24,11 +25,11 @@ public class QuestionAttempt {
 
   @Column(name = "question_text")
   private String questionText;
-
   private String mediaUrl;
   private String category;
 
   @ManyToOne
+  @JoinColumn(name = "quiz_attempt_id", nullable = false)
   @JsonIgnore
   private QuizAttempt quizAttempt;
 }

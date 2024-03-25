@@ -57,8 +57,4 @@ public class Quiz {
 
   @OneToMany(mappedBy = "quiz")
   private Set<Question> questions = new HashSet<>();
-
-  @OneToMany(mappedBy = "quiz")
-  @JsonIgnore
-  private Set<QuizAttempt> quizAttempts = new HashSet<>();
 }

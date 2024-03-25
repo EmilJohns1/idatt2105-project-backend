@@ -1,6 +1,7 @@
 package com.idatt2105.backend.model;
 
 import com.idatt2105.backend.dto.AlternativeDTO;
+import com.idatt2105.backend.util.NoNullElements;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -17,6 +18,7 @@ import lombok.Data;
 @Table(name = "multiple_choice_questions")
 public class MultipleChoiceQuestion extends Question {
   @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+  @NoNullElements
   private Set<Alternative> alternatives = new HashSet<>();
 
   /**
