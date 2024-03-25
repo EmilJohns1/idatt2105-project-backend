@@ -33,21 +33,17 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/site/jacoco
+          publish_branch: gh-pages
+          permalink_path: coverage-report/index.html
 
-      - name: Clone Wiki Repository
-        uses: actions/checkout@v2
+      - name: Convert HTML to Markdown
+        uses: jaredly/pagedown@master
         with:
-          repository: ${{ github.repository }}
-          path: wiki
+          files: 'target/site/jacoco/index.html'
 
-      - name: Copy Coverage Report to Wiki
-        run: cp -r ./target/site/jacoco/* ./wiki/
-
-      - name: Commit and Push Changes
+      - name: Update README.md in main branch
         run: |
-          cd ./wiki
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git add .
-          git commit -m "Update coverage report"
-          git push origin wiki
+          echo "$(<target/site/jacoco/index.md)" > README.md
+          git add README.md
+          git commit -m "Update README with code coverage report"
+          git push origin coverage-report
