@@ -1,4 +1,4 @@
-package com.idatt2105.backend.model;
+package com.idatt2105.backend.dto;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -7,51 +7,21 @@ import java.util.Set;
 
 import org.springframework.validation.annotation.Validated;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.idatt2105.backend.util.InvalidQuestionTypeException;
+import com.idatt2105.backend.model.MultipleChoiceQuestion;
+import com.idatt2105.backend.model.Question;
+import com.idatt2105.backend.model.QuestionType;
+import com.idatt2105.backend.model.Tag;
+import com.idatt2105.backend.model.TrueOrFalseQuestion;
+import com.idatt2105.backend.util.NoNullElements;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /** Data Transfer Object (DTO) for questions. Contains an enum for question types. */
 @Data
 public class QuestionDTO {
-  /** Enum for question types. */
-  private enum Type {
-    TRUE_OR_FALSE("true_or_false"),
-    MULTIPLE_CHOICE("multiple_choice");
-
-    private final String value;
-
-    Type(String value) {
-      this.value = value;
-    }
-
-    /**
-     * Gets the enum from a string value.
-     *
-     * @param value (String) The string value to get the enum from.
-     * @return (Type) The enum corresponding to the value.
-     * @throws InvalidQuestionTypeException if the value is not a valid question type.
-     */
-    @JsonCreator
-    public static Type fromValue(String value) {
-      return switch (value) {
-        case "true_or_false" -> TRUE_OR_FALSE;
-        case "multiple_choice" -> MULTIPLE_CHOICE;
-        default -> throw new InvalidQuestionTypeException(value);
-      };
-    }
-
-    @Override
-    public String toString() {
-      return value;
-    }
-  }
-
   private Long quizId;
   private String questionText;
-  private Type type;
+  private QuestionType type;
   private Long questionId;
   private String mediaUrl;
   private String category;
@@ -63,7 +33,7 @@ public class QuestionDTO {
    *
    * @param tags (Collection &lt;Tag&gt;) The tags to add.
    */
-  public void addAllTags(@Validated @NotNull Collection<Tag> tags) {
+  public void addAllTags(@Validated @NoNullElements Collection<Tag> tags) {
     this.tags.addAll(tags);
   }
 

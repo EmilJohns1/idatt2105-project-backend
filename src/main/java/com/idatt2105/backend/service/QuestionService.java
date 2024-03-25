@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.idatt2105.backend.dto.AlternativeDTO;
+import com.idatt2105.backend.dto.QuestionDTO;
 import com.idatt2105.backend.model.Alternative;
-import com.idatt2105.backend.model.AlternativeDTO;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
-import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;

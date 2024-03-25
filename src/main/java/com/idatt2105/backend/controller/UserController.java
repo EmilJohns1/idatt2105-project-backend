@@ -53,7 +53,7 @@ public class UserController {
   /**
    * Registers a new user.
    *
-   * @param user (User) User to register.
+   * @param registrationRequest (LoginRequestDTO) User to register.
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @PostMapping("/register")
@@ -75,7 +75,7 @@ public class UserController {
   /**
    * Logs in a user.
    *
-   * @param user (User) User to log in.
+   * @param loginRequest (LoginRequestDTO) User to log in.
    * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
    */
   @PostMapping("/login")

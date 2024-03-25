@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.idatt2105.backend.dto.AlternativeDTO;
+import com.idatt2105.backend.dto.QuestionDTO;
 import com.idatt2105.backend.model.Alternative;
-import com.idatt2105.backend.model.AlternativeDTO;
 import com.idatt2105.backend.model.Question;
-import com.idatt2105.backend.model.QuestionDTO;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.service.QuestionService;
 

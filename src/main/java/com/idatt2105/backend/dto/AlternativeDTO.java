@@ -1,4 +1,4 @@
-package com.idatt2105.backend.model;
+package com.idatt2105.backend.dto;
 
 import lombok.Data;
 

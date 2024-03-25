@@ -2,6 +2,7 @@ package com.idatt2105.backend.model;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +45,9 @@ public class Question {
   @Column(name = "category")
   private String category;
 
+  @Column(name = "points")
+  private int points;
+
   @ManyToOne
   @JoinColumn(name = "quiz_id", nullable = false)
   @JsonIgnore
@@ -57,7 +61,7 @@ public class Question {
   private Set<Tag> tags = new HashSet<>();
 
   public void addTags(@Validated @NotNull Collection<Tag> tags) {
-    this.tags.addAll(tags);
+    tags.stream().filter(Objects::nonNull).forEach(this.tags::add);
   }
 
   public void removeTags(@Validated @NotNull Collection<Tag> tags) {
