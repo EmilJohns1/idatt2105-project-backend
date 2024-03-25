@@ -57,7 +57,7 @@ jobs:
           git config --global user.name "GitHub Actions"
 
       - name: Switch to coverage-report branch
-        run: git checkout coverage-report
+        run: git checkout --track origin/coverage-report
 
       - name: Fetch changes from remote gh-pages branch
         run: git fetch origin gh-pages
