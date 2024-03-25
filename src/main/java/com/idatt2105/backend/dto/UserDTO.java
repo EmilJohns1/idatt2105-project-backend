@@ -9,6 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object for User entities. This class is used to transfer User data between the
+ * frontend and the backend.
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -18,22 +22,34 @@ public class UserDTO {
   private String username;
   private List<QuizDTO> quizzes;
 
+  /*
+   * Constructor for UserDTO with User entity.
+   */
   public UserDTO(User user) {
     this.id = user.getId();
     this.username = user.getUsername();
   }
 
+  /*
+   * Constructor for UserDTO with parameters.
+   */
   public UserDTO(Long id, String username) {
     this.id = id;
     this.username = username;
   }
 
+  /*
+   * Constructor for UserDTO with parameters.
+   */
   public UserDTO(Long id, String username, List<QuizDTO> quizzes) {
     this.id = id;
     this.username = username;
     this.quizzes = quizzes;
   }
 
+  /*
+   * Convert UserDTO to User entity.
+   */
   public User toEntity() {
     User user = new User();
     user.setId(this.id);
