@@ -13,7 +13,6 @@ import com.idatt2105.backend.model.QuestionAttempt;
 import com.idatt2105.backend.model.QuizAttempt;
 import com.idatt2105.backend.model.TrueOrFalseQuestionAttempt;
 import com.idatt2105.backend.repository.QuizAttemptRepository;
-import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import com.idatt2105.backend.util.InvalidIdException;
 import com.idatt2105.backend.util.InvalidQuestionTypeException;
@@ -21,16 +20,12 @@ import com.idatt2105.backend.util.InvalidQuestionTypeException;
 @Service
 public class AttemptService {
   private final UserRepository userRepository;
-  private final QuizRepository quizRepository;
   private final QuizAttemptRepository quizAttemptRepository;
 
   @Autowired
   public AttemptService(
-      UserRepository userRepository,
-      QuizRepository quizRepository,
-      QuizAttemptRepository quizAttemptRepository) {
+      UserRepository userRepository, QuizAttemptRepository quizAttemptRepository) {
     this.userRepository = userRepository;
-    this.quizRepository = quizRepository;
     this.quizAttemptRepository = quizAttemptRepository;
   }
 
@@ -40,6 +35,9 @@ public class AttemptService {
   }
 
   public Collection<QuizAttempt> getAllAttemptsForUser(Long userId) {
+    if (!userRepository.existsById(userId)) {
+      throw new InvalidIdException("User with id " + userId + " not found");
+    }
     return quizAttemptRepository.findByUserId(userId);
   }
 

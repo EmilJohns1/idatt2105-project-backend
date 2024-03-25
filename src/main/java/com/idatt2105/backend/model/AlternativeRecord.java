@@ -13,10 +13,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Accessors(fluent = true)
 public class AlternativeRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
