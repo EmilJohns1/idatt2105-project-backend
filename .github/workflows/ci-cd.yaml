@@ -31,3 +31,6 @@ jobs:
 
       - name: Check code
         run: mvn clean process-sources
+
+      - name: Test code
+        run: mvn test
