@@ -93,7 +93,7 @@ public class UserModelTest {
   }
 
   /*
-    * Test set password with valid input.
+   * Test set password with valid input.
    */
   @Test
   public void setPassword_Valid_Success() {
