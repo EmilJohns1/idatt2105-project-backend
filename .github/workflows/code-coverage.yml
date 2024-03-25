@@ -37,7 +37,7 @@ jobs:
       - name: Clone Wiki Repository
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/1Cezzo/idatt2105-project-backend.wiki.git
+          repository: ${{ github.repository }}
           path: wiki
 
       - name: Copy Coverage Report to Wiki
