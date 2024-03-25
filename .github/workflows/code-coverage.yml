@@ -1,0 +1,33 @@
+name: Code Coverage Report
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  generate-coverage-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Generate code coverage report
+        run: mvn jacoco:report
+
+      - name: Publish coverage report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/jacoco

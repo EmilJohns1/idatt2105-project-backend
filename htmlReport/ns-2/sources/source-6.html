@@ -1,0 +1,163 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MultipleChoiceQuestionAttempt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.idatt2105.backend.model</a>
+</div>
+
+<h1>Coverage Summary for Class: MultipleChoiceQuestionAttempt (com.idatt2105.backend.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MultipleChoiceQuestionAttempt</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.4%
+  </span>
+  <span class="absValue">
+    (2/13)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MultipleChoiceQuestionAttempt$HibernateInstantiator$OSsG5Lf8</td>
+  </tr>
+  <tr>
+    <td class="name">MultipleChoiceQuestionAttempt$HibernateProxy$iGpGPOy8</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.4%
+  </span>
+  <span class="absValue">
+    (2/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.idatt2105.backend.model;
+&nbsp;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;import com.idatt2105.backend.util.NoNullElements;
+&nbsp;
+&nbsp;import jakarta.persistence.CascadeType;
+&nbsp;import jakarta.persistence.Entity;
+&nbsp;import jakarta.persistence.OneToMany;
+&nbsp;import jakarta.persistence.Table;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;multiple_choice_question_attempts&quot;)
+<b class="fc">&nbsp;@Data</b>
+&nbsp;public class MultipleChoiceQuestionAttempt extends QuestionAttempt {
+<b class="fc">&nbsp;  @OneToMany(mappedBy = &quot;questionAttempt&quot;, cascade = CascadeType.ALL, orphanRemoval = true)</b>
+&nbsp;  @NoNullElements
+<b class="nc">&nbsp;  private Set&lt;AlternativeRecord&gt; alternatives = new HashSet&lt;&gt;();</b>
+&nbsp;
+&nbsp;  public void addAlternative(@NotNull AlternativeRecord alternative) {
+<b class="nc">&nbsp;    this.alternatives.add(alternative);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public boolean equals(Object o) {
+<b class="nc">&nbsp;    if (this == o) {</b>
+<b class="nc">&nbsp;      return true;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    if (o == null || getClass() != o.getClass()) {</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    if (!super.equals(o)) {</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    MultipleChoiceQuestionAttempt that = (MultipleChoiceQuestionAttempt) o;</b>
+<b class="nc">&nbsp;    return Objects.equals(alternatives, that.alternatives);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public int hashCode() {
+<b class="nc">&nbsp;    return Objects.hash(super.hashCode(), alternatives);</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-03-25 15:30</div>
+</div>
+</body>
+</html>
