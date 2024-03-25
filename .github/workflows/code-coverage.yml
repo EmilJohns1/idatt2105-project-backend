@@ -37,13 +37,13 @@ jobs:
           permalink_path: coverage-report/index.html
 
       - name: Convert HTML to Markdown
-        uses: jaredly/pagedown@master
+        uses: mike-engel/jekyll-converter-action@v2
         with:
-          files: 'target/site/jacoco/index.html'
+          html_files: 'target/site/jacoco/index.html'
 
       - name: Update README.md in main branch
         run: |
           echo "$(<target/site/jacoco/index.md)" > README.md
           git add README.md
           git commit -m "Update README with code coverage report"
-          git push origin coverage-report
+          git push origin main
