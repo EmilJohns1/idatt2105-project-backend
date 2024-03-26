@@ -10,11 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
+/** Controller for sending emails. */
 @RestController
 public class EmailController {
 
   @Autowired private JavaMailSender emailSender;
 
+  /**
+   * Sends an email to the specified email address.
+   *
+   * @param to the email address to send the email to
+   * @return a message indicating if the email was sent successfully
+   */
   @PostMapping("/api/sendEmail")
   public String sendEmail(@RequestParam String to) {
     MimeMessage message = emailSender.createMimeMessage();
