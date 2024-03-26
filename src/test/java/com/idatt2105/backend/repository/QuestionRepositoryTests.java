@@ -1,27 +1,27 @@
 package com.idatt2105.backend.repository;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.idatt2105.backend.dto.AlternativeDTO;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 class QuestionRepositoryTests {
-  @Autowired
-  private QuestionRepository questionRepository;
+  @Autowired private QuestionRepository questionRepository;
 
-  @Autowired
-  private QuizRepository quizRepository;
+  @Autowired private QuizRepository quizRepository;
 
   private Quiz quiz;
   private MultipleChoiceQuestion multipleChoiceQuestion;
@@ -46,20 +46,26 @@ class QuestionRepositoryTests {
 
   @Test
   void savedQuestionsCanBeRetrievedByQuizId() {
-    Optional<Question> retrievedQuestion = questionRepository.findById(multipleChoiceQuestion.getId());
+    Optional<Question> retrievedQuestion =
+        questionRepository.findById(multipleChoiceQuestion.getId());
     assertTrue(retrievedQuestion.isPresent());
-    assertEquals(multipleChoiceQuestion.getQuestionText(), retrievedQuestion.get().getQuestionText());
+    assertEquals(
+        multipleChoiceQuestion.getQuestionText(), retrievedQuestion.get().getQuestionText());
   }
 
   @Test
   void multipleChoiceQuestionsAreSavedProperly() {
-    Optional<Question> retrievedQuestion = questionRepository.findById(multipleChoiceQuestion.getId());
+    Optional<Question> retrievedQuestion =
+        questionRepository.findById(multipleChoiceQuestion.getId());
     assertTrue(retrievedQuestion.isPresent());
     assertDoesNotThrow(() -> (MultipleChoiceQuestion) retrievedQuestion.get());
-    assertEquals("Oslo", ((MultipleChoiceQuestion) retrievedQuestion.get())
-        .getAlternatives()
-        .iterator()
-        .next().getAlternativeText());
+    assertEquals(
+        "Oslo",
+        ((MultipleChoiceQuestion) retrievedQuestion.get())
+            .getAlternatives()
+            .iterator()
+            .next()
+            .getAlternativeText());
   }
 
   @Test

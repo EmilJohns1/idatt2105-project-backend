@@ -1,13 +1,5 @@
 package com.idatt2105.backend.dto;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.idatt2105.backend.model.MultipleChoiceQuestion;
-import com.idatt2105.backend.model.QuestionType;
-import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +7,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import com.idatt2105.backend.model.MultipleChoiceQuestion;
+import com.idatt2105.backend.model.QuestionType;
 import com.idatt2105.backend.model.Tag;
+import com.idatt2105.backend.model.TrueOrFalseQuestion;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestionDTOTests {
   private List<Tag> tags;
+
   @BeforeEach
   void setUp() {
     tags = new ArrayList<>();
@@ -44,7 +44,6 @@ class QuestionDTOTests {
       question.setQuestionId(2L);
       question.setMediaUrl("test.com");
       question.setCategory("Test category");
-      question.addAllTags(tags);
       question.isCorrect(true);
     }
 
@@ -79,25 +78,8 @@ class QuestionDTOTests {
     }
 
     @Test
-    void getTagsReturnsTags() {
-      assertEquals(2, question.getTags().size());
-      assertTrue(question.getTags().contains(tags.get(0)));
-      assertTrue(question.getTags().contains(tags.get(2)));
-    }
-
-    @Test
     void isCorrectReturnsCorrect() {
       assertTrue(question.isCorrect());
-    }
-
-    @Test
-    void getAllTagIdsReturnsAllTagIds() {
-      QuestionDTO questionDTO = new QuestionDTO();
-      questionDTO.addAllTags(tags);
-      List<Long> tagIds = questionDTO.getAllTagIds();
-      assertEquals(2, tagIds.size());
-      assertTrue(tagIds.contains(1L));
-      assertTrue(tagIds.contains(2L));
     }
 
     @Test
@@ -161,26 +143,9 @@ class QuestionDTOTests {
     }
 
     @Test
-    void addAllTagsAddsAllTags() {
-      QuestionDTO questionDTO = new QuestionDTO();
-      questionDTO.addAllTags(tags);
-      assertEquals(2, questionDTO.getTags().size());
-      assertTrue(questionDTO.getTags().contains(tags.get(0)));
-      assertTrue(questionDTO.getTags().contains(tags.get(2)));
-    }
-
-    @Test
     void setCorrectSetsCorrect() {
       question.isCorrect(true);
       assertTrue(question.isCorrect());
-    }
-
-    @Test
-    void addAllTagsIgnoresNullValues() {
-      QuestionDTO questionDTO = new QuestionDTO();
-      questionDTO.addAllTags(tags);
-      assertEquals(2, questionDTO.getTags().size());
-      assertFalse(questionDTO.getTags().contains(null));
     }
   }
 }

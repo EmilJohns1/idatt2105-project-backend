@@ -1,10 +1,15 @@
 package com.idatt2105.backend.dto;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.idatt2105.backend.model.Quiz;
+import com.idatt2105.backend.model.Tag;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
+@AllArgsConstructor
 public class QuizDTO {
   private Long id;
   private String title;
@@ -25,6 +31,7 @@ public class QuizDTO {
   private LocalDateTime creationDate;
   private LocalDateTime lastModifiedDate;
   private Set<UserDTO> userDTOs;
+  private Set<Tag> tags = new HashSet<>();
 
   /**
    * Constructs a QuizDTO object from a Quiz entity.
@@ -37,77 +44,7 @@ public class QuizDTO {
     this.description = quiz.getDescription();
     this.creationDate = quiz.getCreationDate();
     this.lastModifiedDate = quiz.getLastModifiedDate();
-  }
-
-  /**
-   * Constructs a QuizDTO object with the specified attributes.
-   *
-   * @param id The ID of the quiz.
-   * @param title The title of the quiz.
-   * @param description The description of the quiz.
-   * @param creationDate The creation date of the quiz.
-   * @param lastModifiedDate The last modified date of the quiz.
-   */
-  public QuizDTO(
-      Long id,
-      String title,
-      String description,
-      LocalDateTime creationDate,
-      LocalDateTime lastModifiedDate) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.creationDate = creationDate;
-    this.lastModifiedDate = lastModifiedDate;
-  }
-
-  /**
-   * Constructs a QuizDTO object with the specified attributes.
-   *
-   * @param id The ID of the quiz.
-   * @param title The title of the quiz.
-   * @param description The description of the quiz.
-   * @param creationDate The creation date of the quiz.
-   * @param lastModifiedDate The last modified date of the quiz.
-   * @param userDTOs The set of UserDTOs associated with the quiz.
-   */
-  public QuizDTO(
-      Long id,
-      String title,
-      String description,
-      LocalDateTime creationDate,
-      LocalDateTime lastModifiedDate,
-      Set<UserDTO> userDTOs) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.creationDate = creationDate;
-    this.lastModifiedDate = lastModifiedDate;
-    this.userDTOs = userDTOs;
-  }
-
-  /**
-   * Constructs a QuizDTO object with the specified attributes.
-   *
-   * @param id The ID of the quiz.
-   * @param title The title of the quiz.
-   * @param description The description of the quiz.
-   * @param userDTOs The set of UserDTOs associated with the quiz.
-   */
-  public QuizDTO(Long id, String title, String description, Set<UserDTO> userDTOs) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-  }
-
-  /*
-   * Constructs a QuizDTO object with the specified attributes.
-   * @param title The title of the quiz.
-   * @param description The description of the quiz.
-   */
-  public QuizDTO(String title, String description) {
-    this.title = title;
-    this.description = description;
+    this.tags = new HashSet<>(quiz.getTags());
   }
 
   /**
@@ -121,5 +58,63 @@ public class QuizDTO {
     quiz.setTitle(this.title);
     quiz.setDescription(this.description);
     return quiz;
+  }
+
+  /**
+   * Adds all the tags from a given Collection.
+   *
+   * @param tags (Collection &lt;Tag&gt;) The tags to add.
+   */
+  public void addAllTags(Collection<Tag> tags) {
+    tags.stream().filter(Objects::nonNull).forEach(this.tags::add);
+  }
+
+  public static class Builder {
+    private Long id;
+    private String title;
+    private String description;
+    private LocalDateTime creationDate;
+    private LocalDateTime lastModifiedDate;
+    private Set<UserDTO> userDTOs;
+    private Set<Tag> tags = new HashSet<>();
+
+    public Builder setId(Long id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder setTitle(String title) {
+      this.title = title;
+      return this;
+    }
+
+    public Builder setDescription(String description) {
+      this.description = description;
+      return this;
+    }
+
+    public Builder setCreationDate(LocalDateTime creationDate) {
+      this.creationDate = creationDate;
+      return this;
+    }
+
+    public Builder setLastModifiedDate(LocalDateTime lastModifiedDate) {
+      this.lastModifiedDate = lastModifiedDate;
+      return this;
+    }
+
+    public Builder setUserDTOs(Set<UserDTO> userDTOs) {
+      this.userDTOs = userDTOs;
+      return this;
+    }
+
+    public Builder setTags(Set<Tag> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public QuizDTO build() {
+      return new QuizDTO(id, title, description, creationDate, lastModifiedDate, userDTOs, tags);
+    }
   }
 }

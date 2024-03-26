@@ -12,17 +12,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idatt2105.backend.dto.AlternativeDTO;
 import com.idatt2105.backend.dto.QuestionDTO;
 import com.idatt2105.backend.model.Alternative;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.QuestionType;
-import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.service.QuestionService;
 
-import static com.idatt2105.backend.util.TestUtils.asJsonString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -41,7 +40,6 @@ class QuestionControllerTests {
   @Nested
   class BasicFunctionalityTests {
     QuestionDTO mCQuestionDTO;
-    List<Tag> tags;
 
     @BeforeEach
     void setUp() {
@@ -62,8 +60,6 @@ class QuestionControllerTests {
       alternativeDTO.setCorrect(true);
       Alternative alternative = new Alternative();
       alternative.setId(1L);
-      tags = new ArrayList<>();
-      tags.add(new Tag());
 
       when(questionService.addQuestion(any(QuestionDTO.class))).thenReturn(question1);
       when(questionService.getQuestionById(1L)).thenReturn(question1);
@@ -71,8 +67,6 @@ class QuestionControllerTests {
       when(questionService.getQuestionsByQuizId(1L)).thenReturn(questions);
       when(questionService.addAlternative(any(AlternativeDTO.class))).thenReturn(alternative);
       when(questionService.updateTrueOrFalseQuestion(any(QuestionDTO.class))).thenReturn(question2);
-      when(questionService.addTags(any(QuestionDTO.class))).thenReturn(question1);
-      when(questionService.deleteTags(any(QuestionDTO.class))).thenReturn(question1);
       doNothing().when(questionService).deleteAlternative(1L);
     }
 
@@ -145,27 +139,13 @@ class QuestionControllerTests {
           .andExpect(status().isOk())
           .andExpect(jsonPath("$.id").value(2));
     }
+  }
 
-    @Test
-    void addTagsReturnsOkAndQuestion() throws Exception {
-      mockMvc
-          .perform(
-              patch("/api/question/add/tags/1")
-                  .contentType(MediaType.APPLICATION_JSON)
-                  .content(asJsonString(tags)))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.id").value(1));
-    }
-
-    @Test
-    void deleteTagsReturnsOkAndQuestion() throws Exception {
-      mockMvc
-          .perform(
-              delete("/api/question/delete/tags/1")
-                  .contentType(MediaType.APPLICATION_JSON)
-                  .content(asJsonString(tags)))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.id").value(1));
+  public static String asJsonString(final Object obj) {
+    try {
+      return new ObjectMapper().writeValueAsString(obj);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 }

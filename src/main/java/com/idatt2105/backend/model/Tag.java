@@ -15,11 +15,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /** Entity representing a tag. This class represents a tag that can be added to questions. */
 @Entity
 @Data
 @Table(name = "tags")
+@NoArgsConstructor
 public class Tag {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +33,11 @@ public class Tag {
   @ManyToMany(mappedBy = "tags")
   @Hidden
   @JsonIgnore
-  private Set<Question> questions = new HashSet<>();
+  private Set<Quiz> quizzes = new HashSet<>();
+
+  public Tag(String tagName) {
+    setTagName(tagName);
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -42,11 +48,16 @@ public class Tag {
       return false;
     }
     Tag tag = (Tag) o;
-    return Objects.equals(tagName, tag.tagName);
+    return Objects.equals(this.tagName, tag.tagName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(tagName);
+  }
+
+  @Override
+  public String toString() {
+    return "Tag{" + "id=" + id + ", tagName=\"" + tagName + "\"}";
   }
 }

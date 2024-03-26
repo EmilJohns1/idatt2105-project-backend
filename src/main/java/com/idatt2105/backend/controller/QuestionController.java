@@ -18,7 +18,6 @@ import com.idatt2105.backend.dto.AlternativeDTO;
 import com.idatt2105.backend.dto.QuestionDTO;
 import com.idatt2105.backend.model.Alternative;
 import com.idatt2105.backend.model.Question;
-import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.service.QuestionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -154,28 +153,6 @@ public class QuestionController {
     question.setQuestionId(questionId);
     question.isCorrect(isCorrect);
     Question q = questionService.updateTrueOrFalseQuestion(question);
-    return new ResponseEntity<>(q, HttpStatus.OK);
-  }
-
-  @PatchMapping("/add/tags/{questionId}")
-  @Operation(summary = "Adds one or more tags to a question")
-  public ResponseEntity<Question> addTags(
-      @PathVariable Long questionId, @RequestBody List<Tag> tags) {
-    QuestionDTO dto = new QuestionDTO();
-    dto.setQuestionId(questionId);
-    dto.addAllTags(tags);
-    Question q = questionService.addTags(dto);
-    return new ResponseEntity<>(q, HttpStatus.OK);
-  }
-
-  @DeleteMapping("/delete/tags/{questionId}")
-  @Operation(summary = "Deletes the given tags from a question")
-  public ResponseEntity<Question> deleteTags(
-      @PathVariable Long questionId, @RequestBody List<Tag> tags) {
-    QuestionDTO dto = new QuestionDTO();
-    dto.setQuestionId(questionId);
-    dto.addAllTags(tags);
-    Question q = questionService.deleteTags(dto);
     return new ResponseEntity<>(q, HttpStatus.OK);
   }
 }

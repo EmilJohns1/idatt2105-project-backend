@@ -2,10 +2,8 @@ package com.idatt2105.backend.service;
 
 import java.util.List;
 
-import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import com.idatt2105.backend.dto.AlternativeDTO;
 import com.idatt2105.backend.dto.QuestionDTO;
@@ -13,15 +11,11 @@ import com.idatt2105.backend.model.Alternative;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.Quiz;
-import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.repository.AlternativeRepository;
 import com.idatt2105.backend.repository.QuestionRepository;
 import com.idatt2105.backend.repository.QuizRepository;
-import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.util.InvalidIdException;
-
-import jakarta.validation.constraints.NotNull;
 
 /** Service for handling operations related to questions. */
 @Service
@@ -29,7 +23,6 @@ public class QuestionService {
   private final QuestionRepository questionRepository;
   private final QuizRepository quizRepository;
   private final AlternativeRepository alternativeRepository;
-  private final TagRepository tagRepository;
 
   /**
    * Constructor for the QuestionService class.
@@ -41,12 +34,10 @@ public class QuestionService {
   public QuestionService(
       QuestionRepository questionRepository,
       QuizRepository quizRepository,
-      AlternativeRepository alternativeRepository,
-      TagRepository tagRepository) {
+      AlternativeRepository alternativeRepository) {
     this.questionRepository = questionRepository;
     this.quizRepository = quizRepository;
     this.alternativeRepository = alternativeRepository;
-    this.tagRepository = tagRepository;
   }
 
   /**
@@ -76,7 +67,6 @@ public class QuestionService {
     question.setQuestionText(questionDTO.getQuestionText());
     question.setMediaUrl(questionDTO.getMediaUrl());
     question.setCategory(questionDTO.getCategory());
-    question.setTags(questionDTO.getTags());
     return questionRepository.save(question);
   }
 
@@ -128,7 +118,6 @@ public class QuestionService {
     question.setQuestionText(questionDTO.getQuestionText());
     question.setMediaUrl(questionDTO.getMediaUrl());
     question.setCategory(questionDTO.getCategory());
-    question.setTags(questionDTO.getTags());
     return questionRepository.save(question);
   }
 
@@ -207,31 +196,5 @@ public class QuestionService {
       throw new IllegalArgumentException("Id parameter cannot be null.");
     }
     alternativeRepository.deleteById(id);
-  }
-
-  public Question addTags(QuestionDTO dto) {
-    if (dto == null) {
-      throw new IllegalArgumentException("Question parameter cannot be null.");
-    }
-
-    Question question = getQuestionById(dto.getQuestionId());
-    dto.getTags().stream().filter(Objects::nonNull).forEach(tag -> {
-      tag.setId(null);
-      if (Boolean.FALSE.equals(tagRepository.existsByTagName(tag.getTagName()))) {
-        tagRepository.save(tag);
-      }
-    });
-    question.addTags(dto.getTags());
-    return questionRepository.save(question);
-  }
-
-  public Question deleteTags(QuestionDTO dto) {
-    if (dto == null) {
-      throw new IllegalArgumentException("Question parameter cannot be null.");
-    }
-
-    Question question = getQuestionById(dto.getQuestionId());
-    question.removeTags(dto.getTags());
-    return questionRepository.save(question);
   }
 }
