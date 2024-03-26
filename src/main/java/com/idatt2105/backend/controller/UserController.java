@@ -2,6 +2,7 @@ package com.idatt2105.backend.controller;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,8 @@ public class UserController {
       userService.addUser(user);
       return ResponseEntity.ok("Registered successfully");
     } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Registration failed: " + e.getMessage());
     }
   }
 
@@ -156,6 +158,8 @@ public class UserController {
     try {
       UserDTO userDTO = userService.getUserByUsername(username).orElseThrow();
       return ResponseEntity.ok(userDTO);
+    } catch (NoSuchElementException e) {
+      return ResponseEntity.notFound().build(); // Return 404 if user is not found
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserDTO());
     }
