@@ -1,8 +1,10 @@
 package com.idatt2105.backend.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,9 +15,12 @@ import org.springframework.stereotype.Service;
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.Quiz;
+import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.QuizRepository;
+import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.repository.UserRepository;
+import com.idatt2105.backend.util.InvalidIdException;
 import com.idatt2105.backend.util.UserNotFoundException;
 
 @Service
@@ -24,13 +29,18 @@ public class QuizService {
   private final QuizRepository quizRepository;
   private final UserService userService;
   private final UserRepository userRepository;
+  private final TagRepository tagRepository;
 
   @Autowired
   public QuizService(
-      QuizRepository quizRepository, UserService userService, UserRepository userRepository) {
+      QuizRepository quizRepository,
+      UserService userService,
+      UserRepository userRepository,
+      TagRepository tagRepository) {
     this.quizRepository = quizRepository;
     this.userService = userService;
     this.userRepository = userRepository;
+    this.tagRepository = tagRepository;
   }
 
   public List<QuizDTO> getAllQuizzes() {
@@ -46,15 +56,12 @@ public class QuizService {
         .collect(Collectors.toList());
   }
 
-  public Optional<QuizDTO> getQuizById(Long id) {
-    Optional<Quiz> quizOptional = quizRepository.findById(id);
-    return quizOptional.map(
-        quiz -> {
-          QuizDTO quizDTO = convertToDTO(quiz);
-          quizDTO.setCreationDate(quiz.getCreationDate());
-          quizDTO.setLastModifiedDate(quiz.getLastModifiedDate());
-          return quizDTO;
-        });
+  public QuizDTO getQuizById(Long id) {
+    Quiz quiz = findQuiz(id);
+    QuizDTO quizDTO = convertToDTO(quiz);
+    quizDTO.setCreationDate(quiz.getCreationDate());
+    quizDTO.setLastModifiedDate(quiz.getLastModifiedDate());
+    return quizDTO;
   }
 
   public QuizDTO save(Quiz quiz) {
@@ -131,7 +138,12 @@ public class QuizService {
         quiz.getUsers().stream()
             .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()))
             .collect(Collectors.toSet());
-    return new QuizDTO(quiz.getId(), quiz.getTitle(), quiz.getDescription(), userDTOs);
+    return new QuizDTO.Builder()
+        .setId(quiz.getId())
+        .setTitle(quiz.getTitle())
+        .setDescription(quiz.getDescription())
+        .setUserDTOs(userDTOs)
+        .build();
   }
 
   public Set<UserDTO> getUsersByQuizId(Long quizId) {
@@ -144,5 +156,47 @@ public class QuizService {
             .map(user -> new UserDTO(user.getId(), user.getUsername()))
             .collect(Collectors.toSet());
     return userDTOs;
+  }
+
+  public QuizDTO addTags(QuizDTO dto) {
+    if (dto == null) {
+      throw new IllegalArgumentException("Question parameter cannot be null.");
+    }
+
+    Quiz quiz = findQuiz(dto.getId());
+
+    // Save tags if they do not exist, get them if they do
+    List<Tag> savedTags = new ArrayList<>();
+    dto.getTags().stream()
+        .filter(Objects::nonNull)
+        .forEach(
+            tag -> {
+              if (tagRepository.existsByTagName(tag.getTagName())) {
+                savedTags.add(tagRepository.findByTagName(tag.getTagName()).get());
+              } else {
+                tag.setId(null); // Avoiding conflicts with existing tags
+                savedTags.add(tagRepository.save(tag));
+              }
+            });
+    quiz.addTags(savedTags);
+    Quiz savedQuiz = quizRepository.save(quiz);
+    return new QuizDTO(savedQuiz);
+  }
+
+  public QuizDTO deleteTags(QuizDTO dto) {
+    if (dto == null) {
+      throw new IllegalArgumentException("Question parameter cannot be null.");
+    }
+
+    Quiz quiz = findQuiz(dto.getId());
+    quiz.removeTags(dto.getTags());
+    Quiz savedQuiz = quizRepository.save(quiz);
+    return new QuizDTO(savedQuiz);
+  }
+
+  private Quiz findQuiz(Long id) {
+    return quizRepository
+        .findById(id)
+        .orElseThrow(() -> new InvalidIdException("Quiz with id " + id + " not found"));
   }
 }

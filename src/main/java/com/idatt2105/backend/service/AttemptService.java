@@ -13,7 +13,6 @@ import com.idatt2105.backend.model.QuestionAttempt;
 import com.idatt2105.backend.model.QuizAttempt;
 import com.idatt2105.backend.model.TrueOrFalseQuestionAttempt;
 import com.idatt2105.backend.repository.QuizAttemptRepository;
-import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import com.idatt2105.backend.util.InvalidIdException;
 import com.idatt2105.backend.util.InvalidQuestionTypeException;
@@ -21,25 +20,30 @@ import com.idatt2105.backend.util.InvalidQuestionTypeException;
 @Service
 public class AttemptService {
   private final UserRepository userRepository;
-  private final QuizRepository quizRepository;
   private final QuizAttemptRepository quizAttemptRepository;
 
   @Autowired
   public AttemptService(
-      UserRepository userRepository,
-      QuizRepository quizRepository,
-      QuizAttemptRepository quizAttemptRepository) {
+      UserRepository userRepository, QuizAttemptRepository quizAttemptRepository) {
     this.userRepository = userRepository;
-    this.quizRepository = quizRepository;
     this.quizAttemptRepository = quizAttemptRepository;
   }
 
   public QuizAttempt addQuizAttempt(QuizAttemptDTO quizAttemptDTO) {
+    if (quizAttemptDTO == null) {
+      throw new IllegalArgumentException("Quiz attempt cannot be null");
+    }
     QuizAttempt quizAttempt = parseQuizAttemptDTO(quizAttemptDTO);
     return quizAttemptRepository.save(quizAttempt);
   }
 
   public Collection<QuizAttempt> getAllAttemptsForUser(Long userId) {
+    if (userId == null) {
+      throw new InvalidIdException("User id cannot be null");
+    }
+    if (!userRepository.existsById(userId)) {
+      throw new InvalidIdException("User with id " + userId + " not found");
+    }
     return quizAttemptRepository.findByUserId(userId);
   }
 
@@ -69,9 +73,7 @@ public class AttemptService {
 
   private QuestionAttempt parseQuestionAttemptDTO(QuestionAttemptDTO questionAttemptDTO) {
     QuestionAttempt questionAttempt = questionAttemptDTO.instantiateQuestionAttempt();
-    questionAttempt.setQuestionText(questionAttemptDTO.getQuestionText());
-    questionAttempt.setMediaUrl(questionAttemptDTO.getMediaUrl());
-    questionAttempt.setCategory(questionAttemptDTO.getCategory());
+    questionAttempt.extractFromDTO(questionAttemptDTO);
 
     // Different information is stored based on the question type
     switch (questionAttemptDTO.getType()) {

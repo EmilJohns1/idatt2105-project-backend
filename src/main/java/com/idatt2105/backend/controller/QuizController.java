@@ -1,7 +1,6 @@
 package com.idatt2105.backend.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +38,7 @@ public class QuizController {
   @GetMapping("/{id}")
   @Operation(summary = "Get quiz by id")
   public ResponseEntity<QuizDTO> getQuizById(@PathVariable("id") Long id) {
-    Optional<QuizDTO> quiz = quizService.getQuizById(id);
-    return quiz.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    return new ResponseEntity<>(quizService.getQuizById(id), HttpStatus.OK);
   }
 
   @PostMapping
@@ -78,7 +75,11 @@ public class QuizController {
   @Operation(summary = "Update quiz")
   public ResponseEntity<Void> updateQuiz(
       @PathVariable("id") Long id, @RequestBody QuizUpdateRequestDTO requestDTO) {
-    QuizDTO updatedQuiz = new QuizDTO(requestDTO.getTitle(), requestDTO.getDescription());
+    QuizDTO updatedQuiz =
+        new QuizDTO.Builder()
+            .setTitle(requestDTO.getTitle())
+            .setDescription(requestDTO.getDescription())
+            .build();
     quizService.updateQuiz(id, updatedQuiz);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -88,5 +89,27 @@ public class QuizController {
   public ResponseEntity<Set<UserDTO>> getUsersByQuizId(@PathVariable("quizId") Long quizId) {
     Set<UserDTO> users = quizService.getUsersByQuizId(quizId);
     return new ResponseEntity<>(users, HttpStatus.OK);
+  }
+
+  @PatchMapping("/add/tags/{quizId}")
+  @Operation(summary = "Adds one or more tags to a quiz")
+  public ResponseEntity<QuizDTO> addTags(
+      @PathVariable Long quizId, @RequestBody List<com.idatt2105.backend.model.Tag> tags) {
+    QuizDTO dto = new QuizDTO();
+    dto.setId(quizId);
+    dto.addAllTags(tags);
+    QuizDTO q = quizService.addTags(dto);
+    return new ResponseEntity<>(q, HttpStatus.OK);
+  }
+
+  @DeleteMapping("/delete/tags/{quizId}")
+  @Operation(summary = "Deletes the given tags from a quiz")
+  public ResponseEntity<QuizDTO> deleteTags(
+      @PathVariable Long quizId, @RequestBody List<com.idatt2105.backend.model.Tag> tags) {
+    QuizDTO dto = new QuizDTO();
+    dto.setId(quizId);
+    dto.addAllTags(tags);
+    QuizDTO q = quizService.deleteTags(dto);
+    return new ResponseEntity<>(q, HttpStatus.OK);
   }
 }

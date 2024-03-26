@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Entity
 @Data
@@ -26,9 +27,11 @@ public class AlternativeRecord {
   private String alternativeText;
 
   @Column(name = "was_correct", nullable = false)
+  @Accessors(fluent = true)
   private boolean wasCorrect;
 
   @Column(name = "was_selected", nullable = false)
+  @Accessors(fluent = true)
   private boolean wasSelected;
 
   @ManyToOne
