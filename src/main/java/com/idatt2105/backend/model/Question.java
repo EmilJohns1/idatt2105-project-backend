@@ -60,11 +60,11 @@ public class Question {
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private Set<Tag> tags = new HashSet<>();
 
-  public void addTags(@Validated @NotNull Collection<Tag> tags) {
+  public void addTags(Collection<Tag> tags) {
     tags.stream().filter(Objects::nonNull).forEach(this.tags::add);
   }
 
-  public void removeTags(@Validated @NotNull Collection<Tag> tags) {
+  public void removeTags(Collection<Tag> tags) {
     this.tags.removeAll(tags);
   }
 }
