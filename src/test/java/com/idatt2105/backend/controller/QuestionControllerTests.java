@@ -78,21 +78,22 @@ class QuestionControllerTests {
           .perform(
               post("/api/question/add")
                   .contentType(MediaType.APPLICATION_JSON)
-                  .content(asJsonString(mCQuestionDTO)))
+                  .content(asJsonString(mCQuestionDTO))
+                  .secure(true))
           .andExpect(status().isCreated());
     }
 
     @Test
     void getQuestionByIdReturnsOkAndQuestion() throws Exception {
       mockMvc
-          .perform(get("/api/question/get/1"))
+          .perform(get("/api/question/get/1").secure(true))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
     void deleteQuestionByIdReturnsOk() throws Exception {
-      mockMvc.perform(delete("/api/question/delete/1")).andExpect(status().isOk());
+      mockMvc.perform(delete("/api/question/delete/1").secure(true)).andExpect(status().isOk());
     }
 
     @Test
@@ -101,7 +102,8 @@ class QuestionControllerTests {
           .perform(
               post("/api/question/update")
                   .contentType(MediaType.APPLICATION_JSON)
-                  .content(asJsonString(mCQuestionDTO)))
+                  .content(asJsonString(mCQuestionDTO))
+                  .secure(true))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$.id").value(1));
     }
@@ -109,7 +111,7 @@ class QuestionControllerTests {
     @Test
     void getQuestionsByQuizIdReturnsOkAndQuestions() throws Exception {
       mockMvc
-          .perform(get("/api/question/get/all/1"))
+          .perform(get("/api/question/get/all/1").secure(true))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$[0].id").value(1))
           .andExpect(jsonPath("$[1].id").value(2));
@@ -121,14 +123,17 @@ class QuestionControllerTests {
           .perform(
               post("/api/question/add/alternative")
                   .contentType(MediaType.APPLICATION_JSON)
-                  .content(asJsonString(new AlternativeDTO())))
+                  .content(asJsonString(new AlternativeDTO()))
+                  .secure(true))
           .andExpect(status().isCreated())
           .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
     void deleteAlternativeReturnsOk() throws Exception {
-      mockMvc.perform(delete("/api/question/delete/alternative/1")).andExpect(status().isOk());
+      mockMvc
+          .perform(delete("/api/question/delete/alternative/1").secure(true))
+          .andExpect(status().isOk());
     }
 
     @Test
@@ -137,7 +142,8 @@ class QuestionControllerTests {
           .perform(
               patch("/api/question/update/true-or-false/1&&true")
                   .contentType(MediaType.APPLICATION_JSON)
-                  .content(asJsonString(new QuestionDTO())))
+                  .content(asJsonString(new QuestionDTO()))
+                  .secure(true))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$.id").value(2));
     }

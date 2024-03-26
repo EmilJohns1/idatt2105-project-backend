@@ -38,7 +38,8 @@ class AttemptControllerTests {
         .perform(
             post("/api/attempts/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(quizAttemptDTO)))
+                .content(asJsonString(quizAttemptDTO))
+                .secure(true))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value(1));
   }
@@ -46,7 +47,7 @@ class AttemptControllerTests {
   @Test
   void addQuizAttemptWithEmptyBodyIsBadRequest() throws Exception {
     mockMvc
-        .perform(post("/api/attempts/add").contentType(MediaType.APPLICATION_JSON))
+        .perform(post("/api/attempts/add").contentType(MediaType.APPLICATION_JSON).secure(true))
         .andExpect(status().isBadRequest());
   }
 
@@ -57,7 +58,7 @@ class AttemptControllerTests {
     when(attemptService.getAllAttemptsForUser(1L)).thenReturn(List.of(quizAttempt));
 
     mockMvc
-        .perform(get("/api/attempts/all/1"))
+        .perform(get("/api/attempts/all/1").secure(true))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value(1));
   }
