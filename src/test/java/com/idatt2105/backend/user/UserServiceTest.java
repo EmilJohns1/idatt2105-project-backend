@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
@@ -31,6 +33,8 @@ class UserServiceTest {
   @Mock private UserRepository userRepository;
 
   @Mock private QuizRepository quizRepository;
+
+  @Mock private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @InjectMocks private UserService userService;
 
@@ -70,7 +74,11 @@ class UserServiceTest {
     user.setPassword("password");
 
     when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
-    when(userRepository.save(any())).thenReturn(user);
+    when(passwordEncoder.encode(user.getPassword()))
+        .thenReturn("hashedPassword"); // Adjusted to match the actual method call
+
+    // Mock the save method to return the same user object
+    when(userRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
     // Act
     UserDTO savedUser = userService.addUser(user);
@@ -79,6 +87,8 @@ class UserServiceTest {
     assertNotNull(savedUser);
     assertEquals("testUser", savedUser.getUsername());
     assertEquals(Collections.emptyList(), savedUser.getQuizzes());
+
+    // Verify interactions with mocks
     verify(userRepository, times(1)).findByUsername("testUser");
     verify(userRepository, times(1)).save(any());
   }
@@ -87,17 +97,18 @@ class UserServiceTest {
    * Test the addUser method with an existing user.
    */
   @Test
-  public void testAddUser_existingUser() {
+  public void testAddUser_ExistingUser() {
     // Arrange
-    User existingUser = new User();
-    existingUser.setUsername("existingUser");
-    existingUser.setPassword("password");
+    User user = new User();
+    user.setUsername("testUser");
+    user.setPassword("password");
 
-    when(userRepository.findByUsername(any())).thenReturn(Optional.of(existingUser));
+    when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
 
     // Act & Assert
-    assertThrows(ExistingUserException.class, () -> userService.addUser(existingUser));
-    verify(userRepository, times(1)).findByUsername("existingUser");
+    assertThrows(ExistingUserException.class, () -> userService.addUser(user));
+    verify(userRepository, times(1)).findByUsername("testUser");
+    verify(passwordEncoder, never()).encode(any());
     verify(userRepository, never()).save(any());
   }
 
@@ -300,19 +311,33 @@ class UserServiceTest {
    * Test the getUserByUsernameDTO method.
    */
   @Test
-  public void testSuccessfullLogin() {
+  public void testSuccessfulLogin() {
     // Arrange
-    User user = new User();
-    user.setUsername("testUser");
-    user.setPassword("password");
+    // Mocking user and its saved version
+    User user = new User("testUser", "password");
+    user.setId(1L);
+    when(userRepository.save(any())).thenReturn(user);
 
+    // Adding the user to the database
+    UserDTO loggedInUserDTO = userService.addUser(user);
+    assertNotNull(loggedInUserDTO); // Ensure that the user was successfully added
+
+    // Encode the password for login
+    String encodedPassword = passwordEncoder.encode("password");
+
+    // Create a new user object for login
+    User userToLogin = new User();
+    userToLogin.setUsername("testUser");
+    userToLogin.setPassword("password"); // Set the unencoded password
+
+    // Mock UserRepository findByUsername method to return the user object
     when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
 
     // Act
-    String result = userService.login(user);
+    String result = userService.login(userToLogin);
 
     // Assert
-    assertTrue(result.contains("Token"));
+    assertEquals("Token", result);
   }
 
   /*
@@ -326,7 +351,7 @@ class UserServiceTest {
     user.setPassword("incorrectPassword");
 
     // Act & Assert
-    assertThrows(UserNotFoundException.class, () -> userService.login(user));
+    assertThrows(InvalidCredentialsException.class, () -> userService.login(user));
   }
 
   /*
