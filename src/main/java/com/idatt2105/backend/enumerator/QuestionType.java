@@ -1,4 +1,4 @@
-package com.idatt2105.backend.model;
+package com.idatt2105.backend.enumerator;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

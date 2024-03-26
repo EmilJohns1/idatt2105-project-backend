@@ -1,6 +1,7 @@
 package com.idatt2105.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.idatt2105.backend.dto.QuestionDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,4 +43,11 @@ public class Question {
   @JoinColumn(name = "quiz_id", nullable = false)
   @JsonIgnore
   private Quiz quiz;
+
+  public void extractFromDTO(QuestionDTO dto) {
+    this.questionText = dto.getQuestionText();
+    this.mediaUrl = dto.getMediaUrl();
+    this.category = dto.getCategory();
+    this.points = dto.getPoints();
+  }
 }

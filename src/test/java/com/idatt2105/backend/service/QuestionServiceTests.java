@@ -11,10 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.idatt2105.backend.dto.AlternativeDTO;
 import com.idatt2105.backend.dto.QuestionDTO;
+import com.idatt2105.backend.enumerator.QuestionType;
 import com.idatt2105.backend.model.Alternative;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
-import com.idatt2105.backend.model.QuestionType;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.repository.AlternativeRepository;
