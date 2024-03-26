@@ -1,5 +1,9 @@
 package com.idatt2105.backend.security;
 
+import org.apache.catalina.connector.Connector;
+import org.apache.coyote.http11.AbstractHttp11Protocol;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,8 +23,32 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
+        .requiresChannel(requiresChannel -> requiresChannel.anyRequest().requiresSecure())
         .authorizeHttpRequests(
             authorizeRequests -> authorizeRequests.requestMatchers("/**").permitAll());
     return http.build(); // Temporary allow access to all endpoints
+  }
+
+  @Bean
+  public ServletWebServerFactory servletContainer() {
+    // Configure the factory however you need
+    TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+    tomcat.addAdditionalTomcatConnectors(redirectConnector());
+    return tomcat;
+  }
+
+  /**
+   * Redirects HTTP requests to HTTPS.
+   *
+   * @return (Connector) The connector that redirects HTTP requests to HTTPS.
+   */
+  private Connector redirectConnector() {
+    Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
+    connector.setScheme("http");
+    connector.setPort(8080); // The port you want to redirect from
+    connector.setSecure(false);
+    connector.setRedirectPort(8443); // The port you want to redirect to (HTTPS port)
+    ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(-1);
+    return connector;
   }
 }
