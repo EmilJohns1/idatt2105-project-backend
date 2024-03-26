@@ -73,9 +73,7 @@ public class AttemptService {
 
   private QuestionAttempt parseQuestionAttemptDTO(QuestionAttemptDTO questionAttemptDTO) {
     QuestionAttempt questionAttempt = questionAttemptDTO.instantiateQuestionAttempt();
-    questionAttempt.setQuestionText(questionAttemptDTO.getQuestionText());
-    questionAttempt.setMediaUrl(questionAttemptDTO.getMediaUrl());
-    questionAttempt.setCategory(questionAttemptDTO.getCategory());
+    questionAttempt.extractFromDTO(questionAttemptDTO);
 
     // Different information is stored based on the question type
     switch (questionAttemptDTO.getType()) {

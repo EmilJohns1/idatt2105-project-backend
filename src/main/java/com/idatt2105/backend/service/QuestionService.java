@@ -64,9 +64,7 @@ public class QuestionService {
                         "Quiz with id " + questionDTO.getQuizId() + " not found"));
     Question question = questionDTO.instantiateQuestion();
     question.setQuiz(quiz);
-    question.setQuestionText(questionDTO.getQuestionText());
-    question.setMediaUrl(questionDTO.getMediaUrl());
-    question.setCategory(questionDTO.getCategory());
+    question.extractFromDTO(questionDTO);
     return questionRepository.save(question);
   }
 
@@ -115,9 +113,7 @@ public class QuestionService {
     }
 
     Question question = getQuestionById(questionDTO.getQuestionId());
-    question.setQuestionText(questionDTO.getQuestionText());
-    question.setMediaUrl(questionDTO.getMediaUrl());
-    question.setCategory(questionDTO.getCategory());
+    question.extractFromDTO(questionDTO);
     return questionRepository.save(question);
   }
 

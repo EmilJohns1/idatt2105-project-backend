@@ -74,12 +74,6 @@ public class Quiz {
   }
 
   public void removeTags(Collection<Tag> tags) {
-    for (Tag tag : tags) {
-      if (this.tags.contains(tag)) {
-        System.out.println("Debug line 79 - Tag.java");
-      }
-      this.tags.remove(tag);
-    }
-    // tags.stream().filter(Objects::nonNull).forEach(this.tags::remove);
+    tags.stream().filter(Objects::nonNull).forEach(this.tags::remove);
   }
 }

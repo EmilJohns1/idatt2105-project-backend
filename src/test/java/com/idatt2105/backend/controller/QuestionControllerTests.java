@@ -16,10 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idatt2105.backend.dto.AlternativeDTO;
 import com.idatt2105.backend.dto.QuestionDTO;
+import com.idatt2105.backend.enumerator.QuestionType;
 import com.idatt2105.backend.model.Alternative;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
-import com.idatt2105.backend.model.QuestionType;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.service.QuestionService;
 

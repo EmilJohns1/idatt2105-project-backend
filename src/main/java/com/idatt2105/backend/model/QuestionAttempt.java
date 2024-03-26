@@ -1,6 +1,7 @@
 package com.idatt2105.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.idatt2105.backend.dto.QuestionAttemptDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,9 +28,17 @@ public class QuestionAttempt {
 
   private String mediaUrl;
   private String category;
+  private int points;
 
   @ManyToOne
   @JoinColumn(name = "quiz_attempt_id", nullable = false)
   @JsonIgnore
   private QuizAttempt quizAttempt;
+
+  public void extractFromDTO(QuestionAttemptDTO dto) {
+    this.questionText = dto.getQuestionText();
+    this.mediaUrl = dto.getMediaUrl();
+    this.category = dto.getCategory();
+    this.points = dto.getPoints();
+  }
 }

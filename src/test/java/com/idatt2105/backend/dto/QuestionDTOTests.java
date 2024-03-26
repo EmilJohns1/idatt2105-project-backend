@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import com.idatt2105.backend.enumerator.QuestionType;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
-import com.idatt2105.backend.model.QuestionType;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 
