@@ -84,6 +84,7 @@ public class QuizService {
     existingQuiz.setTitle(updatedQuiz.getTitle());
     existingQuiz.setDescription(updatedQuiz.getDescription());
     existingQuiz.setLastModifiedDate(LocalDateTime.now());
+    existingQuiz.setQuizPictureUrl(updatedQuiz.getQuizPictureUrl());
 
     quizRepository.save(existingQuiz);
   }

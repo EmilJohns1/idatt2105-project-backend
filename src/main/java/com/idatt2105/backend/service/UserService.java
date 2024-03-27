@@ -177,6 +177,23 @@ public class UserService {
   }
 
   /**
+   * Update the profile picture of a user
+   *
+   * @param username (String) username of the user to update.
+   * @param profilePictureUrl (String) URL of the new profile picture.
+   * @throws UserNotFoundException If no user with the given username is found.
+   */
+  public void updateProfilePicture(String username, String profilePictureUrl) {
+    User user =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(
+                () -> new UserNotFoundException("User with username " + username + " not found"));
+    user.setProfilePictureUrl(profilePictureUrl);
+    userRepository.save(user);
+  }
+
+  /**
    * Checks the credentials of the given user.
    *
    * @param user (User) The user to be validated.
