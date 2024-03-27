@@ -78,4 +78,16 @@ class TagTests {
       assertEquals(quizzes, tag.getQuizzes());
     }
   }
+
+  @Test
+  void equalTagsGenerateTheSameHashcode() {
+    Tag tag1 = new Tag();
+    tag1.setTagName("tag1");
+    tag1.setId(1L);
+    Tag tag2 = new Tag();
+    tag2.setTagName("tag1");
+    tag2.setId(2L);
+    assertEquals(tag1, tag2);
+    assertEquals(tag1.hashCode(), tag2.hashCode());
+  }
 }

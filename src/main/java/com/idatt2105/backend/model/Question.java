@@ -1,5 +1,7 @@
 package com.idatt2105.backend.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.idatt2105.backend.dto.QuestionDTO;
 
@@ -49,5 +51,34 @@ public class Question {
     this.mediaUrl = dto.getMediaUrl();
     this.category = dto.getCategory();
     this.points = dto.getPoints();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Question question = (Question) o;
+    Long thisQuizId;
+    Long thatQuizId;
+
+    thisQuizId = quiz == null ? null : quiz.getId();
+    thatQuizId = question.quiz == null ? null : question.quiz.getId();
+
+    return points == question.points
+        && Objects.equals(id, question.id)
+        && Objects.equals(questionText, question.questionText)
+        && Objects.equals(mediaUrl, question.mediaUrl)
+        && Objects.equals(category, question.category)
+        && Objects.equals(thisQuizId, thatQuizId);
+  }
+
+  @Override
+  public int hashCode() {
+    Long quizId = quiz == null ? null : quiz.getId();
+    return Objects.hash(id, questionText, mediaUrl, category, points, quizId);
   }
 }

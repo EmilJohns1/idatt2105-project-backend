@@ -27,6 +27,9 @@ public class MultipleChoiceQuestion extends Question {
    * @param alternative (AlternativeDTO) The alternative to add.
    */
   public Alternative addAlternative(AlternativeDTO alternative) {
+    if (alternative == null) {
+      throw new IllegalArgumentException("Alternative parameter cannot be null.");
+    }
     Alternative newAlternative = new Alternative();
     newAlternative.setAlternativeText(alternative.getAlternativeText());
     newAlternative.setCorrect(alternative.isCorrect());

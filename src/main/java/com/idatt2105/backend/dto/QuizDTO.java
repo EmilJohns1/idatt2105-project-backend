@@ -46,6 +46,8 @@ public class QuizDTO {
     this.quizPictureUrl = quiz.getQuizPictureUrl();
     this.creationDate = quiz.getCreationDate();
     this.lastModifiedDate = quiz.getLastModifiedDate();
+    this.userDTOs = new HashSet<>();
+    quiz.getUsers().stream().map(UserDTO::new).forEach(this.userDTOs::add);
     this.tags = new HashSet<>(quiz.getTags());
   }
 
@@ -60,6 +62,8 @@ public class QuizDTO {
     quiz.setTitle(this.title);
     quiz.setDescription(this.description);
     quiz.setQuizPictureUrl(this.quizPictureUrl);
+    quiz.setCreationDate(this.creationDate);
+    quiz.setLastModifiedDate(this.lastModifiedDate);
     return quiz;
   }
 

@@ -1,4 +1,4 @@
-package com.idatt2105.backend.user;
+package com.idatt2105.backend.service;
 
 import java.util.*;
 
@@ -16,7 +16,6 @@ import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.UserRepository;
-import com.idatt2105.backend.service.UserService;
 import com.idatt2105.backend.util.ExistingUserException;
 import com.idatt2105.backend.util.InvalidCredentialsException;
 import com.idatt2105.backend.util.UserNotFoundException;
