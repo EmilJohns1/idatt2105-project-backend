@@ -18,10 +18,10 @@ public class MailConfig {
   @Bean
   public JavaMailSender javaMailSender() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    mailSender.setHost(env.getProperty("smtp.host"));
+    mailSender.setHost(env.getProperty("SMTP_HOST"));
     mailSender.setPort(587);
-    mailSender.setUsername(env.getProperty("smtp.email"));
-    mailSender.setPassword(env.getProperty("smtp.password"));
+    mailSender.setUsername(env.getProperty("SMTP_EMAIL"));
+    mailSender.setPassword(env.getProperty("SMTP_PASSWORD"));
 
     mailSender.setProtocol("smtp");
 

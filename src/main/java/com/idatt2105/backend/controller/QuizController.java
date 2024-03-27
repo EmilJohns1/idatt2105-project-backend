@@ -75,10 +75,14 @@ public class QuizController {
   @Operation(summary = "Update quiz")
   public ResponseEntity<Void> updateQuiz(
       @PathVariable("id") Long id, @RequestBody QuizUpdateRequestDTO requestDTO) {
+    if (requestDTO.getQuizPictureUrl() == null) {
+      requestDTO.setQuizPictureUrl(quizService.getQuizById(id).getQuizPictureUrl());
+    }
     QuizDTO updatedQuiz =
         new QuizDTO.Builder()
             .setTitle(requestDTO.getTitle())
             .setDescription(requestDTO.getDescription())
+            .setQuizPictureUrl(requestDTO.getQuizPictureUrl())
             .build();
     quizService.updateQuiz(id, updatedQuiz);
     return new ResponseEntity<>(HttpStatus.OK);

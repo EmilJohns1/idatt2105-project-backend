@@ -199,7 +199,8 @@ public class UserModelTest {
   @Test
   public void testToString() {
     assertEquals(
-        "User(id=null, username=testuser, password=password, quizzes=[], " + "quizAttempts=[])",
+        "User(id=null, username=testuser, password=password, profilePictureUrl=null, quizzes=[], "
+            + "quizAttempts=[])",
         user.toString());
   }
 
@@ -239,7 +240,7 @@ public class UserModelTest {
    */
   @Test
   public void testAllArgsConstructor() {
-    User user = new User(1L, "testuser", "password", new HashSet<>(), new HashSet<>());
+    User user = new User(1L, "testuser", "password", "imageURL", new HashSet<>(), new HashSet<>());
     assertNotNull(user);
     assertEquals(1L, user.getId());
     assertEquals("testuser", user.getUsername());

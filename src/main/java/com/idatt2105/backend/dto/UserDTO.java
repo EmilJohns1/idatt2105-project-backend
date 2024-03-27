@@ -21,6 +21,7 @@ public class UserDTO {
   private Long id;
   private String username;
   private List<QuizDTO> quizzes;
+  private String profilePictureUrl;
 
   /*
    * Constructor for UserDTO with User entity.

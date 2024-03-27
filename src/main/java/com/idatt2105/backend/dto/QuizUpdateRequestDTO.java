@@ -13,6 +13,20 @@ import lombok.Setter;
 public class QuizUpdateRequestDTO {
   private String title;
   private String description;
+  private String quizPictureUrl;
+
+  /**
+   * Constructs a new QuizUpdateRequestDTO with the specified title and description.
+   *
+   * @param title the title
+   * @param description the description
+   * @param quizPictureUrl the quiz picture URL
+   */
+  public QuizUpdateRequestDTO(String title, String description, String quizPictureUrl) {
+    this.title = title;
+    this.description = description;
+    this.quizPictureUrl = quizPictureUrl;
+  }
 
   /**
    * Constructs a new QuizUpdateRequestDTO with the specified title and description.

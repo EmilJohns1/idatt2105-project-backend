@@ -46,6 +46,9 @@ public class Quiz {
   @Column(name = "description", columnDefinition = "TEXT")
   private String description;
 
+  @Column(name = "quiz_picture_url")
+  private String quizPictureUrl;
+
   @Column(name = "creation_date")
   private LocalDateTime creationDate;
 
