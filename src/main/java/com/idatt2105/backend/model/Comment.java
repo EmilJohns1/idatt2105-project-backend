@@ -48,30 +48,4 @@ public class Comment {
 
   @Column(name = "last_modified_date")
   private LocalDateTime lastModifiedDate;
-
-  /**
-   * Sets the ID of the user who made the comment.
-   *
-   * @param userId The ID of the user
-   */
-  public void setUserId(Long userId) {
-    if (userId == null) {
-      throw new IllegalArgumentException("User ID cannot be null.");
-    }
-    this.user = new User();
-    this.user.setId(userId);
-  }
-
-  /**
-   * Sets the ID of the quiz that the comment is made on.
-   *
-   * @param quizId The ID of the quiz
-   */
-  public void setQuizId(Long quizId) {
-    if (quizId == null) {
-      throw new IllegalArgumentException("Quiz ID cannot be null.");
-    }
-    this.quiz = new Quiz();
-    this.quiz.setId(quizId);
-  }
 }
