@@ -3,8 +3,6 @@ package com.idatt2105.backend.dto;
 import java.time.LocalDateTime;
 
 import com.idatt2105.backend.model.Comment;
-import com.idatt2105.backend.model.Quiz;
-import com.idatt2105.backend.model.User;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,8 +30,8 @@ public class CommentDTO {
       throw new IllegalArgumentException("Comment parameter cannot be null");
     }
     this.content = comment.getContent();
-    setUserIdFromUser(comment.getUser());
-    setQuizIdFromQuiz(comment.getQuiz());
+    this.userId = comment.getUser() == null ? null : comment.getUser().getId();
+    this.quizId = comment.getQuiz() == null ? null : comment.getQuiz().getId();
     this.creationDate = comment.getCreationDate();
     this.lastModifiedDate = comment.getLastModifiedDate();
   }
@@ -57,13 +55,5 @@ public class CommentDTO {
     comment.setCreationDate(this.creationDate);
     comment.setLastModifiedDate(this.lastModifiedDate);
     return comment;
-  }
-
-  public void setUserIdFromUser(User user) {
-    this.userId = user == null ? null : user.getId();
-  }
-
-  public void setQuizIdFromQuiz(Quiz quiz) {
-    this.quizId = quiz == null ? null : quiz.getId();
   }
 }

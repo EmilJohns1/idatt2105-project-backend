@@ -64,6 +64,7 @@ public class QuizDTO {
     quiz.setQuizPictureUrl(this.quizPictureUrl);
     quiz.setCreationDate(this.creationDate);
     quiz.setLastModifiedDate(this.lastModifiedDate);
+    quiz.setQuizPictureUrl(this.quizPictureUrl);
     return quiz;
   }
 
