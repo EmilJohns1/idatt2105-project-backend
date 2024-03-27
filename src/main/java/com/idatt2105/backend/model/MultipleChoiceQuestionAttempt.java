@@ -21,7 +21,10 @@ public class MultipleChoiceQuestionAttempt extends QuestionAttempt {
   @NoNullElements
   private Set<AlternativeRecord> alternatives = new HashSet<>();
 
-  public void addAlternative(@NotNull AlternativeRecord alternative) {
+  public void addAlternative(AlternativeRecord alternative) {
+    if (alternative == null) {
+      throw new IllegalArgumentException("Alternative parameter cannot be null.");
+    }
     this.alternatives.add(alternative);
   }
 

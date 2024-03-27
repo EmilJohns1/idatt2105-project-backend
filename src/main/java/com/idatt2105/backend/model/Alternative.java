@@ -47,12 +47,11 @@ public class Alternative {
     Alternative that = (Alternative) o;
     return isCorrect == that.isCorrect
         && id.equals(that.id)
-        && alternativeText.equals(that.alternativeText)
-        && question.getId().equals(that.question.getId());
+        && alternativeText.equals(that.alternativeText);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, alternativeText, isCorrect, question.getId());
+    return Objects.hash(id, alternativeText, isCorrect);
   }
 }

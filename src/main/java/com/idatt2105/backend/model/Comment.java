@@ -55,6 +55,9 @@ public class Comment {
    * @param userId The ID of the user
    */
   public void setUserId(Long userId) {
+    if (userId == null) {
+      throw new IllegalArgumentException("User ID cannot be null.");
+    }
     this.user = new User();
     this.user.setId(userId);
   }
@@ -65,6 +68,9 @@ public class Comment {
    * @param quizId The ID of the quiz
    */
   public void setQuizId(Long quizId) {
+    if (quizId == null) {
+      throw new IllegalArgumentException("Quiz ID cannot be null.");
+    }
     this.quiz = new Quiz();
     this.quiz.setId(quizId);
   }
