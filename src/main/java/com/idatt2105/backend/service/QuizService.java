@@ -2,7 +2,6 @@ package com.idatt2105.backend.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,7 +20,6 @@ import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import com.idatt2105.backend.util.InvalidIdException;
-import com.idatt2105.backend.util.UserNotFoundException;
 
 @Service
 public class QuizService {
@@ -45,9 +43,7 @@ public class QuizService {
 
   public List<QuizDTO> getAllQuizzes() {
     List<Quiz> quizzes = quizRepository.findAll();
-    return quizzes.stream()
-        .map(QuizDTO::new)
-        .toList();
+    return quizzes.stream().map(QuizDTO::new).toList();
   }
 
   public QuizDTO getQuizById(Long id) {
@@ -62,6 +58,8 @@ public class QuizService {
     if (quiz == null) {
       throw new IllegalArgumentException("Quiz parameter cannot be null.");
     }
+    quiz.setCreationDate(LocalDateTime.now());
+    quiz.setLastModifiedDate(LocalDateTime.now());
     Quiz savedQuiz = quizRepository.save(quiz);
     return new QuizDTO(savedQuiz);
   }

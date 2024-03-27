@@ -1,10 +1,5 @@
 package com.idatt2105.backend.service;
 
-import com.idatt2105.backend.dto.UserDTO;
-import com.idatt2105.backend.model.User;
-import com.idatt2105.backend.repository.UserRepository;
-import com.idatt2105.backend.util.InvalidIdException;
-import com.idatt2105.backend.util.UserNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +13,14 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.idatt2105.backend.dto.QuizDTO;
+import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
+import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.TagRepository;
+import com.idatt2105.backend.repository.UserRepository;
+import com.idatt2105.backend.util.InvalidIdException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
