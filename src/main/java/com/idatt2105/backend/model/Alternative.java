@@ -47,7 +47,8 @@ public class Alternative {
     Alternative that = (Alternative) o;
     return isCorrect == that.isCorrect
         && id.equals(that.id)
-        && alternativeText.equals(that.alternativeText);
+        && alternativeText.equals(that.alternativeText)
+        && question.getId().equals(that.question.getId());
   }
 
   @Override

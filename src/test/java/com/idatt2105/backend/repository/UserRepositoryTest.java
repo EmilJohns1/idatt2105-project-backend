@@ -1,4 +1,4 @@
-package com.idatt2105.backend.user;
+package com.idatt2105.backend.repository;
 
 import java.util.Optional;
 

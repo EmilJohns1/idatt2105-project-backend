@@ -1,4 +1,4 @@
-package com.idatt2105.backend.user;
+package com.idatt2105.backend.model;
 
 import java.util.HashSet;
 import java.util.Set;

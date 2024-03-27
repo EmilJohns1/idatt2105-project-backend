@@ -1,4 +1,4 @@
-package com.idatt2105.backend.user;
+package com.idatt2105.backend.controller;
 
 import java.util.Collections;
 import java.util.List;
