@@ -1,4 +1,4 @@
-package com.idatt2105.backend.user;
+package com.idatt2105.backend.controller;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.idatt2105.backend.controller.UserController;
 import com.idatt2105.backend.dto.LoginRequestDTO;
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;

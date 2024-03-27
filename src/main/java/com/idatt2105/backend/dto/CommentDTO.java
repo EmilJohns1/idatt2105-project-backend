@@ -3,19 +3,17 @@ package com.idatt2105.backend.dto;
 import java.time.LocalDateTime;
 
 import com.idatt2105.backend.model.Comment;
+import com.idatt2105.backend.model.Quiz;
+import com.idatt2105.backend.model.User;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * A Data Transfer Object (DTO) class representing a comment. This class is used to transfer comment
  * data between different layers of the application.
  */
 @NoArgsConstructor
-@Getter
-@Setter
 @Data
 public class CommentDTO {
   private String content;
@@ -30,24 +28,14 @@ public class CommentDTO {
    * @param comment The Comment entity to create the DTO from.
    */
   public CommentDTO(Comment comment) {
+    if (comment == null) {
+      throw new IllegalArgumentException("Comment parameter cannot be null");
+    }
     this.content = comment.getContent();
-    this.userId = comment.getUser().getId();
-    this.quizId = comment.getQuiz().getId();
+    setUserIdFromUser(comment.getUser());
+    setQuizIdFromQuiz(comment.getQuiz());
     this.creationDate = comment.getCreationDate();
     this.lastModifiedDate = comment.getLastModifiedDate();
-  }
-
-  /**
-   * Constructs a CommentDTO object with the specified attributes.
-   *
-   * @param content The content of the comment.
-   * @param userId The ID of the user who made the comment.
-   * @param quizId The ID of the quiz the comment is made on.
-   */
-  public CommentDTO(String content, Long userId, Long quizId) {
-    this.content = content;
-    this.userId = userId;
-    this.quizId = quizId;
   }
 
   /**
@@ -69,5 +57,13 @@ public class CommentDTO {
     comment.setCreationDate(this.creationDate);
     comment.setLastModifiedDate(this.lastModifiedDate);
     return comment;
+  }
+
+  public void setUserIdFromUser(User user) {
+    this.userId = user == null ? null : user.getId();
+  }
+
+  public void setQuizIdFromQuiz(Quiz quiz) {
+    this.quizId = quiz == null ? null : quiz.getId();
   }
 }

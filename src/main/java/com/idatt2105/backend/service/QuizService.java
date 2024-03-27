@@ -2,7 +2,6 @@ package com.idatt2105.backend.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,7 +20,6 @@ import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import com.idatt2105.backend.util.InvalidIdException;
-import com.idatt2105.backend.util.UserNotFoundException;
 
 @Service
 public class QuizService {
@@ -45,117 +43,102 @@ public class QuizService {
 
   public List<QuizDTO> getAllQuizzes() {
     List<Quiz> quizzes = quizRepository.findAll();
-    return quizzes.stream()
-        .map(
-            quiz -> {
-              QuizDTO quizDTO = convertToDTO(quiz);
-              quizDTO.setCreationDate(quiz.getCreationDate());
-              quizDTO.setLastModifiedDate(quiz.getLastModifiedDate());
-              return quizDTO;
-            })
-        .collect(Collectors.toList());
+    return quizzes.stream().map(QuizDTO::new).toList();
   }
 
   public QuizDTO getQuizById(Long id) {
+    if (id == null) {
+      throw new IllegalArgumentException("Id parameter cannot be null.");
+    }
     Quiz quiz = findQuiz(id);
-    QuizDTO quizDTO = convertToDTO(quiz);
-    quizDTO.setCreationDate(quiz.getCreationDate());
-    quizDTO.setLastModifiedDate(quiz.getLastModifiedDate());
-    return quizDTO;
+    return new QuizDTO(quiz);
   }
 
   public QuizDTO save(Quiz quiz) {
+    if (quiz == null) {
+      throw new IllegalArgumentException("Quiz parameter cannot be null.");
+    }
+    quiz.setCreationDate(LocalDateTime.now());
+    quiz.setLastModifiedDate(LocalDateTime.now());
     Quiz savedQuiz = quizRepository.save(quiz);
-    return convertToDTO(savedQuiz);
+    return new QuizDTO(savedQuiz);
   }
 
   public void deleteQuiz(Long id) {
+    if (id == null) {
+      throw new IllegalArgumentException("Id parameter cannot be null.");
+    }
     quizRepository.deleteById(id);
   }
 
   public void updateQuiz(Long id, QuizDTO updatedQuiz) {
-    Quiz existingQuiz =
-        quizRepository
-            .findById(id)
-            .orElseThrow(() -> new RuntimeException("Quiz not found with id: " + id));
+    if (id == null) {
+      throw new IllegalArgumentException("Id parameter cannot be null.");
+    }
+    if (updatedQuiz == null) {
+      throw new IllegalArgumentException("Quiz parameter cannot be null.");
+    }
+
+    Quiz existingQuiz = findQuiz(id);
 
     existingQuiz.setTitle(updatedQuiz.getTitle());
     existingQuiz.setDescription(updatedQuiz.getDescription());
     existingQuiz.setLastModifiedDate(LocalDateTime.now());
-    // add questions here
 
     quizRepository.save(existingQuiz);
   }
 
   public void addUserToQuiz(Long userId, Long quizId) {
-    Optional<Quiz> quizOptional = quizRepository.findById(quizId);
-    if (quizOptional.isPresent()) {
-      Quiz quiz = quizOptional.get();
-      Optional<UserDTO> userOptional = userService.getUserByIdDTO(userId);
-      if (userOptional.isPresent()) {
-        UserDTO userDTO = userOptional.get();
-        User user = userRepository.findByUsername(userDTO.getUsername()).get();
-        quiz.getUsers().add(user);
-        quizRepository.save(quiz);
-
-        user.getQuizzes().add(quiz);
-        userService.save(user);
-      } else {
-        throw new UserNotFoundException("User with id " + userId + " not found");
-      }
-    } else {
-      throw new IllegalStateException("Quiz with id " + quizId + " not found");
+    if (userId == null) {
+      throw new IllegalArgumentException("User id parameter cannot be null.");
     }
+    if (quizId == null) {
+      throw new IllegalArgumentException("Quiz id parameter cannot be null.");
+    }
+
+    Quiz foundQuiz = findQuiz(quizId);
+    User user = findUser(userId);
+    foundQuiz.getUsers().add(user);
+    user.getQuizzes().add(foundQuiz);
+    quizRepository.save(foundQuiz);
   }
 
   public void removeUserFromQuiz(Long userId, Long quizId) {
-    Optional<Quiz> quizOptional = quizRepository.findById(quizId);
-    if (quizOptional.isPresent()) {
-      Quiz quiz = quizOptional.get();
-      Optional<UserDTO> userOptional = userService.getUserByIdDTO(userId);
-      if (userOptional.isPresent()) {
-        UserDTO userDTO = userOptional.get();
-        User user = userRepository.findByUsername(userDTO.getUsername()).get();
-        quiz.getUsers().remove(user);
-        quizRepository.save(quiz);
+    if (userId == null) {
+      throw new IllegalArgumentException("User id parameter cannot be null.");
+    }
+    if (quizId == null) {
+      throw new IllegalArgumentException("Quiz id parameter cannot be null.");
+    }
+    Quiz foundQuiz = findQuiz(quizId);
+    User user = findUser(userId);
+    foundQuiz.getUsers().remove(user);
+    user.getQuizzes().remove(foundQuiz);
+    quizRepository.save(foundQuiz);
+  }
 
-        user.getQuizzes().remove(quiz);
-        userService.save(user);
-      } else {
-        throw new UserNotFoundException("User with id " + userId + " not found");
-      }
+  public QuizDTO getQuizByTitle(String title) {
+    if (title == null) {
+      throw new IllegalArgumentException("Title parameter cannot be null.");
+    }
+
+    Optional<Quiz> quiz = quizRepository.findByTitle(title);
+    if (quiz.isEmpty()) {
+      throw new InvalidIdException("Quiz with title " + title + " not found");
     } else {
-      throw new IllegalStateException("Quiz with id " + quizId + " not found");
+      return new QuizDTO(quiz.get());
     }
   }
 
-  public Optional<QuizDTO> getQuizByTitle(String title) {
-    return quizRepository.findByTitle(title).map(this::convertToDTO);
-  }
-
-  private QuizDTO convertToDTO(Quiz quiz) {
-    Set<UserDTO> userDTOs =
-        quiz.getUsers().stream()
-            .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()))
-            .collect(Collectors.toSet());
-    return new QuizDTO.Builder()
-        .setId(quiz.getId())
-        .setTitle(quiz.getTitle())
-        .setDescription(quiz.getDescription())
-        .setUserDTOs(userDTOs)
-        .build();
-  }
-
   public Set<UserDTO> getUsersByQuizId(Long quizId) {
-    Quiz quiz =
-        quizRepository
-            .findById(quizId)
-            .orElseThrow(() -> new IllegalStateException("Quiz with id " + quizId + " not found"));
-    Set<UserDTO> userDTOs =
-        quiz.getUsers().stream()
-            .map(user -> new UserDTO(user.getId(), user.getUsername()))
-            .collect(Collectors.toSet());
-    return userDTOs;
+    if (quizId == null) {
+      throw new IllegalArgumentException("Quiz id parameter cannot be null.");
+    }
+
+    Quiz quiz = findQuiz(quizId);
+    return quiz.getUsers().stream()
+        .map(user -> new UserDTO(user.getId(), user.getUsername()))
+        .collect(Collectors.toSet());
   }
 
   public QuizDTO addTags(QuizDTO dto) {
@@ -198,5 +181,11 @@ public class QuizService {
     return quizRepository
         .findById(id)
         .orElseThrow(() -> new InvalidIdException("Quiz with id " + id + " not found"));
+  }
+
+  private User findUser(Long id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new InvalidIdException("User with id " + id + " not found"));
   }
 }

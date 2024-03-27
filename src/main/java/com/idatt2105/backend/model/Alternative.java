@@ -52,6 +52,6 @@ public class Alternative {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, alternativeText, isCorrect, question.getId());
+    return Objects.hash(id, alternativeText, isCorrect);
   }
 }
