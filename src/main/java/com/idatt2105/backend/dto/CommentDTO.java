@@ -41,19 +41,6 @@ public class CommentDTO {
    * Constructs a CommentDTO object with the specified attributes.
    *
    * @param content The content of the comment.
-   * @param userId The ID of the user who made the comment.
-   * @param quizId The ID of the quiz the comment is made on.
-   */
-  public CommentDTO(String content, Long userId, Long quizId) {
-    this.content = content;
-    this.userId = userId;
-    this.quizId = quizId;
-  }
-
-  /**
-   * Constructs a CommentDTO object with the specified attributes.
-   *
-   * @param content The content of the comment.
    */
   public CommentDTO(String content) {
     this.content = content;

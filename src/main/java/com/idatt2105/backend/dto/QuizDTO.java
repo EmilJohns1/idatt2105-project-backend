@@ -44,6 +44,8 @@ public class QuizDTO {
     this.description = quiz.getDescription();
     this.creationDate = quiz.getCreationDate();
     this.lastModifiedDate = quiz.getLastModifiedDate();
+    this.userDTOs = new HashSet<>();
+    quiz.getUsers().stream().map(UserDTO::new).forEach(this.userDTOs::add);
     this.tags = new HashSet<>(quiz.getTags());
   }
 
@@ -57,6 +59,8 @@ public class QuizDTO {
     quiz.setId(this.id);
     quiz.setTitle(this.title);
     quiz.setDescription(this.description);
+    quiz.setCreationDate(this.creationDate);
+    quiz.setLastModifiedDate(this.lastModifiedDate);
     return quiz;
   }
 
