@@ -5,7 +5,6 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

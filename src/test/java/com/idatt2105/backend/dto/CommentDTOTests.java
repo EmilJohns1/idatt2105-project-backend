@@ -1,13 +1,14 @@
 package com.idatt2105.backend.dto;
 
-import com.idatt2105.backend.model.Comment;
-import com.idatt2105.backend.model.Quiz;
-import com.idatt2105.backend.model.User;
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import com.idatt2105.backend.model.Comment;
+import com.idatt2105.backend.model.Quiz;
+import com.idatt2105.backend.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

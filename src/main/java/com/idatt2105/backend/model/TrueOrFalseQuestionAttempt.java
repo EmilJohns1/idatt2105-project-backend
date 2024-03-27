@@ -1,11 +1,12 @@
 package com.idatt2105.backend.model;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.Objects;
 import lombok.Data;
 
 @Entity
@@ -33,9 +34,9 @@ public class TrueOrFalseQuestionAttempt extends QuestionAttempt {
       return false;
     }
     TrueOrFalseQuestionAttempt that = (TrueOrFalseQuestionAttempt) o;
-    return Objects.equals(id, that.id) &&
-           Objects.equals(userAnswer, that.userAnswer) &&
-           Objects.equals(correctAnswer, that.correctAnswer);
+    return Objects.equals(id, that.id)
+        && Objects.equals(userAnswer, that.userAnswer)
+        && Objects.equals(correctAnswer, that.correctAnswer);
   }
 
   @Override

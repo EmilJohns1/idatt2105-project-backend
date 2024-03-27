@@ -1,6 +1,7 @@
 package com.idatt2105.backend.model;
 
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -122,6 +123,5 @@ class QuestionAttemptTests {
     }
     assertEquals(q1, q2);
     assertEquals(q1.hashCode(), q2.hashCode());
-
   }
 }

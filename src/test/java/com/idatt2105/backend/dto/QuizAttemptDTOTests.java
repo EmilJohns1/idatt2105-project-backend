@@ -1,13 +1,14 @@
 package com.idatt2105.backend.dto;
 
-import jakarta.validation.Validator;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
+import jakarta.validation.Validator;
 
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;

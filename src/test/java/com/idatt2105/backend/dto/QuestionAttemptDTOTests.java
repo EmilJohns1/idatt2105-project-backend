@@ -1,15 +1,16 @@
 package com.idatt2105.backend.dto;
 
-import com.idatt2105.backend.enumerator.QuestionType;
-import com.idatt2105.backend.model.AlternativeRecord;
-import com.idatt2105.backend.model.MultipleChoiceQuestionAttempt;
-import com.idatt2105.backend.model.TrueOrFalseQuestionAttempt;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.idatt2105.backend.enumerator.QuestionType;
+import com.idatt2105.backend.model.AlternativeRecord;
+import com.idatt2105.backend.model.MultipleChoiceQuestionAttempt;
+import com.idatt2105.backend.model.TrueOrFalseQuestionAttempt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -150,11 +151,11 @@ class QuestionAttemptDTOTests {
   @Test
   void testInstantiateQuestionAttempt() {
     questionAttemptDTO.setType(QuestionType.TRUE_OR_FALSE);
-    assertInstanceOf(TrueOrFalseQuestionAttempt.class,
-                     questionAttemptDTO.instantiateQuestionAttempt());
+    assertInstanceOf(
+        TrueOrFalseQuestionAttempt.class, questionAttemptDTO.instantiateQuestionAttempt());
 
     questionAttemptDTO.setType(QuestionType.MULTIPLE_CHOICE);
-    assertInstanceOf(MultipleChoiceQuestionAttempt.class,
-                     questionAttemptDTO.instantiateQuestionAttempt());
+    assertInstanceOf(
+        MultipleChoiceQuestionAttempt.class, questionAttemptDTO.instantiateQuestionAttempt());
   }
 }

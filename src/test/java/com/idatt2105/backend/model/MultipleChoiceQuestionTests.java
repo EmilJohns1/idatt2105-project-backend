@@ -1,12 +1,13 @@
 package com.idatt2105.backend.model;
 
-import com.idatt2105.backend.dto.AlternativeDTO;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.idatt2105.backend.dto.AlternativeDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -61,7 +62,8 @@ class MultipleChoiceQuestionTests {
 
     @Test
     void addAlternativeThrowsExceptionWhenParameterIsNull() {
-      assertThrows(IllegalArgumentException.class, () -> multipleChoiceQuestion.addAlternative(null));
+      assertThrows(
+          IllegalArgumentException.class, () -> multipleChoiceQuestion.addAlternative(null));
     }
   }
 
@@ -70,6 +72,8 @@ class MultipleChoiceQuestionTests {
     AlternativeDTO alternative = new AlternativeDTO();
     alternative.setAlternativeText("Alternative text");
     multipleChoiceQuestion.addAlternative(alternative);
-    assertEquals("Alternative text", multipleChoiceQuestion.getAlternatives().iterator().next().getAlternativeText());
+    assertEquals(
+        "Alternative text",
+        multipleChoiceQuestion.getAlternatives().iterator().next().getAlternativeText());
   }
 }

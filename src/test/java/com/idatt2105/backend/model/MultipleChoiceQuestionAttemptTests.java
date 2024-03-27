@@ -3,6 +3,7 @@ package com.idatt2105.backend.model;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -70,7 +71,8 @@ class MultipleChoiceQuestionAttemptTests {
 
   @Test
   void addAlternativeThrowsExceptionWhenGivenNullAsParameter() {
-    assertThrows(IllegalArgumentException.class, () -> multipleChoiceQuestionAttempt.addAlternative(null));
+    assertThrows(
+        IllegalArgumentException.class, () -> multipleChoiceQuestionAttempt.addAlternative(null));
   }
 
   @Test
@@ -78,11 +80,12 @@ class MultipleChoiceQuestionAttemptTests {
     MultipleChoiceQuestionAttempt attempt1 = new MultipleChoiceQuestionAttempt();
     MultipleChoiceQuestionAttempt attempt2 = new MultipleChoiceQuestionAttempt();
     List<MultipleChoiceQuestionAttempt> both = List.of(attempt1, attempt2);
-    both.forEach(attempt -> {
-      AlternativeRecord record = new AlternativeRecord();
-      record.setId(1L);
-      attempt.addAlternative(record);
-    });
+    both.forEach(
+        attempt -> {
+          AlternativeRecord record = new AlternativeRecord();
+          record.setId(1L);
+          attempt.addAlternative(record);
+        });
     assertEquals(attempt1, attempt2);
     assertEquals(attempt1.hashCode(), attempt2.hashCode());
   }

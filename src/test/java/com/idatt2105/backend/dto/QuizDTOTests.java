@@ -1,15 +1,16 @@
 package com.idatt2105.backend.dto;
 
-import com.idatt2105.backend.model.Quiz;
-import com.idatt2105.backend.model.Tag;
-import com.idatt2105.backend.model.User;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import com.idatt2105.backend.model.Quiz;
+import com.idatt2105.backend.model.Tag;
+import com.idatt2105.backend.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,8 +53,9 @@ class QuizDTOTests {
       assertEquals(quiz.getCreationDate(), quizDTO.getCreationDate());
       assertEquals(quiz.getLastModifiedDate(), quizDTO.getLastModifiedDate());
       assertEquals(quiz.getTags(), quizDTO.getTags());
-      assertEquals(quiz.getUsers().iterator().next().getUsername(),
-                   quizDTO.getUserDTOs().iterator().next().getUsername());
+      assertEquals(
+          quiz.getUsers().iterator().next().getUsername(),
+          quizDTO.getUserDTOs().iterator().next().getUsername());
     }
   }
 
@@ -178,13 +180,14 @@ class QuizDTOTests {
       LocalDateTime creationDate = LocalDateTime.now();
       LocalDateTime lastModifiedDate = LocalDateTime.now();
 
-      QuizDTO quizDTO = new QuizDTO.Builder()
-        .setId(1L)
-        .setTitle("Quiz Title")
-        .setDescription("Quiz Description")
-        .setCreationDate(creationDate)
-        .setLastModifiedDate(lastModifiedDate)
-        .build();
+      QuizDTO quizDTO =
+          new QuizDTO.Builder()
+              .setId(1L)
+              .setTitle("Quiz Title")
+              .setDescription("Quiz Description")
+              .setCreationDate(creationDate)
+              .setLastModifiedDate(lastModifiedDate)
+              .build();
 
       assertEquals(1L, quizDTO.getId());
       assertEquals("Quiz Title", quizDTO.getTitle());

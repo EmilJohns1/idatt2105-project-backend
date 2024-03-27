@@ -1,9 +1,10 @@
 package com.idatt2105.backend.model;
 
-import com.idatt2105.backend.enumerator.FeedbackType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.idatt2105.backend.enumerator.FeedbackType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

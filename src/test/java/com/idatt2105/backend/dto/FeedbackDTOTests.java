@@ -1,11 +1,12 @@
 package com.idatt2105.backend.dto;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.idatt2105.backend.enumerator.FeedbackType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.idatt2105.backend.enumerator.FeedbackType;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FeedbackDTOTests {
   private FeedbackDTO feedbackDTO;
@@ -19,13 +20,9 @@ class FeedbackDTOTests {
   class Constructor {
     @Test
     void allArgsConstructorInstantiatesObject() {
-      FeedbackDTO dto = new FeedbackDTO(
-          "John",
-          "Smith",
-          "test@gmail.com",
-          FeedbackType.ASSISTANCE,
-          "Test message",
-          1L);
+      FeedbackDTO dto =
+          new FeedbackDTO(
+              "John", "Smith", "test@gmail.com", FeedbackType.ASSISTANCE, "Test message", 1L);
       assertEquals("John", dto.getFirstName());
       assertEquals("Smith", dto.getLastName());
       assertEquals("test@gmail.com", dto.getEmail());

@@ -1,5 +1,7 @@
 package com.idatt2105.backend.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.idatt2105.backend.dto.QuestionDTO;
 
@@ -14,7 +16,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.Objects;
 import lombok.Data;
 
 /** Entity representing a question for a quiz. */
@@ -67,11 +68,12 @@ public class Question {
     thisQuizId = quiz == null ? null : quiz.getId();
     thatQuizId = question.quiz == null ? null : question.quiz.getId();
 
-    return points == question.points && Objects.equals(id, question.id) &&
-           Objects.equals(questionText, question.questionText) &&
-           Objects.equals(mediaUrl, question.mediaUrl) &&
-           Objects.equals(category, question.category) &&
-           Objects.equals(thisQuizId, thatQuizId);
+    return points == question.points
+        && Objects.equals(id, question.id)
+        && Objects.equals(questionText, question.questionText)
+        && Objects.equals(mediaUrl, question.mediaUrl)
+        && Objects.equals(category, question.category)
+        && Objects.equals(thisQuizId, thatQuizId);
   }
 
   @Override
