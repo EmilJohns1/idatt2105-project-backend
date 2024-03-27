@@ -84,7 +84,8 @@ public class UserDTOTest {
   @Test
   public void testToString() {
     UserDTO userDTO = new UserDTO(1L, "testuser", Collections.emptyList());
-    assertEquals("UserDTO(id=1, username=testuser, quizzes=[])", userDTO.toString());
+    assertEquals(
+        "UserDTO(id=1, username=testuser, quizzes=[], profilePictureUrl=null)", userDTO.toString());
   }
 
   /*

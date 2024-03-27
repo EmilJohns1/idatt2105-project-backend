@@ -34,6 +34,9 @@ public class User {
   @Column(name = "password")
   private String password;
 
+  @Column(name = "profile_picture_url")
+  private String profilePictureUrl;
+
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   @JoinTable(
       name = "user_quiz",

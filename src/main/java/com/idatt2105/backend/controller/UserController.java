@@ -9,20 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.idatt2105.backend.dto.LoginRequestDTO;
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.service.UserService;
+import com.idatt2105.backend.util.UserNotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -162,6 +156,28 @@ public class UserController {
       return ResponseEntity.notFound().build(); // Return 404 if user is not found
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserDTO());
+    }
+  }
+
+  /**
+   * Update user's profile picture by username.
+   *
+   * @param username (String) Username of the user to update profile picture for.
+   * @param profilePictureUrl (String) URL of the new profile picture.
+   * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
+   */
+  @PutMapping("/profile-picture")
+  @Operation(summary = "Update user's profile picture by username")
+  public ResponseEntity<String> updateProfilePictureByUsername(
+      @RequestParam("username") String username,
+      @RequestParam("profilePictureUrl") String profilePictureUrl) {
+    try {
+      userService.updateProfilePicture(username, profilePictureUrl);
+      return ResponseEntity.ok("Profile picture updated successfully");
+    } catch (UserNotFoundException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
   }
 

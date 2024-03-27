@@ -28,6 +28,7 @@ public class QuizDTO {
   private Long id;
   private String title;
   private String description;
+  private String quizPictureUrl;
   private LocalDateTime creationDate;
   private LocalDateTime lastModifiedDate;
   private Set<UserDTO> userDTOs;
@@ -42,6 +43,7 @@ public class QuizDTO {
     this.id = quiz.getId();
     this.title = quiz.getTitle();
     this.description = quiz.getDescription();
+    this.quizPictureUrl = quiz.getQuizPictureUrl();
     this.creationDate = quiz.getCreationDate();
     this.lastModifiedDate = quiz.getLastModifiedDate();
     this.tags = new HashSet<>(quiz.getTags());
@@ -57,6 +59,7 @@ public class QuizDTO {
     quiz.setId(this.id);
     quiz.setTitle(this.title);
     quiz.setDescription(this.description);
+    quiz.setQuizPictureUrl(this.quizPictureUrl);
     return quiz;
   }
 
@@ -73,6 +76,7 @@ public class QuizDTO {
     private Long id;
     private String title;
     private String description;
+    private String quizPictureUrl;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private Set<UserDTO> userDTOs;
@@ -90,6 +94,11 @@ public class QuizDTO {
 
     public Builder setDescription(String description) {
       this.description = description;
+      return this;
+    }
+
+    public Builder setQuizPictureUrl(String quizPictureUrl) {
+      this.quizPictureUrl = quizPictureUrl;
       return this;
     }
 
@@ -114,7 +123,8 @@ public class QuizDTO {
     }
 
     public QuizDTO build() {
-      return new QuizDTO(id, title, description, creationDate, lastModifiedDate, userDTOs, tags);
+      return new QuizDTO(
+          id, title, description, quizPictureUrl, creationDate, lastModifiedDate, userDTOs, tags);
     }
   }
 }
