@@ -31,13 +31,6 @@ class QuestionTests {
     }
 
     @Test
-    void getCategoryReturnsCorrectCategory() {
-      Question question = new Question();
-      question.setCategory("Geography");
-      assertEquals("Geography", question.getCategory());
-    }
-
-    @Test
     void getPointsReturnsCorrectPoints() {
       Question question = new Question();
       question.setPoints(10);
@@ -74,13 +67,6 @@ class QuestionTests {
       Question question = new Question();
       question.setMediaUrl("image.jpg");
       assertEquals("image.jpg", question.getMediaUrl());
-    }
-
-    @Test
-    void setCategorySetsCorrectCategory() {
-      Question question = new Question();
-      question.setCategory("Geography");
-      assertEquals("Geography", question.getCategory());
     }
 
     @Test

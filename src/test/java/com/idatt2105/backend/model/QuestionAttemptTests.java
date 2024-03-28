@@ -40,13 +40,6 @@ class QuestionAttemptTests {
     }
 
     @Test
-    void getCategoryReturnsCorrectCategory() {
-      String expectedCategory = "Geography";
-      questionAttempt.setCategory(expectedCategory);
-      assertEquals(expectedCategory, questionAttempt.getCategory());
-    }
-
-    @Test
     void getPointsReturnsCorrectPoints() {
       int expectedPoints = 5;
       questionAttempt.setPoints(expectedPoints);
@@ -85,13 +78,6 @@ class QuestionAttemptTests {
     }
 
     @Test
-    void setCategorySetsCategoryCorrectly() {
-      String expectedCategory = "Geography";
-      questionAttempt.setCategory(expectedCategory);
-      assertEquals(expectedCategory, questionAttempt.getCategory());
-    }
-
-    @Test
     void setPointsSetsPointsCorrectly() {
       int expectedPoints = 5;
       questionAttempt.setPoints(expectedPoints);
@@ -115,7 +101,6 @@ class QuestionAttemptTests {
       q.setId(1L);
       q.setQuestionText("Test question");
       q.setMediaUrl("Test media url");
-      q.setCategory("Test category");
       q.setPoints(1);
       QuizAttempt quiz = new QuizAttempt();
       quiz.setId(1L);

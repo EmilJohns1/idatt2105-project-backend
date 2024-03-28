@@ -43,7 +43,6 @@ class QuestionDTOTests {
       question.setType(QuestionType.MULTIPLE_CHOICE);
       question.setQuestionId(2L);
       question.setMediaUrl("test.com");
-      question.setCategory("Test category");
       question.isCorrect(true);
     }
 
@@ -70,11 +69,6 @@ class QuestionDTOTests {
     @Test
     void getMediaUrlReturnsMediaUrl() {
       assertEquals("test.com", question.getMediaUrl());
-    }
-
-    @Test
-    void getCategoryReturnsCategory() {
-      assertEquals("Test category", question.getCategory());
     }
 
     @Test
@@ -134,12 +128,6 @@ class QuestionDTOTests {
     void setMediaUrlSetsMediaUrl() {
       question.setMediaUrl("test.com");
       assertEquals("test.com", question.getMediaUrl());
-    }
-
-    @Test
-    void setCategorySetsCategory() {
-      question.setCategory("Test category");
-      assertEquals("Test category", question.getCategory());
     }
 
     @Test

@@ -27,7 +27,6 @@ public class QuestionAttempt {
   private String questionText;
 
   private String mediaUrl;
-  private String category;
   private int points;
 
   @ManyToOne
@@ -38,7 +37,6 @@ public class QuestionAttempt {
   public void extractFromDTO(QuestionAttemptDTO dto) {
     this.questionText = dto.getQuestionText();
     this.mediaUrl = dto.getMediaUrl();
-    this.category = dto.getCategory();
     this.points = dto.getPoints();
   }
 }

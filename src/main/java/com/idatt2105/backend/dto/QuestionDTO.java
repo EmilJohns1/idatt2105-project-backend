@@ -14,7 +14,6 @@ public class QuestionDTO {
   private Long questionId;
   private String questionText;
   private String mediaUrl;
-  private String category;
   private int points;
   private Long quizId;
   private QuestionType type;

@@ -16,7 +16,6 @@ public class QuestionAttemptDTO {
   private QuestionType type;
   private String questionText;
   private String mediaUrl;
-  private String category;
   private int points;
   private Set<AlternativeRecord> alternatives = new HashSet<>();
   private Boolean userAnswer;
