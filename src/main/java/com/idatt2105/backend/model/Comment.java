@@ -2,6 +2,8 @@ package com.idatt2105.backend.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +39,7 @@ public class Comment {
 
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
+  @JsonBackReference
   private User user;
 
   @ManyToOne
@@ -48,30 +51,4 @@ public class Comment {
 
   @Column(name = "last_modified_date")
   private LocalDateTime lastModifiedDate;
-
-  /**
-   * Sets the ID of the user who made the comment.
-   *
-   * @param userId The ID of the user
-   */
-  public void setUserId(Long userId) {
-    if (userId == null) {
-      throw new IllegalArgumentException("User ID cannot be null.");
-    }
-    this.user = new User();
-    this.user.setId(userId);
-  }
-
-  /**
-   * Sets the ID of the quiz that the comment is made on.
-   *
-   * @param quizId The ID of the quiz
-   */
-  public void setQuizId(Long quizId) {
-    if (quizId == null) {
-      throw new IllegalArgumentException("Quiz ID cannot be null.");
-    }
-    this.quiz = new Quiz();
-    this.quiz.setId(quizId);
-  }
 }

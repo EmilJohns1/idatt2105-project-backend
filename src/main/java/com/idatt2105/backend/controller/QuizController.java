@@ -6,19 +6,29 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.idatt2105.backend.dto.QuizDTO;
-import com.idatt2105.backend.dto.QuizUpdateRequestDTO;
 import com.idatt2105.backend.dto.UserDTO;
+import com.idatt2105.backend.model.Category;
+import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.service.QuizService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/quizzes")
-@Tag(name = "Quizzes", description = "Operations related to quizzes")
+@io.swagger.v3.oas.annotations.tags.Tag(
+    name = "Quizzes",
+    description = "Operations related to quizzes")
 public class QuizController {
 
   private final QuizService quizService;
@@ -74,17 +84,8 @@ public class QuizController {
   @PutMapping("/{id}")
   @Operation(summary = "Update quiz")
   public ResponseEntity<Void> updateQuiz(
-      @PathVariable("id") Long id, @RequestBody QuizUpdateRequestDTO requestDTO) {
-    if (requestDTO.getQuizPictureUrl() == null) {
-      requestDTO.setQuizPictureUrl(quizService.getQuizById(id).getQuizPictureUrl());
-    }
-    QuizDTO updatedQuiz =
-        new QuizDTO.Builder()
-            .setTitle(requestDTO.getTitle())
-            .setDescription(requestDTO.getDescription())
-            .setQuizPictureUrl(requestDTO.getQuizPictureUrl())
-            .build();
-    quizService.updateQuiz(id, updatedQuiz);
+      @PathVariable("id") Long id, @RequestBody QuizDTO requestDTO) {
+    quizService.updateQuiz(id, requestDTO);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -97,8 +98,7 @@ public class QuizController {
 
   @PatchMapping("/add/tags/{quizId}")
   @Operation(summary = "Adds one or more tags to a quiz")
-  public ResponseEntity<QuizDTO> addTags(
-      @PathVariable Long quizId, @RequestBody List<com.idatt2105.backend.model.Tag> tags) {
+  public ResponseEntity<QuizDTO> addTags(@PathVariable Long quizId, @RequestBody List<Tag> tags) {
     QuizDTO dto = new QuizDTO();
     dto.setId(quizId);
     dto.addAllTags(tags);
@@ -109,11 +109,46 @@ public class QuizController {
   @DeleteMapping("/delete/tags/{quizId}")
   @Operation(summary = "Deletes the given tags from a quiz")
   public ResponseEntity<QuizDTO> deleteTags(
-      @PathVariable Long quizId, @RequestBody List<com.idatt2105.backend.model.Tag> tags) {
+      @PathVariable Long quizId, @RequestBody List<Tag> tags) {
     QuizDTO dto = new QuizDTO();
     dto.setId(quizId);
     dto.addAllTags(tags);
     QuizDTO q = quizService.deleteTags(dto);
     return new ResponseEntity<>(q, HttpStatus.OK);
+  }
+
+  @PostMapping("/tag")
+  @Operation(summary = "Get all quizzes with a specific tag")
+  public ResponseEntity<List<QuizDTO>> getQuizzesByTag(@RequestBody Tag tag) {
+    List<QuizDTO> quizzes = quizService.getQuizzesByTag(tag);
+    return new ResponseEntity<>(quizzes, HttpStatus.OK);
+  }
+
+  @PostMapping("/all/tags")
+  @Operation(summary = "Get all tags currently in use")
+  public ResponseEntity<List<Tag>> getAllTags() {
+    List<Tag> tags = quizService.getAllTags();
+    return new ResponseEntity<>(tags, HttpStatus.OK);
+  }
+
+  @PostMapping("/create/category")
+  @Operation(summary = "Create a new category")
+  public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    Category createdCategory = quizService.createCategory(category);
+    return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+  }
+
+  @PostMapping("/category")
+  @Operation(summary = "Get all quizzes with a specific category")
+  public ResponseEntity<List<QuizDTO>> getQuizzesByCategory(@RequestBody Category category) {
+    List<QuizDTO> quizzes = quizService.getQuizzesByCategory(category);
+    return new ResponseEntity<>(quizzes, HttpStatus.OK);
+  }
+
+  @GetMapping("/categories")
+  @Operation(summary = "Get all categories")
+  public ResponseEntity<List<Category>> getAllCategories() {
+    List<Category> categories = quizService.getAllCategories();
+    return new ResponseEntity<>(categories, HttpStatus.OK);
   }
 }

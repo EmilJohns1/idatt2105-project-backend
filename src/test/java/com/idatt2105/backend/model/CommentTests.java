@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CommentTests {
 
@@ -109,30 +108,6 @@ class CommentTests {
       LocalDateTime lastModifiedDate = LocalDateTime.now();
       comment.setLastModifiedDate(lastModifiedDate);
       assertEquals(lastModifiedDate, comment.getLastModifiedDate());
-    }
-
-    @Test
-    void setUserId() {
-      Long userId = 1L;
-      comment.setUserId(userId);
-      assertEquals(userId, comment.getUser().getId());
-    }
-
-    @Test
-    void setUserIdThrowsExceptionWhenParameterIsNull() {
-      assertThrows(IllegalArgumentException.class, () -> comment.setUserId(null));
-    }
-
-    @Test
-    void setQuizId() {
-      Long quizId = 1L;
-      comment.setQuizId(quizId);
-      assertEquals(quizId, comment.getQuiz().getId());
-    }
-
-    @Test
-    void setQuizIdThrowsExceptionWhenParameterIsNull() {
-      assertThrows(IllegalArgumentException.class, () -> comment.setQuizId(null));
     }
   }
 }

@@ -2,12 +2,14 @@ package com.idatt2105.backend.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.dto.CommentDTO;
 import com.idatt2105.backend.model.Comment;
+import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.CommentRepository;
 import com.idatt2105.backend.repository.QuizRepository;
@@ -47,28 +49,36 @@ public class CommentService {
     if (quizId == null) {
       throw new IllegalArgumentException("Quiz id cannot be null");
     }
-    if (!quizRepository.existsById(quizId)) {
+    Optional<Quiz> quiz = quizRepository.findById(quizId);
+    if (quiz.isEmpty()) {
       throw new InvalidIdException("Quiz not found with id: " + quizId);
     }
 
-    List<Comment> comments = commentRepository.findByQuiz(quizRepository.findById(quizId).get());
+    List<Comment> comments = commentRepository.findByQuiz(quiz.get());
     return comments.stream().map(CommentDTO::new).toList();
   }
 
   public List<CommentDTO> getCommentsByUserId(Long userId) {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(() -> new InvalidIdException("User with id " + userId + " not found"));
+    if (userId == null) {
+      throw new IllegalArgumentException("User id cannot be null");
+    }
+
+    User user = findUser(userId);
     List<Comment> comments = commentRepository.findByUser(user);
     return comments.stream().map(CommentDTO::new).toList();
   }
 
   public CommentDTO saveComment(CommentDTO commentDTO) {
+    if (commentDTO == null) {
+      throw new IllegalArgumentException("CommentDTO cannot be null");
+    }
+    Quiz quiz = findQuiz(commentDTO.getQuizId());
+    User user = findUser(commentDTO.getUserId());
+
     Comment comment = new Comment();
     comment.setContent(commentDTO.getContent());
-    comment.setUserId(commentDTO.getUserId());
-    comment.setQuizId(commentDTO.getQuizId());
+    comment.setUser(user);
+    comment.setQuiz(quiz);
     comment.setCreationDate(LocalDateTime.now());
     comment.setLastModifiedDate(LocalDateTime.now());
 
@@ -77,6 +87,12 @@ public class CommentService {
   }
 
   public void updateComment(Long id, CommentDTO updatedComment) {
+    if (id == null) {
+      throw new IllegalArgumentException("Id cannot be null");
+    }
+    if (updatedComment == null) {
+      throw new IllegalArgumentException("CommentDTO cannot be null");
+    }
     Comment comment = findComment(id);
     comment.setContent(updatedComment.getContent());
     comment.setLastModifiedDate(LocalDateTime.now());
@@ -85,6 +101,9 @@ public class CommentService {
   }
 
   public void deleteComment(Long id) {
+    if (id == null) {
+      throw new IllegalArgumentException("Id cannot be null");
+    }
     if (commentRepository.existsById(id)) {
       commentRepository.deleteById(id);
     } else {
@@ -96,5 +115,17 @@ public class CommentService {
     return commentRepository
         .findById(id)
         .orElseThrow(() -> new InvalidIdException("Comment not found with id: " + id));
+  }
+
+  private Quiz findQuiz(Long id) {
+    return quizRepository
+        .findById(id)
+        .orElseThrow(() -> new InvalidIdException("Quiz not found with id: " + id));
+  }
+
+  private User findUser(Long id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new InvalidIdException("User not found with id: " + id));
   }
 }

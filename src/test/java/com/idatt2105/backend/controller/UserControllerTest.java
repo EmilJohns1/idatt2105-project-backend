@@ -2,7 +2,6 @@ package com.idatt2105.backend.controller;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -131,7 +130,7 @@ class UserControllerTest {
   void testGetUserById() {
     // Arrange
     UserDTO userDTO = new UserDTO();
-    when(userService.getUserById(eq(1L))).thenReturn(Optional.of(userDTO));
+    when(userService.getUserById(1L)).thenReturn(userDTO);
 
     // Act
     ResponseEntity<UserDTO> response = userController.getUserById(1L);
@@ -139,7 +138,7 @@ class UserControllerTest {
     // Assert
     assertEquals(userDTO, response.getBody());
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    verify(userService, times(1)).getUserById(eq(1L));
+    verify(userService, times(1)).getUserById(1L);
   }
 
   /*
@@ -149,7 +148,7 @@ class UserControllerTest {
   void testGetUserByUsername() {
     // Arrange
     UserDTO userDTO = new UserDTO();
-    when(userService.getUserByUsername(anyString())).thenReturn(Optional.of(userDTO));
+    when(userService.getUserByUsername(anyString())).thenReturn(userDTO);
 
     // Act
     ResponseEntity<UserDTO> response = userController.getUserByUsername("username");

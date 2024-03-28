@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
+import com.idatt2105.backend.model.Category;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.User;
+import com.idatt2105.backend.repository.CategoryRepository;
 import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.repository.UserRepository;
@@ -25,20 +27,20 @@ import com.idatt2105.backend.util.InvalidIdException;
 public class QuizService {
 
   private final QuizRepository quizRepository;
-  private final UserService userService;
   private final UserRepository userRepository;
   private final TagRepository tagRepository;
+  private final CategoryRepository categoryRepository;
 
   @Autowired
   public QuizService(
       QuizRepository quizRepository,
-      UserService userService,
       UserRepository userRepository,
-      TagRepository tagRepository) {
+      TagRepository tagRepository,
+      CategoryRepository categoryRepository) {
     this.quizRepository = quizRepository;
-    this.userService = userService;
     this.userRepository = userRepository;
     this.tagRepository = tagRepository;
+    this.categoryRepository = categoryRepository;
   }
 
   public List<QuizDTO> getAllQuizzes() {
@@ -81,10 +83,16 @@ public class QuizService {
 
     Quiz existingQuiz = findQuiz(id);
 
-    existingQuiz.setTitle(updatedQuiz.getTitle());
-    existingQuiz.setDescription(updatedQuiz.getDescription());
-    existingQuiz.setLastModifiedDate(LocalDateTime.now());
-    existingQuiz.setQuizPictureUrl(updatedQuiz.getQuizPictureUrl());
+    // Only update fields that are included in the request
+    Optional.ofNullable(updatedQuiz.getTitle()).ifPresent(existingQuiz::setTitle);
+    Optional.ofNullable(updatedQuiz.getDescription()).ifPresent(existingQuiz::setDescription);
+    Optional.ofNullable(updatedQuiz.getQuizPictureUrl()).ifPresent(existingQuiz::setQuizPictureUrl);
+    Optional.ofNullable(updatedQuiz.getCategoryName())
+        .ifPresent(
+            categoryName -> {
+              Category category = findCategoryByName(categoryName);
+              existingQuiz.setCategory(category);
+            });
 
     quizRepository.save(existingQuiz);
   }
@@ -178,6 +186,48 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
+  public List<QuizDTO> getQuizzesByTag(Tag tag) {
+    if (tag == null) {
+      throw new IllegalArgumentException("Tag parameter cannot be null.");
+    }
+    Optional<Tag> foundTag = tagRepository.findByTagName(tag.getTagName());
+    if (foundTag.isEmpty()) {
+      return new ArrayList<>();
+    }
+    List<Quiz> quizzes = quizRepository.findByTagsContains(foundTag.get());
+    return quizzes.stream().map(QuizDTO::new).toList();
+  }
+
+  public List<Tag> getAllTags() {
+    return tagRepository.findAll();
+  }
+
+  public Category createCategory(Category category) {
+    if (category == null) {
+      throw new IllegalArgumentException("Category parameter cannot be null.");
+    }
+    if (categoryRepository.existsByName(category.getName())) {
+      throw new IllegalArgumentException(
+          "Category with name " + category.getName() + " already exists.");
+    }
+    category.setId(null); // Avoids conflicts with existing categories
+
+    return categoryRepository.save(category);
+  }
+
+  public List<QuizDTO> getQuizzesByCategory(Category category) {
+    if (category == null) {
+      throw new IllegalArgumentException("Category parameter cannot be null.");
+    }
+    Category foundCategory = findCategoryByName(category.getName());
+    List<Quiz> quizzes = quizRepository.findByCategory(foundCategory);
+    return quizzes.stream().map(QuizDTO::new).toList();
+  }
+
+  public List<Category> getAllCategories() {
+    return categoryRepository.findAll();
+  }
+
   private Quiz findQuiz(Long id) {
     return quizRepository
         .findById(id)
@@ -188,5 +238,11 @@ public class QuizService {
     return userRepository
         .findById(id)
         .orElseThrow(() -> new InvalidIdException("User with id " + id + " not found"));
+  }
+
+  private Category findCategoryByName(String name) {
+    return categoryRepository
+        .findByName(name)
+        .orElseThrow(() -> new InvalidIdException("Category with name " + name + " not found"));
   }
 }

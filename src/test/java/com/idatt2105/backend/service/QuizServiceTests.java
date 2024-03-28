@@ -44,6 +44,11 @@ public class QuizServiceTests {
   void setUp() {
     when(tagRepository.existsByTagName(any())).thenReturn(false);
     when(tagRepository.save(any(Tag.class))).thenAnswer(returnsFirstArg());
+    when(tagRepository.findAll()).thenReturn(List.of(new Tag()));
+    Tag tag = new Tag();
+    tag.setId(1L);
+    tag.setTagName("Test");
+    when(tagRepository.findByTagName("Test")).thenReturn(Optional.of(tag));
     when(quizRepository.findById(1L)).thenReturn(Optional.of(new Quiz()));
     when(quizRepository.save(any(Quiz.class))).thenAnswer(returnsFirstArg());
   }
@@ -206,6 +211,19 @@ public class QuizServiceTests {
       assertFalse(actual.getTags().contains(tag1));
       assertTrue(actual.getTags().contains(tag2));
     }
+
+    @Test
+    void getQuizzesByTag() {
+      Tag tag = new Tag();
+      tag.setTagName("Test");
+      Quiz quiz = new Quiz();
+      quiz.setId(1L);
+      quiz.setTitle("Quiz");
+      quiz.addTags(Set.of(tag));
+      when(quizRepository.findByTagsContains(tag)).thenReturn(List.of(quiz));
+      List<QuizDTO> actual = quizService.getQuizzesByTag(tag);
+      assertEquals(new QuizDTO(quiz), actual.get(0));
+    }
   }
 
   @Nested
@@ -287,6 +305,11 @@ public class QuizServiceTests {
     @Test
     void deleteTagsThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.deleteTags(null));
+    }
+
+    @Test
+    void getQuizzesByTagThrowsExceptionWhenParameterIsNull() {
+      assertThrows(IllegalArgumentException.class, () -> quizService.getQuizzesByTag(null));
     }
   }
 }

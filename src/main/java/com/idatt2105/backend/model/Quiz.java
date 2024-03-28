@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -71,6 +72,8 @@ public class Quiz {
       joinColumns = @JoinColumn(name = "quiz_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private Set<Tag> tags = new HashSet<>();
+
+  @ManyToOne private Category category;
 
   public void addTags(Collection<Tag> tags) {
     tags.stream().filter(Objects::nonNull).forEach(this.tags::add);

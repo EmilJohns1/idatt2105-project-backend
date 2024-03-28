@@ -29,6 +29,7 @@ public class QuizDTO {
   private String title;
   private String description;
   private String quizPictureUrl;
+  private String categoryName;
   private LocalDateTime creationDate;
   private LocalDateTime lastModifiedDate;
   private Set<UserDTO> userDTOs;
@@ -44,6 +45,7 @@ public class QuizDTO {
     this.title = quiz.getTitle();
     this.description = quiz.getDescription();
     this.quizPictureUrl = quiz.getQuizPictureUrl();
+    this.categoryName = quiz.getCategory() == null ? null : quiz.getCategory().getName();
     this.creationDate = quiz.getCreationDate();
     this.lastModifiedDate = quiz.getLastModifiedDate();
     this.userDTOs = new HashSet<>();
@@ -64,6 +66,7 @@ public class QuizDTO {
     quiz.setQuizPictureUrl(this.quizPictureUrl);
     quiz.setCreationDate(this.creationDate);
     quiz.setLastModifiedDate(this.lastModifiedDate);
+    quiz.setQuizPictureUrl(this.quizPictureUrl);
     return quiz;
   }
 
@@ -81,6 +84,7 @@ public class QuizDTO {
     private String title;
     private String description;
     private String quizPictureUrl;
+    private String categoryName;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private Set<UserDTO> userDTOs;
@@ -106,6 +110,11 @@ public class QuizDTO {
       return this;
     }
 
+    public Builder setCategoryName(String categoryName) {
+      this.categoryName = categoryName;
+      return this;
+    }
+
     public Builder setCreationDate(LocalDateTime creationDate) {
       this.creationDate = creationDate;
       return this;
@@ -128,7 +137,15 @@ public class QuizDTO {
 
     public QuizDTO build() {
       return new QuizDTO(
-          id, title, description, quizPictureUrl, creationDate, lastModifiedDate, userDTOs, tags);
+          id,
+          title,
+          description,
+          quizPictureUrl,
+          categoryName,
+          creationDate,
+          lastModifiedDate,
+          userDTOs,
+          tags);
     }
   }
 }

@@ -239,7 +239,7 @@ class UserServiceTest {
     when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(IllegalStateException.class, () -> userService.getQuizzesByUserId(userId));
+    assertThrows(UserNotFoundException.class, () -> userService.getQuizzesByUserId(userId));
     verify(userRepository, times(1)).findById(userId);
   }
 
@@ -387,11 +387,11 @@ class UserServiceTest {
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
     // Act
-    Optional<UserDTO> result = userService.getUserById(userId);
+    UserDTO result = userService.getUserById(userId);
 
     // Assert
     assertNotNull(result);
-    assertEquals("testUser", result.get().getUsername());
+    assertEquals("testUser", result.getUsername());
   }
 
   /*
@@ -407,10 +407,10 @@ class UserServiceTest {
     when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
     // Act
-    Optional<UserDTO> result = userService.getUserByUsername(username);
+    UserDTO result = userService.getUserByUsername(username);
 
     // Assert
     assertNotNull(result);
-    assertEquals(username, result.get().getUsername());
+    assertEquals(username, result.getUsername());
   }
 }

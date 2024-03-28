@@ -3,13 +3,15 @@ package com.idatt2105.backend.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.idatt2105.backend.service.AmazonClient;
 
 @RestController
-@RequestMapping("/storage/")
+@RequestMapping("/api/storage")
 public class ImageController {
   private AmazonClient amazonClient;
 
@@ -19,11 +21,12 @@ public class ImageController {
   }
 
   @PostMapping("/uploadFile")
-  public String uploadFile(@RequestPart(value = "file") MultipartFile file) {
+  public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
     try {
-      return this.amazonClient.uploadFile(file);
+      String imageUrl = this.amazonClient.uploadFile(file);
+      return ResponseEntity.ok(imageUrl);
     } catch (Exception e) {
-      return e.getMessage();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
   }
 

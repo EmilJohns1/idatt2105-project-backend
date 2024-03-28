@@ -1,7 +1,6 @@
 package com.idatt2105.backend.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import com.idatt2105.backend.model.Feedback;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.repository.FeedbackRepository;
 import com.idatt2105.backend.repository.UserRepository;
+import com.idatt2105.backend.util.InvalidIdException;
 
 @Service
 public class FeedbackService {
@@ -37,9 +37,18 @@ public class FeedbackService {
    * @return The created FeedbackDTO.
    */
   public FeedbackDTO createFeedback(FeedbackDTO feedbackDTO) {
-    Feedback feedback = convertToEntity(feedbackDTO);
-    Feedback savedFeedback = feedbackRepository.save(feedback);
-    return convertToDTO(savedFeedback);
+    if (feedbackDTO == null) {
+      throw new IllegalArgumentException("FeedbackDTO cannot be null");
+    }
+
+    User user =
+        userRepository
+            .findById(feedbackDTO.getUserId())
+            .orElseThrow(() -> new InvalidIdException("User not found"));
+    Feedback feedback = feedbackDTO.convertToEntity();
+    feedback.setUser(user);
+
+    return new FeedbackDTO(feedbackRepository.save(feedback));
   }
 
   /**
@@ -49,16 +58,22 @@ public class FeedbackService {
    * @param feedbackDTO The DTO containing the updated feedback data.
    */
   public void updateFeedback(Long feedbackId, FeedbackDTO feedbackDTO) {
+    if (feedbackId == null) {
+      throw new IllegalArgumentException("FeedbackDTO cannot be null");
+    }
+    if (feedbackDTO == null) {
+      throw new IllegalArgumentException("FeedbackDTO cannot be null");
+    }
+
     Feedback existingFeedback =
         feedbackRepository
             .findById(feedbackId)
-            .orElseThrow(() -> new IllegalArgumentException("Feedback not found"));
-    Feedback updatedFeedback = convertToEntity(feedbackDTO);
-    existingFeedback.setFirstName(updatedFeedback.getFirstName());
-    existingFeedback.setLastName(updatedFeedback.getLastName());
-    existingFeedback.setEmail(updatedFeedback.getEmail());
-    existingFeedback.setFeedbackType(updatedFeedback.getFeedbackType());
-    existingFeedback.setContent(updatedFeedback.getContent());
+            .orElseThrow(() -> new InvalidIdException("Feedback not found"));
+    existingFeedback.setFirstName(feedbackDTO.getFirstName());
+    existingFeedback.setLastName(feedbackDTO.getLastName());
+    existingFeedback.setEmail(feedbackDTO.getEmail());
+    existingFeedback.setFeedbackType(feedbackDTO.getFeedbackType());
+    existingFeedback.setContent(feedbackDTO.getContent());
     feedbackRepository.save(existingFeedback);
   }
 
@@ -68,6 +83,9 @@ public class FeedbackService {
    * @param feedbackId The ID of the feedback to delete.
    */
   public void deleteFeedback(Long feedbackId) {
+    if (feedbackId == null) {
+      throw new IllegalArgumentException("FeedbackDTO cannot be null");
+    }
     feedbackRepository.deleteById(feedbackId);
   }
 
@@ -78,7 +96,7 @@ public class FeedbackService {
    */
   public List<FeedbackDTO> getAllFeedback() {
     List<Feedback> feedbackList = feedbackRepository.findAll();
-    return feedbackList.stream().map(this::convertToDTO).collect(Collectors.toList());
+    return feedbackList.stream().map(FeedbackDTO::new).toList();
   }
 
   /**
@@ -90,45 +108,11 @@ public class FeedbackService {
    *     userId.
    */
   public List<FeedbackDTO> getFeedbackByUserId(Long userId) {
-    List<Feedback> feedbackList = feedbackRepository.findByUserId(userId);
-    return feedbackList.stream().map(this::convertToDTO).collect(Collectors.toList());
-  }
-
-  /**
-   * Converts a Feedback entity to a FeedbackDTO.
-   *
-   * @param feedback The Feedback entity to convert.
-   * @return The converted FeedbackDTO.
-   */
-  private FeedbackDTO convertToDTO(Feedback feedback) {
-    FeedbackDTO dto = new FeedbackDTO();
-    dto.setFirstName(feedback.getFirstName());
-    dto.setLastName(feedback.getLastName());
-    dto.setEmail(feedback.getEmail());
-    dto.setFeedbackType(feedback.getFeedbackType());
-    dto.setContent(feedback.getContent());
-    if (feedback.getUser() != null) {
-      dto.setUserId(feedback.getUser().getId());
+    if (userId == null) {
+      throw new IllegalArgumentException("User ID cannot be null");
     }
-    return dto;
-  }
 
-  /**
-   * Converts a FeedbackDTO to a Feedback entity.
-   *
-   * @param dto The FeedbackDTO to convert.
-   * @return The converted Feedback entity.
-   */
-  private Feedback convertToEntity(FeedbackDTO dto) {
-    Feedback feedback = new Feedback();
-    feedback.setFirstName(dto.getFirstName());
-    feedback.setLastName(dto.getLastName());
-    feedback.setEmail(dto.getEmail());
-    feedback.setFeedbackType(dto.getFeedbackType());
-    feedback.setContent(dto.getContent());
-    User user = userRepository.findById(dto.getUserId()).orElseThrow();
-    feedback.setUser(user);
-    // You may set the user here if needed
-    return feedback;
+    List<Feedback> feedbackList = feedbackRepository.findByUserId(userId);
+    return feedbackList.stream().map(FeedbackDTO::new).toList();
   }
 }

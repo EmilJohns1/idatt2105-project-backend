@@ -73,7 +73,7 @@ public class CommentController {
    * Updates an existing comment.
    *
    * @param id the ID of the comment to update
-   * @param commentDTO the CommentDTO object representing the updated comment
+   * @param content the new content of the comment
    * @return a ResponseEntity containing the updated CommentDTO object and the HTTP status code
    */
   @PutMapping("/{id}")
