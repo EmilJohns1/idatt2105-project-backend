@@ -145,7 +145,7 @@ public class UserService {
         .findByUsername(username)
         .map(
             user -> {
-              return new UserDTO(user.getId(), user.getUsername());
+              return new UserDTO(user.getId(), user.getUsername(), user.getProfilePictureUrl());
             });
   }
 
