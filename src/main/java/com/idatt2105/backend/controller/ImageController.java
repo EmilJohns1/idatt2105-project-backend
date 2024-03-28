@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.idatt2105.backend.service.AmazonClient;
 
 @RestController
-@RequestMapping("/storage/")
+@RequestMapping("/api/storage")
 public class ImageController {
   private AmazonClient amazonClient;
 
