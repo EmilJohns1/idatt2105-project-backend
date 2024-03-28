@@ -35,9 +35,6 @@ public class Question {
   @Column(name = "media_url")
   private String mediaUrl;
 
-  @Column(name = "category")
-  private String category;
-
   @Column(name = "points")
   private int points;
 
@@ -49,7 +46,6 @@ public class Question {
   public void extractFromDTO(QuestionDTO dto) {
     this.questionText = dto.getQuestionText();
     this.mediaUrl = dto.getMediaUrl();
-    this.category = dto.getCategory();
     this.points = dto.getPoints();
   }
 
@@ -72,13 +68,12 @@ public class Question {
         && Objects.equals(id, question.id)
         && Objects.equals(questionText, question.questionText)
         && Objects.equals(mediaUrl, question.mediaUrl)
-        && Objects.equals(category, question.category)
         && Objects.equals(thisQuizId, thatQuizId);
   }
 
   @Override
   public int hashCode() {
     Long quizId = quiz == null ? null : quiz.getId();
-    return Objects.hash(id, questionText, mediaUrl, category, points, quizId);
+    return Objects.hash(id, questionText, mediaUrl, points, quizId);
   }
 }
