@@ -62,18 +62,10 @@ public class UserService {
    * @return Optional of the user with the given id.
    * @throws UserNotFoundException If no user with the given id is found.
    */
-  public Optional<UserDTO> getUserById(Long id) {
-    return userRepository
-        .findById(id)
-        .map(
-            user -> {
-              List<QuizDTO> quizDTOs = new ArrayList<>();
-              for (Quiz quiz : user.getQuizzes()) {
-                quizDTOs.add(new QuizDTO(quiz));
-              }
-              return new UserDTO(user.getId(), user.getUsername(), quizDTOs);
-            })
-        .or(() -> Optional.<UserDTO>empty());
+  public UserDTO getUserById(Long id) {
+    User user = findUserById(id);
+    List<QuizDTO> quizDTOs = user.getQuizzes().stream().map(QuizDTO::new).toList();
+    return new UserDTO(user.getId(), user.getUsername(), quizDTOs);
   }
 
   /**
@@ -91,9 +83,6 @@ public class UserService {
     String hashedPassword = passwordEncoder.encode(user.getPassword());
     user.setPassword(hashedPassword);
     User savedUser = userRepository.save(user);
-    if (savedUser == null) {
-      throw new RuntimeException("Failed to save user");
-    }
     return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
   }
 
@@ -119,10 +108,7 @@ public class UserService {
    * @throws UserNotFoundException If no user with the given id is found.
    */
   public UserDTO updateUser(Long id, @Validated @NotNull User user) {
-    User existingUser =
-        userRepository
-            .findById(id)
-            .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+    User existingUser = findUserById(id);
     existingUser.setUsername(user.getUsername());
     existingUser.setPassword(user.getPassword());
     User updatedUser = userRepository.save(existingUser);
@@ -140,13 +126,9 @@ public class UserService {
    * @return User with the given username.
    * @throws UserNotFoundException If no user with the given username is found.
    */
-  public Optional<UserDTO> getUserByUsername(String username) {
-    return userRepository
-        .findByUsername(username)
-        .map(
-            user -> {
-              return new UserDTO(user.getId(), user.getUsername(), user.getProfilePictureUrl());
-            });
+  public UserDTO getUserByUsername(String username) {
+    User user = findUserByUsername(username);
+    return new UserDTO(user.getId(), user.getUsername(), user.getProfilePictureUrl());
   }
 
   /**
@@ -184,11 +166,7 @@ public class UserService {
    * @throws UserNotFoundException If no user with the given username is found.
    */
   public void updateProfilePicture(String username, String profilePictureUrl) {
-    User user =
-        userRepository
-            .findByUsername(username)
-            .orElseThrow(
-                () -> new UserNotFoundException("User with username " + username + " not found"));
+    User user = findUserByUsername(username);
     user.setProfilePictureUrl(profilePictureUrl);
     userRepository.save(user);
   }
@@ -201,13 +179,7 @@ public class UserService {
    * @throws UserNotFoundException If no user with the given username is found.
    */
   private boolean validateCredentials(@Validated @NotNull User user) {
-    User existingUser =
-        userRepository
-            .findByUsername(user.getUsername())
-            .orElseThrow(
-                () ->
-                    new UserNotFoundException(
-                        "User with username " + user.getUsername() + " not found"));
+    User existingUser = findUserByUsername(user.getUsername());
     // Use the password encoder to verify the password
     return passwordEncoder.matches(user.getPassword(), existingUser.getPassword());
   }
@@ -218,10 +190,7 @@ public class UserService {
    * @return Set of quizzes created by the user.
    */
   public Set<QuizDTO> getQuizzesByUserId(Long userId) {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(() -> new IllegalStateException("User with id " + userId + " not found"));
+    User user = findUserById(userId);
     Set<QuizDTO> quizDTOs = new HashSet<>();
     for (Quiz quiz : user.getQuizzes()) {
       quizDTOs.add(new QuizDTO(quiz));
@@ -252,5 +221,18 @@ public class UserService {
     return userRepository
         .findById(id)
         .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()));
+  }
+
+  private User findUserById(Long id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+  }
+
+  private User findUserByUsername(String username) {
+    return userRepository
+        .findByUsername(username)
+        .orElseThrow(
+            () -> new UserNotFoundException("User with username " + username + " not found"));
   }
 }

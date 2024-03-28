@@ -22,6 +22,8 @@ import com.idatt2105.backend.model.MultipleChoiceQuestion;
 import com.idatt2105.backend.model.Question;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 import com.idatt2105.backend.service.QuestionService;
+import com.idatt2105.backend.util.InvalidIdException;
+import com.idatt2105.backend.util.InvalidQuestionTypeException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -146,6 +148,28 @@ class QuestionControllerTests {
                   .secure(true))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$.id").value(2));
+    }
+
+    @Test
+    void getQuestionByIdWithNonExistentIdReturns404() throws Exception {
+      when(questionService.getQuestionById(any())).thenThrow(InvalidIdException.class);
+      mockMvc
+          .perform(get("/api/question/get/5").contentType(MediaType.APPLICATION_JSON).secure(true))
+          .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void addQuestionWithInvalidTypeReturns400() throws Exception {
+      when(questionService.addQuestion(any(QuestionDTO.class)))
+          .thenThrow(InvalidQuestionTypeException.class);
+      mCQuestionDTO.setType(null);
+      mockMvc
+          .perform(
+              post("/api/question/add")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(asJsonString(mCQuestionDTO))
+                  .secure(true))
+          .andExpect(status().isBadRequest());
     }
   }
 

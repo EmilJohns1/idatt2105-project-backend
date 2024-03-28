@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.idatt2105.backend.enumerator.FeedbackType;
+import com.idatt2105.backend.model.Feedback;
+import com.idatt2105.backend.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -30,6 +32,42 @@ class FeedbackDTOTests {
       assertEquals("Test message", dto.getContent());
       assertEquals(1L, dto.getUserId());
     }
+  }
+
+  @Test
+  void constructorWithFeedbackParameter() {
+    Feedback input = new Feedback();
+    input.setFirstName("John");
+    input.setLastName("Smith");
+    input.setEmail("test@gmail.com");
+    input.setFeedbackType(FeedbackType.ASSISTANCE);
+    input.setContent("Test message");
+    User user = new User();
+    user.setId(1L);
+    input.setUser(user);
+    FeedbackDTO dto = new FeedbackDTO(input);
+    assertEquals("John", dto.getFirstName());
+    assertEquals("Smith", dto.getLastName());
+    assertEquals("test@gmail.com", dto.getEmail());
+    assertEquals(FeedbackType.ASSISTANCE, dto.getFeedbackType());
+    assertEquals("Test message", dto.getContent());
+    assertEquals(1L, dto.getUserId());
+  }
+
+  @Test
+  void toEntity() {
+    FeedbackDTO dto = new FeedbackDTO();
+    dto.setFirstName("John");
+    dto.setLastName("Smith");
+    dto.setEmail("test@gmail.com");
+    dto.setFeedbackType(FeedbackType.ASSISTANCE);
+    dto.setContent("Test message");
+    Feedback feedback = dto.convertToEntity();
+    assertEquals("John", feedback.getFirstName());
+    assertEquals("Smith", feedback.getLastName());
+    assertEquals("test@gmail.com", feedback.getEmail());
+    assertEquals(FeedbackType.ASSISTANCE, feedback.getFeedbackType());
+    assertEquals("Test message", feedback.getContent());
   }
 
   @Nested

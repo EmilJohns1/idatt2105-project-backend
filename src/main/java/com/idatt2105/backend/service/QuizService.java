@@ -25,18 +25,13 @@ import com.idatt2105.backend.util.InvalidIdException;
 public class QuizService {
 
   private final QuizRepository quizRepository;
-  private final UserService userService;
   private final UserRepository userRepository;
   private final TagRepository tagRepository;
 
   @Autowired
   public QuizService(
-      QuizRepository quizRepository,
-      UserService userService,
-      UserRepository userRepository,
-      TagRepository tagRepository) {
+      QuizRepository quizRepository, UserRepository userRepository, TagRepository tagRepository) {
     this.quizRepository = quizRepository;
-    this.userService = userService;
     this.userRepository = userRepository;
     this.tagRepository = tagRepository;
   }
@@ -176,6 +171,22 @@ public class QuizService {
     quiz.removeTags(dto.getTags());
     Quiz savedQuiz = quizRepository.save(quiz);
     return new QuizDTO(savedQuiz);
+  }
+
+  public List<QuizDTO> getQuizzesByTag(Tag tag) {
+    if (tag == null) {
+      throw new IllegalArgumentException("Tag parameter cannot be null.");
+    }
+    Optional<Tag> foundTag = tagRepository.findByTagName(tag.getTagName());
+    if (foundTag.isEmpty()) {
+      return new ArrayList<>();
+    }
+    List<Quiz> quizzes = quizRepository.findByTagsContains(foundTag.get());
+    return quizzes.stream().map(QuizDTO::new).toList();
+  }
+
+  public List<Tag> getAllTags() {
+    return tagRepository.findAll();
   }
 
   private Quiz findQuiz(Long id) {
