@@ -48,13 +48,6 @@ class QuestionAttemptDTOTests {
     }
 
     @Test
-    void testGetCategory() {
-      String category = "Category";
-      questionAttemptDTO.setCategory(category);
-      assertEquals(category, questionAttemptDTO.getCategory());
-    }
-
-    @Test
     void testGetPoints() {
       int points = 10;
       questionAttemptDTO.setPoints(points);
@@ -107,13 +100,6 @@ class QuestionAttemptDTOTests {
       String mediaUrl = "http://example.com";
       questionAttemptDTO.setMediaUrl(mediaUrl);
       assertEquals(mediaUrl, questionAttemptDTO.getMediaUrl());
-    }
-
-    @Test
-    void testSetCategory() {
-      String category = "Category";
-      questionAttemptDTO.setCategory(category);
-      assertEquals(category, questionAttemptDTO.getCategory());
     }
 
     @Test
