@@ -12,7 +12,7 @@ public class RestExceptionHandler {
   @ExceptionHandler(UserNotFoundException.class)
   ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
     ErrorResponse errorResponse = new ErrorResponse();
-    errorResponse.setTitle("User not found");
+    errorResponse.setTitle(e.getMessage());
     errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
     errorResponse.setTimestamp(LocalDate.now().toString());
     return ResponseEntity.status(404).body(errorResponse);
@@ -21,7 +21,7 @@ public class RestExceptionHandler {
   @ExceptionHandler(ExistingUserException.class)
   ResponseEntity<ErrorResponse> handleExistingUserException(ExistingUserException e) {
     ErrorResponse errorResponse = new ErrorResponse();
-    errorResponse.setTitle("User already exists");
+    errorResponse.setTitle(e.getMessage());
     errorResponse.setStatus(HttpStatus.CONFLICT.value());
     errorResponse.setTimestamp(LocalDate.now().toString());
     return ResponseEntity.status(409).body(errorResponse);
@@ -30,10 +30,10 @@ public class RestExceptionHandler {
   @ExceptionHandler(InvalidCredentialsException.class)
   ResponseEntity<ErrorResponse> handleInvalidCredentialsException(InvalidCredentialsException e) {
     ErrorResponse errorResponse = new ErrorResponse();
-    errorResponse.setTitle("Unauthorized");
-    errorResponse.setStatus(HttpStatus.FORBIDDEN.value());
+    errorResponse.setTitle(e.getMessage());
+    errorResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
     errorResponse.setTimestamp(LocalDate.now().toString());
-    return ResponseEntity.status(403).body(errorResponse);
+    return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
   }
 
   @ExceptionHandler(InvalidIdException.class)

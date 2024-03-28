@@ -1,8 +1,6 @@
 package com.idatt2105.backend.controller;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.User;
 import com.idatt2105.backend.service.UserService;
-import com.idatt2105.backend.util.UserNotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,16 +52,11 @@ public class UserController {
   @Operation(summary = "Register a new user")
   public ResponseEntity<String> register(
       @RequestBody @Validated LoginRequestDTO registrationRequest) {
-    try {
-      User user = new User();
-      user.setUsername(registrationRequest.getUsername());
-      user.setPassword(registrationRequest.getPassword());
-      userService.addUser(user);
-      return ResponseEntity.ok("Registered successfully");
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Registration failed: " + e.getMessage());
-    }
+    User user = new User();
+    user.setUsername(registrationRequest.getUsername());
+    user.setPassword(registrationRequest.getPassword());
+    userService.addUser(user);
+    return ResponseEntity.ok("Registered successfully");
   }
 
   // TODO implement hashing of password and secure login
@@ -77,15 +69,11 @@ public class UserController {
   @PostMapping("/login")
   @Operation(summary = "Log in a user")
   public ResponseEntity<String> login(@RequestBody @Validated LoginRequestDTO loginRequest) {
-    try {
-      User user = new User();
-      user.setUsername(loginRequest.getUsername());
-      user.setPassword(loginRequest.getPassword());
-      userService.login(user);
-      return ResponseEntity.ok("Logged in successfully");
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
+    User user = new User();
+    user.setUsername(loginRequest.getUsername());
+    user.setPassword(loginRequest.getPassword());
+    userService.login(user);
+    return ResponseEntity.ok("Logged in successfully");
   }
 
   // TODO implement
@@ -98,12 +86,8 @@ public class UserController {
   @PostMapping("/update")
   @Operation(summary = "Update a user")
   public ResponseEntity<String> update(@RequestBody @Validated User user) {
-    try {
-      userService.updateUser(user.getId(), user);
-      return ResponseEntity.ok("User updated successfully");
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
+    userService.updateUser(user.getId(), user);
+    return ResponseEntity.ok("User updated successfully");
   }
 
   /**
@@ -115,12 +99,8 @@ public class UserController {
   @DeleteMapping("/{id}")
   @Operation(summary = "Delete a user")
   public ResponseEntity<String> delete(@PathVariable("id") Long id) {
-    try {
-      userService.deleteUser(id);
-      return ResponseEntity.ok("User deleted successfully");
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
+    userService.deleteUser(id);
+    return ResponseEntity.ok("User deleted successfully");
   }
 
   /**
@@ -132,12 +112,8 @@ public class UserController {
   @GetMapping("/{id}")
   @Operation(summary = "Get user by id")
   public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
-    try {
-      UserDTO userDTO = userService.getUserById(id).orElseThrow();
-      return ResponseEntity.ok(userDTO);
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserDTO());
-    }
+    UserDTO userDTO = userService.getUserById(id);
+    return ResponseEntity.ok(userDTO);
   }
 
   /**
@@ -149,14 +125,8 @@ public class UserController {
   @GetMapping("/username")
   @Operation(summary = "Get user by username")
   public ResponseEntity<UserDTO> getUserByUsername(@RequestParam("username") String username) {
-    try {
-      UserDTO userDTO = userService.getUserByUsername(username).orElseThrow();
-      return ResponseEntity.ok(userDTO);
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.notFound().build(); // Return 404 if user is not found
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserDTO());
-    }
+    UserDTO userDTO = userService.getUserByUsername(username);
+    return ResponseEntity.ok(userDTO);
   }
 
   /**
@@ -171,14 +141,8 @@ public class UserController {
   public ResponseEntity<String> updateProfilePictureByUsername(
       @RequestParam("username") String username,
       @RequestParam("profilePictureUrl") String profilePictureUrl) {
-    try {
-      userService.updateProfilePicture(username, profilePictureUrl);
-      return ResponseEntity.ok("Profile picture updated successfully");
-    } catch (UserNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
+    userService.updateProfilePicture(username, profilePictureUrl);
+    return ResponseEntity.ok("Profile picture updated successfully");
   }
 
   /**
@@ -190,11 +154,7 @@ public class UserController {
   @GetMapping("/{id}/quizzes")
   @Operation(summary = "Get quizzes by user id")
   public ResponseEntity<Set<QuizDTO>> getUserQuizzes(@PathVariable("id") Long id) {
-    try {
-      Set<QuizDTO> quizDTOs = userService.getQuizzesByUserId(id);
-      return ResponseEntity.ok(quizDTOs);
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptySet());
-    }
+    Set<QuizDTO> quizDTOs = userService.getQuizzesByUserId(id);
+    return ResponseEntity.ok(quizDTOs);
   }
 }
