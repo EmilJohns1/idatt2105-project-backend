@@ -60,9 +60,9 @@ public class UserDTO {
   /**
    * Constructor for UserDTO with parameters.
    *
-   * @param id the id of the user
-   * @param username the username of the user
-   * @param profilePictureUrl the profile picture url of the user
+   * @param id The ID of the user
+   * @param username The username of the user
+   * @param profilePictureUrl The URL of the user's profile picture
    */
   public UserDTO(Long id, String username, String profilePictureUrl) {
     this.id = id;
