@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.idatt2105.backend.dto.LoginRequestDTO;
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
 import com.idatt2105.backend.model.Quiz;
@@ -223,16 +224,47 @@ public class UserService {
         .map(user -> new UserDTO(user.getId(), user.getUsername(), Collections.emptyList()));
   }
 
+  /**
+   * Finds a user by id.
+   *
+   * @param id (Long) Id of the user to find.
+   * @return User entity.
+   */
   private User findUserById(Long id) {
     return userRepository
         .findById(id)
         .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
   }
 
+  /**
+   * Finds a user by username.
+   *
+   * @param username (String) Username of the user to find.
+   * @return User entity.
+   */
   private User findUserByUsername(String username) {
     return userRepository
         .findByUsername(username)
         .orElseThrow(
             () -> new UserNotFoundException("User with username " + username + " not found"));
+  }
+
+  /**
+   * Resets a user's password.
+   *
+   * @param loginRequest (LoginRequestDTO) Password reset request containing username and new
+   *     password.
+   * @return {@code true} if the password was reset successfully, {@code false} otherwise.
+   */
+  public boolean resetPassword(LoginRequestDTO loginRequest) {
+    try {
+      User user = findUserByUsername(loginRequest.getUsername());
+      String hashedPassword = passwordEncoder.encode(loginRequest.getPassword());
+      user.setPassword(hashedPassword);
+      userRepository.save(user);
+      return true;
+    } catch (UserNotFoundException e) {
+      return false;
+    }
   }
 }
