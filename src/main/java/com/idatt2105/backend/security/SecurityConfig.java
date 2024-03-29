@@ -29,12 +29,13 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers("/api/user/register")
                     .permitAll()
-                    .requestMatchers("/oauth/token").permitAll()
-                    .requestMatchers("/oauth2/authorize").permitAll()
+                    .requestMatchers("/oauth/token")
+                    .permitAll()
+                    .requestMatchers("/oauth2/authorize")
+                    .permitAll()
                     .anyRequest()
                     .authenticated())
-        .requiresChannel(requiresChannel -> requiresChannel
-            .anyRequest().requiresSecure())
+        .requiresChannel(requiresChannel -> requiresChannel.anyRequest().requiresSecure())
         .formLogin(Customizer.withDefaults());
 
     return http.build();
