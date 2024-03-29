@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
 
 /** Service class for User entities. Handles business logic for User entities. */
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
@@ -266,5 +268,14 @@ public class UserService {
     } catch (UserNotFoundException e) {
       return false;
     }
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) {
+    User user = findUserByUsername(username);
+    return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
+        .password(user.getPassword())
+        .roles("USER")
+        .build();
   }
 }

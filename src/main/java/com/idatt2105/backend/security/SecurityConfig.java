@@ -6,8 +6,10 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,7 +17,28 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+  @Bean
+  @Order(2)
+  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults())
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers("/api/user/register")
+                    .permitAll()
+                    .requestMatchers("/oauth/token").permitAll()
+                    .requestMatchers("/oauth2/authorize").permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .requiresChannel(requiresChannel -> requiresChannel
+            .anyRequest().requiresSecure())
+        .formLogin(Customizer.withDefaults());
+
+    return http.build();
+  }
 
   @Bean
   public BCryptPasswordEncoder encoder() {
@@ -29,21 +52,11 @@ public class SecurityConfig {
       public void addCorsMappings(CorsRegistry registry) {
         registry
             .addMapping("/**")
-            .allowedOrigins("http://localhost:5173")
+            .allowedOrigins("https://localhost:5173")
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             .allowedHeaders("*");
       }
     };
-  }
-
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
-        .cors(Customizer.withDefaults())
-        .requiresChannel(requiresChannel -> requiresChannel.anyRequest().requiresSecure())
-        .authorizeHttpRequests(
-            authorizeRequests -> authorizeRequests.requestMatchers("/**").permitAll());
-    return http.build(); // Temporary allow access to all endpoints
   }
 
   @Bean
