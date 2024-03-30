@@ -20,21 +20,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class SecurityConfig {
   @Bean
-  @Order(2)
+  @Order(3)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
-        .authorizeHttpRequests(
-            authorize ->
-                authorize
-                    .requestMatchers("/api/user/register")
-                    .permitAll()
-                    .requestMatchers("/oauth2/authorize")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
         .requiresChannel(requiresChannel -> requiresChannel.anyRequest().requiresSecure())
-    .formLogin(Customizer.withDefaults())
+        .formLogin(Customizer.withDefaults())
         ;
     return http.build();
   }
