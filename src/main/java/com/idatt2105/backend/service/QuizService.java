@@ -56,12 +56,15 @@ public class QuizService {
     return new QuizDTO(quiz);
   }
 
-  public QuizDTO save(Quiz quiz) {
-    if (quiz == null) {
+  public QuizDTO save(QuizDTO quizDTO) {
+    if (quizDTO == null) {
       throw new IllegalArgumentException("Quiz parameter cannot be null.");
     }
+    Category category = findCategoryByName(quizDTO.getCategoryName());
+    Quiz quiz = quizDTO.toEntity();
     quiz.setCreationDate(LocalDateTime.now());
     quiz.setLastModifiedDate(LocalDateTime.now());
+    quiz.setCategory(category);
     Quiz savedQuiz = quizRepository.save(quiz);
     return new QuizDTO(savedQuiz);
   }

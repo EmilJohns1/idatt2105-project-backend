@@ -14,9 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
+import com.idatt2105.backend.model.Category;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.User;
+import com.idatt2105.backend.repository.CategoryRepository;
 import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.repository.UserRepository;
@@ -39,6 +41,7 @@ public class QuizServiceTests {
   @Mock private TagRepository tagRepository;
   @Mock private QuizRepository quizRepository;
   @Mock private UserRepository userRepository;
+  @Mock private CategoryRepository categoryRepository;
 
   @BeforeEach
   void setUp() {
@@ -51,6 +54,9 @@ public class QuizServiceTests {
     when(tagRepository.findByTagName("Test")).thenReturn(Optional.of(tag));
     when(quizRepository.findById(1L)).thenReturn(Optional.of(new Quiz()));
     when(quizRepository.save(any(Quiz.class))).thenAnswer(returnsFirstArg());
+    Category category = new Category();
+    category.setName("Category");
+    when(categoryRepository.findByName(any(String.class))).thenReturn(Optional.of(category));
   }
 
   @Nested
@@ -77,12 +83,14 @@ public class QuizServiceTests {
 
     @Test
     void saveStoresEntityInRepository() {
-      Quiz input = new Quiz();
+      QuizDTO input = new QuizDTO();
       input.setId(1L);
       input.setTitle("Quiz");
+      input.setCategoryName("Category");
       QuizDTO actual = quizService.save(input);
-      assertEquals(new QuizDTO(input), actual);
-      verify(quizRepository).save(input);
+      assertEquals(input.getTitle(), actual.getTitle());
+      assertEquals(input.getCategoryName(), actual.getCategoryName());
+      verify(quizRepository).save(any(Quiz.class));
     }
 
     @Test

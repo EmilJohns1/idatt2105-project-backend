@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
-import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.service.QuizService;
 
@@ -63,7 +62,7 @@ public class QuizControllerTests {
       tags = new HashSet<>();
       tags.add(tag);
 
-      when(quizService.save(any(Quiz.class))).thenReturn(quizDTO);
+      when(quizService.save(any(QuizDTO.class))).thenReturn(quizDTO);
       when(quizService.getQuizById(1L)).thenReturn(quizDTO);
       when(quizService.getUsersByQuizId(1L)).thenReturn(users);
       when(quizService.addTags(any(QuizDTO.class))).thenReturn(quizDTO);
