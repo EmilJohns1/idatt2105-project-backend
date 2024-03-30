@@ -67,7 +67,7 @@ public class AuthorizationServerConfig {
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-            .redirectUri("https://localhost:5173/login")
+            .redirectUri("https://localhost:5173/token")
             .postLogoutRedirectUri("https://127.0.0.1:8080/")
             .scope(OidcScopes.OPENID)
             .scope(OidcScopes.PROFILE)

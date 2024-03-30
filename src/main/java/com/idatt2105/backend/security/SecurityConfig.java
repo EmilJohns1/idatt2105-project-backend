@@ -29,7 +29,7 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers("/api/user/register")
                     .permitAll()
-                    .requestMatchers("/oauth/token")
+                    .requestMatchers("/oauth2/token/**")
                     .permitAll()
                     .requestMatchers("/oauth2/authorize")
                     .permitAll()
