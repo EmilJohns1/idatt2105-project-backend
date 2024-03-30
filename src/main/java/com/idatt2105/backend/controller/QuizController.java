@@ -54,7 +54,7 @@ public class QuizController {
   @PostMapping
   @Operation(summary = "Create quiz")
   public ResponseEntity<QuizDTO> createQuiz(@RequestBody QuizDTO quizDTO) {
-    QuizDTO createdQuiz = quizService.save(quizDTO.toEntity());
+    QuizDTO createdQuiz = quizService.save(quizDTO);
     return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
   }
 
