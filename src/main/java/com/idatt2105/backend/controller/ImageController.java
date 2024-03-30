@@ -32,7 +32,11 @@ public class ImageController {
 
   @DeleteMapping("/deleteFile")
   public String deleteFile(@RequestBody Map<String, String> payload) {
-    String fileUrl = payload.get("url");
-    return this.amazonClient.deleteFileFromS3Bucket(fileUrl);
+    try {
+      this.amazonClient.deleteFileFromS3Bucket(payload.get("fileUrl"));
+      return "File deleted successfully";
+    } catch (Exception e) {
+      return "File deletion failed";
+    }
   }
 }
