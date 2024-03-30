@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -44,7 +45,7 @@ public class AuthorizationServerConfig {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
     http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
         .oidc(Customizer.withDefaults()); // Enable OpenID Connect 1.0
-    http
+    http.csrf(AbstractHttpConfigurer::disable)
         // Redirect to the login page when not authenticated from the
         // authorization endpoint
         .exceptionHandling(
@@ -64,14 +65,18 @@ public class AuthorizationServerConfig {
         RegisteredClient.withId(UUID.randomUUID().toString())
             .clientId("asdf")
             .clientSecret("{noop}secret")
-            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+            .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
             .redirectUri("https://localhost:5173/token")
             .postLogoutRedirectUri("https://127.0.0.1:8080/")
             .scope(OidcScopes.OPENID)
             .scope(OidcScopes.PROFILE)
-            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+            .clientSettings(ClientSettings.builder()
+                                .requireAuthorizationConsent(true)
+                                .requireProofKey(true)
+                                .build()
+            )
             .build();
 
     return new InMemoryRegisteredClientRepository(oidcClient);
@@ -110,6 +115,7 @@ public class AuthorizationServerConfig {
 
   @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
-    return AuthorizationServerSettings.builder().build();
+    return AuthorizationServerSettings.builder().authorizationEndpoint("/oauth2/authorize")
+        .tokenEndpoint("/oauth2/token").build();
   }
 }
