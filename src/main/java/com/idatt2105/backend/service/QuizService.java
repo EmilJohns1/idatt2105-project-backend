@@ -96,6 +96,9 @@ public class QuizService {
               Category category = findCategoryByName(categoryName);
               existingQuiz.setCategory(category);
             });
+    Optional.ofNullable(updatedQuiz.isPublic()).ifPresent(existingQuiz::setPublic);
+    Optional.ofNullable(updatedQuiz.isRandomizedOrder())
+        .ifPresent(existingQuiz::setRandomizedOrder);
 
     quizRepository.save(existingQuiz);
   }
