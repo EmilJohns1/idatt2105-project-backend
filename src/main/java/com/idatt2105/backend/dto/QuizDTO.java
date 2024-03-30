@@ -34,6 +34,8 @@ public class QuizDTO {
   private LocalDateTime lastModifiedDate;
   private Set<UserDTO> userDTOs;
   private Set<Tag> tags = new HashSet<>();
+  private boolean isPublic;
+  private boolean randomizedOrder;
 
   /**
    * Constructs a QuizDTO object from a Quiz entity.
@@ -51,6 +53,8 @@ public class QuizDTO {
     this.userDTOs = new HashSet<>();
     quiz.getUsers().stream().map(UserDTO::new).forEach(this.userDTOs::add);
     this.tags = new HashSet<>(quiz.getTags());
+    this.isPublic = quiz.isPublic();
+    this.randomizedOrder = quiz.isRandomizedOrder();
   }
 
   /**
@@ -67,6 +71,8 @@ public class QuizDTO {
     quiz.setCreationDate(this.creationDate);
     quiz.setLastModifiedDate(this.lastModifiedDate);
     quiz.setQuizPictureUrl(this.quizPictureUrl);
+    quiz.setPublic(this.isPublic);
+    quiz.setRandomizedOrder(this.randomizedOrder);
     return quiz;
   }
 
@@ -89,6 +95,8 @@ public class QuizDTO {
     private LocalDateTime lastModifiedDate;
     private Set<UserDTO> userDTOs;
     private Set<Tag> tags = new HashSet<>();
+    private boolean isPublic;
+    private boolean randomizedOrder;
 
     public Builder setId(Long id) {
       this.id = id;
@@ -135,6 +143,16 @@ public class QuizDTO {
       return this;
     }
 
+    public Builder setIsPublic(boolean isPublic) {
+      this.isPublic = isPublic;
+      return this;
+    }
+
+    public Builder setRandomizedOrder(boolean randomizedOrder) {
+      this.randomizedOrder = randomizedOrder;
+      return this;
+    }
+
     public QuizDTO build() {
       return new QuizDTO(
           id,
@@ -145,7 +163,9 @@ public class QuizDTO {
           creationDate,
           lastModifiedDate,
           userDTOs,
-          tags);
+          tags,
+          isPublic,
+          randomizedOrder);
     }
   }
 }
