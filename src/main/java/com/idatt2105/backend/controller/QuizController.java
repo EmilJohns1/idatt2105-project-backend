@@ -106,6 +106,14 @@ public class QuizController {
     return new ResponseEntity<>(q, HttpStatus.OK);
   }
 
+  @PatchMapping("/{quizId}/tags")
+  @Operation(summary = "Update tags of a quiz")
+  public ResponseEntity<QuizDTO> updateTags(
+      @PathVariable Long quizId, @RequestBody List<Tag> updatedTags) {
+    QuizDTO dto = quizService.updateTags(quizId, updatedTags);
+    return new ResponseEntity<>(dto, HttpStatus.OK);
+  }
+
   @DeleteMapping("/delete/tags/{quizId}")
   @Operation(summary = "Deletes the given tags from a quiz")
   public ResponseEntity<QuizDTO> deleteTags(

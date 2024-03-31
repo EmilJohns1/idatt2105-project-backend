@@ -192,6 +192,48 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
+  public QuizDTO updateTags(Long quizId, List<Tag> updatedTags) {
+    if (quizId == null) {
+      throw new IllegalArgumentException("Quiz id parameter cannot be null.");
+    }
+    if (updatedTags == null) {
+      throw new IllegalArgumentException("Updated tags parameter cannot be null.");
+    }
+
+    Quiz quiz = findQuiz(quizId);
+
+    // Find tags to add
+    List<Tag> tagsToAdd =
+        updatedTags.stream()
+            .filter(tag -> !quiz.getTags().contains(tag))
+            .collect(Collectors.toList());
+
+    // Find tags to remove
+    List<Tag> tagsToRemove =
+        quiz.getTags().stream()
+            .filter(tag -> !updatedTags.contains(tag))
+            .collect(Collectors.toList());
+
+    // Save new tags if they don't exist, and add them to the quiz
+    List<Tag> savedTags = new ArrayList<>();
+    tagsToAdd.forEach(
+        tag -> {
+          if (tagRepository.existsByTagName(tag.getTagName())) {
+            savedTags.add(tagRepository.findByTagName(tag.getTagName()).get());
+          } else {
+            tag.setId(null); // Avoiding conflicts with existing tags
+            savedTags.add(tagRepository.save(tag));
+          }
+        });
+    quiz.addTags(savedTags);
+
+    // Remove tags not present in the updatedTags list
+    quiz.removeTags(tagsToRemove);
+
+    Quiz savedQuiz = quizRepository.save(quiz);
+    return new QuizDTO(savedQuiz);
+  }
+
   public List<QuizDTO> getQuizzesByTag(Tag tag) {
     if (tag == null) {
       throw new IllegalArgumentException("Tag parameter cannot be null.");
