@@ -1,11 +1,7 @@
 package com.idatt2105.backend.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +109,11 @@ public class QuizService {
 
     Quiz foundQuiz = findQuiz(quizId);
     User user = findUser(userId);
+
+    if (foundQuiz.getAuthorId() == null) {
+      foundQuiz.setAuthorId(user.getId());
+    }
+
     foundQuiz.getUsers().add(user);
     user.getQuizzes().add(foundQuiz);
     quizRepository.save(foundQuiz);
@@ -192,11 +193,53 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
-  public List<QuizDTO> getQuizzesByTag(Tag tag) {
-    if (tag == null) {
-      throw new IllegalArgumentException("Tag parameter cannot be null.");
+  public QuizDTO updateTags(Long quizId, List<Tag> updatedTags) {
+    if (quizId == null) {
+      throw new IllegalArgumentException("Quiz id parameter cannot be null.");
     }
-    Optional<Tag> foundTag = tagRepository.findByTagName(tag.getTagName());
+    if (updatedTags == null) {
+      throw new IllegalArgumentException("Updated tags parameter cannot be null.");
+    }
+
+    Quiz quiz = findQuiz(quizId);
+
+    // Find tags to add
+    List<Tag> tagsToAdd =
+        updatedTags.stream()
+            .filter(tag -> !quiz.getTags().contains(tag))
+            .collect(Collectors.toList());
+
+    // Find tags to remove
+    List<Tag> tagsToRemove =
+        quiz.getTags().stream()
+            .filter(tag -> !updatedTags.contains(tag))
+            .collect(Collectors.toList());
+
+    // Save new tags if they don't exist, and add them to the quiz
+    List<Tag> savedTags = new ArrayList<>();
+    tagsToAdd.forEach(
+        tag -> {
+          if (tagRepository.existsByTagName(tag.getTagName())) {
+            savedTags.add(tagRepository.findByTagName(tag.getTagName()).get());
+          } else {
+            tag.setId(null); // Avoiding conflicts with existing tags
+            savedTags.add(tagRepository.save(tag));
+          }
+        });
+    quiz.addTags(savedTags);
+
+    // Remove tags not present in the updatedTags list
+    quiz.removeTags(tagsToRemove);
+
+    Quiz savedQuiz = quizRepository.save(quiz);
+    return new QuizDTO(savedQuiz);
+  }
+
+  public List<QuizDTO> getQuizzesByTag(String tag) {
+    if (tag == null || tag.isEmpty()) {
+      throw new IllegalArgumentException("Tag parameter cannot be null or empty.");
+    }
+    Optional<Tag> foundTag = tagRepository.findByTagName(tag);
     if (foundTag.isEmpty()) {
       return new ArrayList<>();
     }
@@ -221,13 +264,18 @@ public class QuizService {
     return categoryRepository.save(category);
   }
 
-  public List<QuizDTO> getQuizzesByCategory(Category category) {
-    if (category == null) {
-      throw new IllegalArgumentException("Category parameter cannot be null.");
+  public List<QuizDTO> getQuizzesByCategory(String categoryName) {
+    if (categoryName == null || categoryName.isEmpty()) {
+      throw new IllegalArgumentException("Category parameter cannot be null or empty.");
     }
-    Category foundCategory = findCategoryByName(category.getName());
+
+    Category foundCategory = findCategoryByName(categoryName);
+    if (foundCategory == null) {
+      return Collections.emptyList();
+    }
+
     List<Quiz> quizzes = quizRepository.findByCategory(foundCategory);
-    return quizzes.stream().map(QuizDTO::new).toList();
+    return quizzes.stream().map(QuizDTO::new).collect(Collectors.toList());
   }
 
   public List<Category> getAllCategories() {

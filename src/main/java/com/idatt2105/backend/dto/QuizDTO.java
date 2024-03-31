@@ -36,6 +36,7 @@ public class QuizDTO {
   private Set<Tag> tags = new HashSet<>();
   private boolean isPublic;
   private boolean randomizedOrder;
+  private Long authorId;
 
   /**
    * Constructs a QuizDTO object from a Quiz entity.
@@ -55,6 +56,7 @@ public class QuizDTO {
     this.tags = new HashSet<>(quiz.getTags());
     this.isPublic = quiz.isPublic();
     this.randomizedOrder = quiz.isRandomizedOrder();
+    this.authorId = quiz.getAuthorId();
   }
 
   /**
@@ -73,6 +75,7 @@ public class QuizDTO {
     quiz.setQuizPictureUrl(this.quizPictureUrl);
     quiz.setPublic(this.isPublic);
     quiz.setRandomizedOrder(this.randomizedOrder);
+    quiz.setAuthorId(this.authorId);
     return quiz;
   }
 
@@ -97,6 +100,7 @@ public class QuizDTO {
     private Set<Tag> tags = new HashSet<>();
     private boolean isPublic;
     private boolean randomizedOrder;
+    private Long authorId;
 
     public Builder setId(Long id) {
       this.id = id;
@@ -153,6 +157,11 @@ public class QuizDTO {
       return this;
     }
 
+    public Builder setAuthorId(Long authorId) {
+      this.authorId = authorId;
+      return this;
+    }
+
     public QuizDTO build() {
       return new QuizDTO(
           id,
@@ -165,7 +174,8 @@ public class QuizDTO {
           userDTOs,
           tags,
           isPublic,
-          randomizedOrder);
+          randomizedOrder,
+          authorId);
     }
   }
 }
