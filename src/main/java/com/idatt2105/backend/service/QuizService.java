@@ -1,11 +1,7 @@
 package com.idatt2105.backend.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +109,11 @@ public class QuizService {
 
     Quiz foundQuiz = findQuiz(quizId);
     User user = findUser(userId);
+
+    if (foundQuiz.getAuthorId() == null) {
+      foundQuiz.setAuthorId(user.getId());
+    }
+
     foundQuiz.getUsers().add(user);
     user.getQuizzes().add(foundQuiz);
     quizRepository.save(foundQuiz);
@@ -234,11 +235,11 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
-  public List<QuizDTO> getQuizzesByTag(Tag tag) {
-    if (tag == null) {
-      throw new IllegalArgumentException("Tag parameter cannot be null.");
+  public List<QuizDTO> getQuizzesByTag(String tag) {
+    if (tag == null || tag.isEmpty()) {
+      throw new IllegalArgumentException("Tag parameter cannot be null or empty.");
     }
-    Optional<Tag> foundTag = tagRepository.findByTagName(tag.getTagName());
+    Optional<Tag> foundTag = tagRepository.findByTagName(tag);
     if (foundTag.isEmpty()) {
       return new ArrayList<>();
     }
@@ -263,13 +264,18 @@ public class QuizService {
     return categoryRepository.save(category);
   }
 
-  public List<QuizDTO> getQuizzesByCategory(Category category) {
-    if (category == null) {
-      throw new IllegalArgumentException("Category parameter cannot be null.");
+  public List<QuizDTO> getQuizzesByCategory(String categoryName) {
+    if (categoryName == null || categoryName.isEmpty()) {
+      throw new IllegalArgumentException("Category parameter cannot be null or empty.");
     }
-    Category foundCategory = findCategoryByName(category.getName());
+
+    Category foundCategory = findCategoryByName(categoryName);
+    if (foundCategory == null) {
+      return Collections.emptyList();
+    }
+
     List<Quiz> quizzes = quizRepository.findByCategory(foundCategory);
-    return quizzes.stream().map(QuizDTO::new).toList();
+    return quizzes.stream().map(QuizDTO::new).collect(Collectors.toList());
   }
 
   public List<Category> getAllCategories() {
