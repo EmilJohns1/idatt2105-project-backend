@@ -33,6 +33,7 @@ public class ResourceServerConfig {
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/user/register").permitAll()
             .requestMatchers("/oauth2/authorize").permitAll()
+            .requestMatchers("/connect/logout").permitAll()
             .requestMatchers("/login").permitAll()
             .anyRequest().authenticated())
         .formLogin(Customizer.withDefaults())

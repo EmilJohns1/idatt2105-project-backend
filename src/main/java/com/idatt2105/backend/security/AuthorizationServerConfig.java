@@ -69,7 +69,7 @@ public class AuthorizationServerConfig {
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
             .redirectUri("https://localhost:5173/token")
-            .postLogoutRedirectUri("https://127.0.0.1:8080/")
+            .postLogoutRedirectUri("https://localhost:5173")
             .scope(OidcScopes.OPENID)
             .scope(OidcScopes.PROFILE)
             .clientSettings(ClientSettings.builder()
@@ -115,7 +115,10 @@ public class AuthorizationServerConfig {
 
   @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
-    return AuthorizationServerSettings.builder().authorizationEndpoint("/oauth2/authorize")
+    return AuthorizationServerSettings.builder()
+        .tokenRevocationEndpoint("/oauth2/revoke")
+        .oidcLogoutEndpoint("/connect/logout")
+        .authorizationEndpoint("/oauth2/authorize")
         .tokenEndpoint("/oauth2/token").build();
   }
 }
