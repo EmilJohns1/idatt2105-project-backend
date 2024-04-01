@@ -28,8 +28,7 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .requiresChannel(requiresChannel -> requiresChannel.anyRequest().requiresSecure())
-        .formLogin(Customizer.withDefaults())
-        ;
+        .formLogin(Customizer.withDefaults());
     return http.build();
   }
 
@@ -74,7 +73,6 @@ public class SecurityConfig {
     ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(-1);
     return connector;
   }
-
 
   @Bean
   public SessionRegistry sessionRegistry() {

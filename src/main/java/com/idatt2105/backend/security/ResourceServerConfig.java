@@ -26,29 +26,40 @@ public class ResourceServerConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(AbstractHttpConfigurer::disable)
+    http.csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
-        //.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/user/register").permitAll()
-            .requestMatchers("/oauth2/authorize").permitAll()
-            .requestMatchers("/connect/logout").permitAll()
-            .requestMatchers("/login").permitAll()
-            .anyRequest().authenticated())
+        // .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers("/api/user/register")
+                    .permitAll()
+                    .requestMatchers("/oauth2/authorize")
+                    .permitAll()
+                    .requestMatchers("/connect/logout")
+                    .permitAll()
+                    .requestMatchers("/login")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
         .formLogin(Customizer.withDefaults())
-        .oauth2ResourceServer(oauth2ResourceServer ->
-                                  oauth2ResourceServer
-                                      .jwt(jwt -> jwt.decoder(jwtDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter()))
-        );
+        .oauth2ResourceServer(
+            oauth2ResourceServer ->
+                oauth2ResourceServer.jwt(
+                    jwt ->
+                        jwt.decoder(jwtDecoder)
+                            .jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
     return http.build();
   }
 
   private JwtAuthenticationConverter jwtAuthenticationConverter() {
-    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    grantedAuthoritiesConverter.setAuthoritiesClaimName("roles"); // Customize according to your JWT structure
-    grantedAuthoritiesConverter.setAuthorityPrefix(""); // Use this to customize the prefix for authorities (default is "SCOPE_")
+    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
+        new JwtGrantedAuthoritiesConverter();
+    grantedAuthoritiesConverter.setAuthoritiesClaimName(
+        "roles"); // Customize according to your JWT structure
+    grantedAuthoritiesConverter.setAuthorityPrefix(
+        ""); // Use this to customize the prefix for authorities (default is "SCOPE_")
 
     JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
     jwtConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

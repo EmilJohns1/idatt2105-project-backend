@@ -71,11 +71,11 @@ public class AuthorizationServerConfig {
             .postLogoutRedirectUri("https://localhost:5173")
             .scope(OidcScopes.OPENID)
             .scope(OidcScopes.PROFILE)
-            .clientSettings(ClientSettings.builder()
-                                .requireAuthorizationConsent(true)
-                                .requireProofKey(true)
-                                .build()
-            )
+            .clientSettings(
+                ClientSettings.builder()
+                    .requireAuthorizationConsent(true)
+                    .requireProofKey(true)
+                    .build())
             .build();
 
     return new InMemoryRegisteredClientRepository(oidcClient);
@@ -118,6 +118,7 @@ public class AuthorizationServerConfig {
         .tokenRevocationEndpoint("/oauth2/revoke")
         .oidcLogoutEndpoint("/connect/logout")
         .authorizationEndpoint("/oauth2/authorize")
-        .tokenEndpoint("/oauth2/token").build();
+        .tokenEndpoint("/oauth2/token")
+        .build();
   }
 }
