@@ -62,7 +62,7 @@ public class AuthorizationServerConfig {
   public RegisteredClientRepository registeredClientRepository() {
     RegisteredClient oidcClient =
         RegisteredClient.withId(UUID.randomUUID().toString())
-            .clientId("asdf")
+            .clientId("frontend-client")
             .clientSecret("{noop}secret")
             .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)

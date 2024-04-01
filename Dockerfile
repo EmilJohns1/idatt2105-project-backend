@@ -18,10 +18,10 @@ RUN mvn clean package -DskipTests
 RUN apt-get update 
 RUN apt install -y libnss3-tools
 RUN apt-get install -y openssl
-#RUN curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
-#RUN chmod +x mkcert-v*-linux-amd64
-#RUN cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
-#RUN mkcert -install
+RUN curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+RUN chmod +x mkcert-v*-linux-amd64
+RUN cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+RUN mkcert -install
 # Copy the compiled JAR file from the build stage
 #COPY --from=build /app/target/my-application.jar /app/backend-1.1.jar
 
