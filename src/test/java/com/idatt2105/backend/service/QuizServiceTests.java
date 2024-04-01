@@ -229,7 +229,7 @@ public class QuizServiceTests {
       quiz.setTitle("Quiz");
       quiz.addTags(Set.of(tag));
       when(quizRepository.findByTagsContains(tag)).thenReturn(List.of(quiz));
-      List<QuizDTO> actual = quizService.getQuizzesByTag(tag);
+      List<QuizDTO> actual = quizService.getQuizzesByTag("Test");
       assertEquals(new QuizDTO(quiz), actual.get(0));
     }
   }

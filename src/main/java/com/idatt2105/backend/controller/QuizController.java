@@ -6,15 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
@@ -106,6 +98,14 @@ public class QuizController {
     return new ResponseEntity<>(q, HttpStatus.OK);
   }
 
+  @PatchMapping("/{quizId}/tags")
+  @Operation(summary = "Update tags of a quiz")
+  public ResponseEntity<QuizDTO> updateTags(
+      @PathVariable Long quizId, @RequestBody List<Tag> updatedTags) {
+    QuizDTO dto = quizService.updateTags(quizId, updatedTags);
+    return new ResponseEntity<>(dto, HttpStatus.OK);
+  }
+
   @DeleteMapping("/delete/tags/{quizId}")
   @Operation(summary = "Deletes the given tags from a quiz")
   public ResponseEntity<QuizDTO> deleteTags(
@@ -117,11 +117,19 @@ public class QuizController {
     return new ResponseEntity<>(q, HttpStatus.OK);
   }
 
-  @PostMapping("/tag")
+  @GetMapping("/tag")
   @Operation(summary = "Get all quizzes with a specific tag")
-  public ResponseEntity<List<QuizDTO>> getQuizzesByTag(@RequestBody Tag tag) {
+  public ResponseEntity<List<QuizDTO>> getQuizzesByTag(@RequestParam String tag) {
+    if (tag == null || tag.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+
     List<QuizDTO> quizzes = quizService.getQuizzesByTag(tag);
-    return new ResponseEntity<>(quizzes, HttpStatus.OK);
+    if (quizzes.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(quizzes);
   }
 
   @PostMapping("/all/tags")
@@ -138,11 +146,19 @@ public class QuizController {
     return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
   }
 
-  @PostMapping("/category")
+  @GetMapping("/category")
   @Operation(summary = "Get all quizzes with a specific category")
-  public ResponseEntity<List<QuizDTO>> getQuizzesByCategory(@RequestBody Category category) {
+  public ResponseEntity<List<QuizDTO>> getQuizzesByCategory(@RequestParam String category) {
+    if (category == null || category.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+
     List<QuizDTO> quizzes = quizService.getQuizzesByCategory(category);
-    return new ResponseEntity<>(quizzes, HttpStatus.OK);
+    if (quizzes.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(quizzes);
   }
 
   @GetMapping("/categories")

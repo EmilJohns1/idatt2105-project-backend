@@ -56,6 +56,15 @@ public class Quiz {
   @Column(name = "last_modified_date")
   private LocalDateTime lastModifiedDate;
 
+  @Column(name = "is_public")
+  private boolean isPublic;
+
+  @Column(name = "randomized_order")
+  private boolean randomizedOrder;
+
+  @Column(name = "author_id")
+  private Long authorId;
+
   @ManyToMany(
       mappedBy = "quizzes",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})

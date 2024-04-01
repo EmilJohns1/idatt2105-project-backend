@@ -34,6 +34,9 @@ public class QuizDTO {
   private LocalDateTime lastModifiedDate;
   private Set<UserDTO> userDTOs;
   private Set<Tag> tags = new HashSet<>();
+  private boolean isPublic;
+  private boolean randomizedOrder;
+  private Long authorId;
 
   /**
    * Constructs a QuizDTO object from a Quiz entity.
@@ -51,6 +54,9 @@ public class QuizDTO {
     this.userDTOs = new HashSet<>();
     quiz.getUsers().stream().map(UserDTO::new).forEach(this.userDTOs::add);
     this.tags = new HashSet<>(quiz.getTags());
+    this.isPublic = quiz.isPublic();
+    this.randomizedOrder = quiz.isRandomizedOrder();
+    this.authorId = quiz.getAuthorId();
   }
 
   /**
@@ -67,6 +73,9 @@ public class QuizDTO {
     quiz.setCreationDate(this.creationDate);
     quiz.setLastModifiedDate(this.lastModifiedDate);
     quiz.setQuizPictureUrl(this.quizPictureUrl);
+    quiz.setPublic(this.isPublic);
+    quiz.setRandomizedOrder(this.randomizedOrder);
+    quiz.setAuthorId(this.authorId);
     return quiz;
   }
 
@@ -89,6 +98,9 @@ public class QuizDTO {
     private LocalDateTime lastModifiedDate;
     private Set<UserDTO> userDTOs;
     private Set<Tag> tags = new HashSet<>();
+    private boolean isPublic;
+    private boolean randomizedOrder;
+    private Long authorId;
 
     public Builder setId(Long id) {
       this.id = id;
@@ -135,6 +147,21 @@ public class QuizDTO {
       return this;
     }
 
+    public Builder setIsPublic(boolean isPublic) {
+      this.isPublic = isPublic;
+      return this;
+    }
+
+    public Builder setRandomizedOrder(boolean randomizedOrder) {
+      this.randomizedOrder = randomizedOrder;
+      return this;
+    }
+
+    public Builder setAuthorId(Long authorId) {
+      this.authorId = authorId;
+      return this;
+    }
+
     public QuizDTO build() {
       return new QuizDTO(
           id,
@@ -145,7 +172,10 @@ public class QuizDTO {
           creationDate,
           lastModifiedDate,
           userDTOs,
-          tags);
+          tags,
+          isPublic,
+          randomizedOrder,
+          authorId);
     }
   }
 }
