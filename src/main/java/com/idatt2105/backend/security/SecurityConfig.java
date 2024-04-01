@@ -6,16 +6,31 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+  @Bean
+  @Order(3)
+  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults())
+        .requiresChannel(requiresChannel -> requiresChannel.anyRequest().requiresSecure())
+        .formLogin(Customizer.withDefaults());
+    return http.build();
+  }
 
   @Bean
   public BCryptPasswordEncoder encoder() {
@@ -34,16 +49,6 @@ public class SecurityConfig {
             .allowedHeaders("*");
       }
     };
-  }
-
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
-        .cors(Customizer.withDefaults())
-        .requiresChannel(requiresChannel -> requiresChannel.anyRequest().requiresSecure())
-        .authorizeHttpRequests(
-            authorizeRequests -> authorizeRequests.requestMatchers("/**").permitAll());
-    return http.build(); // Temporary allow access to all endpoints
   }
 
   @Bean
@@ -67,5 +72,15 @@ public class SecurityConfig {
     connector.setRedirectPort(8443); // The port you want to redirect to (HTTPS port)
     ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(-1);
     return connector;
+  }
+
+  @Bean
+  public SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
+  }
+
+  @Bean
+  public HttpSessionEventPublisher httpSessionEventPublisher() {
+    return new HttpSessionEventPublisher();
   }
 }
