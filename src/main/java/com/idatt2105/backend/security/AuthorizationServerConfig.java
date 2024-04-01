@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -45,7 +44,7 @@ public class AuthorizationServerConfig {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
     http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
         .oidc(Customizer.withDefaults()); // Enable OpenID Connect 1.0
-    http.csrf(AbstractHttpConfigurer::disable)
+    http
         // Redirect to the login page when not authenticated from the
         // authorization endpoint
         .exceptionHandling(
