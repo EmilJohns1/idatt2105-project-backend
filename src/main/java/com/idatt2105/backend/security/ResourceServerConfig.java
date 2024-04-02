@@ -1,9 +1,14 @@
 package com.idatt2105.backend.security;
 
+import com.idatt2105.backend.controller.CommentController;
+import com.idatt2105.backend.controller.PasswordResetTokenController;
+import com.idatt2105.backend.controller.QuestionController;
+import com.idatt2105.backend.controller.QuizController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,6 +17,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Configuration
 @EnableWebSecurity
@@ -28,8 +34,8 @@ public class ResourceServerConfig {
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
-        .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
-        /*.authorizeHttpRequests(
+        //.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+        .authorizeHttpRequests(
         authorize -> {
           // This gets the base api path for the quiz controller from the "RequestMapping"
           // annotation.
@@ -78,7 +84,7 @@ public class ResourceServerConfig {
               .permitAll()
               .anyRequest()
               .authenticated();
-        })*/
+        })
         .formLogin(Customizer.withDefaults())
         .oauth2ResourceServer(
             oauth2ResourceServer ->
