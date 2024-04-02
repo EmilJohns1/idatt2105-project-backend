@@ -34,7 +34,8 @@ public class QuestionDTO {
     };
   }
 
-  public Boolean getIsCorrect() { // Must also have regular setter/getter to make jackson work properly
+  public Boolean
+      getIsCorrect() { // Must also have regular setter/getter to make jackson work properly
     return isCorrect;
   }
 

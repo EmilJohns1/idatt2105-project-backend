@@ -39,7 +39,8 @@ public class AlternativeRecord {
   @JoinColumn(name = "attempt_id", nullable = false)
   private MultipleChoiceQuestionAttempt questionAttempt;
 
-  public boolean getWasCorrect() { // Must also have regular setter/getter to make jackson work properly
+  public boolean
+      getWasCorrect() { // Must also have regular setter/getter to make jackson work properly
     return wasCorrect;
   }
 
@@ -47,7 +48,8 @@ public class AlternativeRecord {
     this.wasCorrect = wasCorrect;
   }
 
-  public boolean getWasSelected() { // Must also have regular setter/getter to make jackson work properly
+  public boolean
+      getWasSelected() { // Must also have regular setter/getter to make jackson work properly
     return wasSelected;
   }
 
