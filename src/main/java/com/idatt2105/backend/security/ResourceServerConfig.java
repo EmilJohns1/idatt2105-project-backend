@@ -9,13 +9,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.idatt2105.backend.controller.CommentController;
@@ -89,18 +86,22 @@ public class ResourceServerConfig {
                   .anyRequest()
                   .authenticated();
             })
-        .formLogin(custom -> {
-          custom.loginPage("/login.html")
-              .usernameParameter("username")
-              .passwordParameter("password")
-              .loginProcessingUrl("/login")
-              .successHandler(
-                  (request, response, authentication) -> {
-                    String originalRequestUrl = (String) request.getSession().getAttribute("ORIGINAL_REQUEST_URL");
-                    response.sendRedirect(originalRequestUrl != null ? originalRequestUrl : "/");
-                  });
-        })
-        //.formLogin(Customizer.withDefaults())
+        .formLogin(
+            custom -> {
+              custom
+                  .loginPage("/login.html")
+                  .usernameParameter("username")
+                  .passwordParameter("password")
+                  .loginProcessingUrl("/login")
+                  .successHandler(
+                      (request, response, authentication) -> {
+                        String originalRequestUrl =
+                            (String) request.getSession().getAttribute("ORIGINAL_REQUEST_URL");
+                        response.sendRedirect(
+                            originalRequestUrl != null ? originalRequestUrl : "/");
+                      });
+            })
+        // .formLogin(Customizer.withDefaults())
         .oauth2ResourceServer(
             oauth2ResourceServer ->
                 oauth2ResourceServer.jwt(
