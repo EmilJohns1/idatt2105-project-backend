@@ -125,14 +125,11 @@ public class QuizController {
     }
 
     List<QuizDTO> quizzes = quizService.getQuizzesByTag(tag);
-    if (quizzes.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
 
     return ResponseEntity.ok(quizzes);
   }
 
-  @PostMapping("/all/tags")
+  @GetMapping("/all/tags")
   @Operation(summary = "Get all tags currently in use")
   public ResponseEntity<List<Tag>> getAllTags() {
     List<Tag> tags = quizService.getAllTags();
