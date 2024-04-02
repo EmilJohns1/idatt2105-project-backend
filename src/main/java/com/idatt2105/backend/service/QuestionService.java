@@ -1,7 +1,10 @@
 package com.idatt2105.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -204,7 +207,8 @@ public class QuestionService {
    * @throws InvalidIdException if the question with the given id is not found or is not a multiple
    *     choice question.
    */
-  public List<Alternative> updateAlternatives(
+  @Transactional
+  public Set<Alternative> updateAlternatives(
       Long questionId, List<AlternativeDTO> alternativeDTOs) {
     if (questionId == null) {
       throw new IllegalArgumentException("Question ID cannot be null.");
@@ -259,16 +263,17 @@ public class QuestionService {
 
     // Remove alternatives not present in the list
     mcQuestion
-        .getAlternatives()
-        .removeIf(
-            existingAlternative ->
-                alternativeDTOs.stream()
-                    .noneMatch(
-                        alternativeDTO ->
-                            alternativeDTO.getId() != null
-                                && alternativeDTO.getId().equals(existingAlternative.getId())));
+      .getAlternatives()
+      .removeIf(existingAlternative -> {
+        Long existingAltId = existingAlternative.getId();
+        return alternativeDTOs.stream()
+          .noneMatch(alternativeDTO ->
+            alternativeDTO.getId() != null &&
+              existingAltId != null &&
+              alternativeDTO.getId().equals(existingAltId));
+      });
 
     // Save the question with updated alternatives
-    return (List<Alternative>) questionRepository.save(mcQuestion).getAlternatives();
+    return questionRepository.save(mcQuestion).getAlternatives();
   }
 }

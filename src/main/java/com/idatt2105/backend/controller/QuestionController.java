@@ -1,6 +1,7 @@
 package com.idatt2105.backend.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -132,9 +133,9 @@ public class QuestionController {
   }
 
   @PutMapping("/{questionId}/alternatives")
-  public ResponseEntity<List<Alternative>> updateAlternatives(
+  public ResponseEntity<Set<Alternative>> updateAlternatives(
       @PathVariable Long questionId, @RequestBody List<AlternativeDTO> alternativeDTOs) {
-    List<Alternative> updatedAlternatives =
+    Set<Alternative> updatedAlternatives =
         questionService.updateAlternatives(questionId, alternativeDTOs);
     return new ResponseEntity<>(updatedAlternatives, HttpStatus.OK);
   }
