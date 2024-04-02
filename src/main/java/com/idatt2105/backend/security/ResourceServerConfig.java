@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,6 +40,16 @@ public class ResourceServerConfig {
                     .requestMatchers("/connect/logout")
                     .permitAll()
                     .requestMatchers("/login")
+                    .permitAll()
+                    .requestMatchers("/api/quizzes/categories")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/quizzes")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/quizzes/*")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/quizzes/users/*")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/quizzes/all/tags")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
