@@ -52,9 +52,12 @@ public class AuthorizationServerConfig {
         // authorization endpoint
         .exceptionHandling(
             exceptions ->
-                exceptions.defaultAuthenticationEntryPointFor(
-                    new LoginUrlAuthenticationEntryPoint("/login"),
-                    new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
+                exceptions.authenticationEntryPoint((request, response, e) -> {
+                  String originalUrl = request.getRequestURL().toString() + "?" + request.getQueryString();
+                  request.getSession().setAttribute("ORIGINAL_REQUEST_URL", originalUrl);
+                  response.sendRedirect("/login");
+                })
+        )
         // Accept access tokens for User Info and/or Client Registration
         .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
 
