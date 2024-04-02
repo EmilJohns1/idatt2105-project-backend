@@ -1,10 +1,8 @@
 package com.idatt2105.backend.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +17,8 @@ import com.idatt2105.backend.repository.AlternativeRepository;
 import com.idatt2105.backend.repository.QuestionRepository;
 import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.util.InvalidIdException;
+
+import jakarta.transaction.Transactional;
 
 /** Service for handling operations related to questions. */
 @Service
@@ -263,15 +263,17 @@ public class QuestionService {
 
     // Remove alternatives not present in the list
     mcQuestion
-      .getAlternatives()
-      .removeIf(existingAlternative -> {
-        Long existingAltId = existingAlternative.getId();
-        return alternativeDTOs.stream()
-          .noneMatch(alternativeDTO ->
-            alternativeDTO.getId() != null &&
-              existingAltId != null &&
-              alternativeDTO.getId().equals(existingAltId));
-      });
+        .getAlternatives()
+        .removeIf(
+            existingAlternative -> {
+              Long existingAltId = existingAlternative.getId();
+              return alternativeDTOs.stream()
+                  .noneMatch(
+                      alternativeDTO ->
+                          alternativeDTO.getId() != null
+                              && existingAltId != null
+                              && alternativeDTO.getId().equals(existingAltId));
+            });
 
     // Save the question with updated alternatives
     return questionRepository.save(mcQuestion).getAlternatives();
