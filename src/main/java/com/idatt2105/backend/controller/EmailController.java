@@ -23,8 +23,15 @@ import jakarta.mail.internet.MimeMessage;
 @RestController
 public class EmailController {
 
-  @Autowired private JavaMailSender emailSender;
-  @Autowired private PasswordResetTokenService passwordResetTokenService;
+  private final JavaMailSender emailSender;
+  private final PasswordResetTokenService passwordResetTokenService;
+
+  @Autowired
+  public EmailController(
+      JavaMailSender emailSender, PasswordResetTokenService passwordResetTokenService) {
+    this.emailSender = emailSender;
+    this.passwordResetTokenService = passwordResetTokenService;
+  }
 
   /**
    * Sends an email to the specified email address.
