@@ -33,4 +33,12 @@ public class QuestionDTO {
       case MULTIPLE_CHOICE -> new MultipleChoiceQuestion();
     };
   }
+
+  public Boolean getIsCorrect() { // Must also have regular setter/getter to make jackson work properly
+    return isCorrect;
+  }
+
+  public void setIsCorrect(Boolean isCorrect) {
+    this.isCorrect = isCorrect;
+  }
 }
