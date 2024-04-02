@@ -133,9 +133,9 @@ public class QuestionController {
 
   @PutMapping("/{questionId}/alternatives")
   public ResponseEntity<List<Alternative>> updateAlternatives(
-    @PathVariable Long questionId,
-    @RequestBody List<AlternativeDTO> alternativeDTOs) {
-    List<Alternative> updatedAlternatives = questionService.updateAlternatives(questionId, alternativeDTOs);
+      @PathVariable Long questionId, @RequestBody List<AlternativeDTO> alternativeDTOs) {
+    List<Alternative> updatedAlternatives =
+        questionService.updateAlternatives(questionId, alternativeDTOs);
     return new ResponseEntity<>(updatedAlternatives, HttpStatus.OK);
   }
 
