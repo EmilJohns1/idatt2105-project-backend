@@ -1,5 +1,6 @@
 package com.idatt2105.backend.service;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class AttemptService {
 
   private QuizAttempt parseQuizAttemptDTO(QuizAttemptDTO quizAttemptDTO) {
     QuizAttempt quizAttempt = new QuizAttempt();
-    quizAttempt.setAttemptTime(quizAttemptDTO.getAttemptTime());
+    quizAttempt.setAttemptTime(LocalDateTime.now());
     quizAttempt.setScore(quizAttemptDTO.getScore());
     quizAttempt.setUser(
         userRepository
