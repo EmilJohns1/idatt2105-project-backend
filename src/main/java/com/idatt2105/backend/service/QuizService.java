@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
@@ -248,6 +250,35 @@ public class QuizService {
 
   public List<Tag> getAllTags() {
     return tagRepository.findAll();
+  }
+
+  /**
+   * Fetches quizzes by a list of tags. The result will contain quizzes that have at least one of
+   *
+   * @param tags in the list.
+   * @param pageable Pageable object to control pagination
+   * @return Page of quizzes that have at least one of the tags in the list
+   */
+  @Transactional(readOnly = true)
+  public Page<QuizDTO> getQuizzesByTags(List<String> tags, Pageable pageable) {
+    if (tags == null || tags.isEmpty()) {
+      return Page.empty();
+    }
+
+    // Initialize an empty set to hold the unique quizzes
+    Set<QuizDTO> uniqueQuizzes = new HashSet<>();
+
+    // Iterate over each tag and fetch associated quizzes
+    for (String tag : tags) {
+      Page<QuizDTO> quizzes = getQuizzesByTag(tag, pageable);
+      uniqueQuizzes.addAll(quizzes.getContent());
+    }
+
+    // Construct the result page
+    List<QuizDTO> pageContent = new ArrayList<>(uniqueQuizzes);
+    int start = (int) pageable.getOffset();
+    int end = Math.min(start + pageable.getPageSize(), pageContent.size());
+    return new PageImpl<>(pageContent.subList(start, end), pageable, pageContent.size());
   }
 
   public Category createCategory(Category category) {
