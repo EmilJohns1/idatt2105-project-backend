@@ -139,6 +139,14 @@ public class QuizController {
     return new ResponseEntity<>(tags, HttpStatus.OK);
   }
 
+  @PostMapping("/filter-by-tags")
+  @Operation(summary = "Filter quizzes by tags")
+  public ResponseEntity<Page<QuizDTO>> filterQuizzesByTags(
+      @RequestBody List<String> tags, Pageable pageable) {
+    Page<QuizDTO> quizzes = quizService.getQuizzesByTags(tags, pageable);
+    return new ResponseEntity<>(quizzes, HttpStatus.OK);
+  }
+
   @PostMapping("/create/category")
   @Operation(summary = "Create a new category")
   public ResponseEntity<Category> createCategory(@RequestBody Category category) {
