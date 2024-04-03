@@ -140,7 +140,7 @@ public class QuizController {
   }
 
   @PostMapping("/filter-by-tags")
-  @Operation(summary = "Filter quizzes by tags")
+  @Operation(summary = "Get all quizzes with the specified tags")
   public ResponseEntity<Page<QuizDTO>> filterQuizzesByTags(
       @RequestBody List<String> tags, Pageable pageable) {
     Page<QuizDTO> quizzes = quizService.getQuizzesByTags(tags, pageable);
