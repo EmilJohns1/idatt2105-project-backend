@@ -265,17 +265,22 @@ public class QuizService {
       return Page.empty();
     }
 
-    // Initialize an empty set to hold the unique quizzes
-    Set<QuizDTO> uniqueQuizzes = new HashSet<>();
+    Set<Quiz> uniqueQuizzes = new HashSet<>();
+    Set<Tag> uniqueTags = new HashSet<>();
 
-    // Iterate over each tag and fetch associated quizzes
     for (String tag : tags) {
-      Page<QuizDTO> quizzes = getQuizzesByTag(tag, pageable);
-      uniqueQuizzes.addAll(quizzes.getContent());
+      Optional<Tag> foundTag = tagRepository.findByTagName(tag);
+      if (foundTag.isPresent()) {
+        uniqueQuizzes.addAll(quizRepository.findByTagsContains(foundTag.get(), pageable).toList());
+        uniqueTags.add(foundTag.get());
+      }
     }
 
-    // Construct the result page
-    List<QuizDTO> pageContent = new ArrayList<>(uniqueQuizzes);
+    // Filter quizzes that contain all the given tags
+    uniqueQuizzes.removeIf(quiz -> !quiz.getTags().containsAll(uniqueTags));
+
+    List<QuizDTO> pageContent =
+        uniqueQuizzes.stream().map(QuizDTO::new).collect(Collectors.toList());
     int start = (int) pageable.getOffset();
     int end = Math.min(start + pageable.getPageSize(), pageContent.size());
     return new PageImpl<>(pageContent.subList(start, end), pageable, pageContent.size());
