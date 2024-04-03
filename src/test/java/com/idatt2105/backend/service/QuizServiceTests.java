@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
@@ -30,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,8 +70,9 @@ public class QuizServiceTests {
       Quiz quiz = new Quiz();
       quiz.setId(1L);
       quiz.setTitle("Quiz");
-      when(quizRepository.findAll()).thenReturn(List.of(quiz));
-      List<QuizDTO> actual = quizService.getAllQuizzes();
+      Page<Quiz> page = new PageImpl<>(List.of(quiz));
+      when(quizRepository.findAll(any(Pageable.class))).thenReturn(page);
+      List<QuizDTO> actual = quizService.getAllQuizzes(Pageable.ofSize(1)).toList();
       assertEquals(new QuizDTO(quiz), actual.get(0));
     }
 
@@ -228,9 +233,10 @@ public class QuizServiceTests {
       quiz.setId(1L);
       quiz.setTitle("Quiz");
       quiz.addTags(Set.of(tag));
-      when(quizRepository.findByTagsContains(tag)).thenReturn(List.of(quiz));
-      List<QuizDTO> actual = quizService.getQuizzesByTag("Test");
-      assertEquals(new QuizDTO(quiz), actual.get(0));
+      Page<Quiz> page = new PageImpl<>(List.of(quiz));
+      when(quizRepository.findByTagsContains(eq(tag), any(Pageable.class))).thenReturn(page);
+      Page<QuizDTO> actual = quizService.getQuizzesByTag("Test", Pageable.ofSize(1));
+      assertEquals(new QuizDTO(quiz), actual.iterator().next());
     }
   }
 
@@ -317,7 +323,9 @@ public class QuizServiceTests {
 
     @Test
     void getQuizzesByTagThrowsExceptionWhenParameterIsNull() {
-      assertThrows(IllegalArgumentException.class, () -> quizService.getQuizzesByTag(null));
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> quizService.getQuizzesByTag(null, Pageable.ofSize(1)));
     }
   }
 }

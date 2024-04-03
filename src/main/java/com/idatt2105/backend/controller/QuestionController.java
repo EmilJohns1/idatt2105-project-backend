@@ -43,7 +43,7 @@ public class QuestionController {
    * Adds a question to a quiz. This endpoint accepts a QuestionDTO object and adds it to a quiz.
    *
    * @param question (QuestionDTO) The question to add.
-   * @return (ResponseEntity < Question >) The added question.
+   * @return (ResponseEntity &lt;Question&gt;) The added question.
    */
   @PostMapping("/add")
   @Operation(summary = "Add a question to a quiz")

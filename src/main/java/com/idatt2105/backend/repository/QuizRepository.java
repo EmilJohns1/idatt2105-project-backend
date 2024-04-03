@@ -1,8 +1,9 @@
 package com.idatt2105.backend.repository;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import com.idatt2105.backend.model.Tag;
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
   Optional<Quiz> findByTitle(String title);
 
-  List<Quiz> findByTagsContains(Tag tag);
+  Page<Quiz> findByTagsContains(Tag tag, Pageable pageable);
 
-  List<Quiz> findByCategory(Category category);
+  Page<Quiz> findByCategory(Category category, Pageable pageable);
 }

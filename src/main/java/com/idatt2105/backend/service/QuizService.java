@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.dto.QuizDTO;
@@ -39,9 +41,8 @@ public class QuizService {
     this.categoryRepository = categoryRepository;
   }
 
-  public List<QuizDTO> getAllQuizzes() {
-    List<Quiz> quizzes = quizRepository.findAll();
-    return quizzes.stream().map(QuizDTO::new).toList();
+  public Page<QuizDTO> getAllQuizzes(Pageable pageable) {
+    return quizRepository.findAll(pageable).map(QuizDTO::new);
   }
 
   public QuizDTO getQuizById(Long id) {
@@ -235,16 +236,14 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
-  public List<QuizDTO> getQuizzesByTag(String tag) {
+  public Page<QuizDTO> getQuizzesByTag(String tag, Pageable pageable) {
     if (tag == null || tag.isEmpty()) {
       throw new IllegalArgumentException("Tag parameter cannot be null or empty.");
     }
     Optional<Tag> foundTag = tagRepository.findByTagName(tag);
-    if (foundTag.isEmpty()) {
-      return new ArrayList<>();
-    }
-    List<Quiz> quizzes = quizRepository.findByTagsContains(foundTag.get());
-    return quizzes.stream().map(QuizDTO::new).toList();
+    return foundTag
+        .map(value -> quizRepository.findByTagsContains(value, pageable).map(QuizDTO::new))
+        .orElseGet(Page::empty);
   }
 
   public List<Tag> getAllTags() {
@@ -264,18 +263,14 @@ public class QuizService {
     return categoryRepository.save(category);
   }
 
-  public List<QuizDTO> getQuizzesByCategory(String categoryName) {
+  public Page<QuizDTO> getQuizzesByCategory(String categoryName, Pageable pageable) {
     if (categoryName == null || categoryName.isEmpty()) {
       throw new IllegalArgumentException("Category parameter cannot be null or empty.");
     }
 
     Category foundCategory = findCategoryByName(categoryName);
-    if (foundCategory == null) {
-      return Collections.emptyList();
-    }
 
-    List<Quiz> quizzes = quizRepository.findByCategory(foundCategory);
-    return quizzes.stream().map(QuizDTO::new).collect(Collectors.toList());
+    return quizRepository.findByCategory(foundCategory, pageable).map(QuizDTO::new);
   }
 
   public List<Category> getAllCategories() {
