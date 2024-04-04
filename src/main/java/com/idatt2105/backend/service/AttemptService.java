@@ -48,6 +48,15 @@ public class AttemptService {
     return quizAttemptRepository.findByUserId(userId);
   }
 
+  public QuizAttempt getAttemptById(Long id) {
+    if (id == null) {
+      throw new InvalidIdException("Attempt id cannot be null");
+    }
+    return quizAttemptRepository
+        .findById(id)
+        .orElseThrow(() -> new InvalidIdException("Attempt with id " + id + " not found"));
+  }
+
   private QuizAttempt parseQuizAttemptDTO(QuizAttemptDTO quizAttemptDTO) {
     QuizAttempt quizAttempt = new QuizAttempt();
     quizAttempt.setAttemptTime(LocalDateTime.now());

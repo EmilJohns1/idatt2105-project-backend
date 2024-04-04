@@ -43,4 +43,11 @@ public class AttemptController {
     Collection<QuizAttempt> quizAttempts = attemptService.getAllAttemptsForUser(userId);
     return new ResponseEntity<>(quizAttempts, HttpStatus.OK);
   }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get an attempt by id")
+  public ResponseEntity<QuizAttempt> getAttemptById(@PathVariable Long id) {
+    QuizAttempt quizAttempt = attemptService.getAttemptById(id);
+    return new ResponseEntity<>(quizAttempt, HttpStatus.OK);
+  }
 }
