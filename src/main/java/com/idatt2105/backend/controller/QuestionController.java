@@ -1,18 +1,12 @@
 package com.idatt2105.backend.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.idatt2105.backend.dto.AlternativeDTO;
 import com.idatt2105.backend.dto.QuestionDTO;
@@ -49,7 +43,7 @@ public class QuestionController {
    * Adds a question to a quiz. This endpoint accepts a QuestionDTO object and adds it to a quiz.
    *
    * @param question (QuestionDTO) The question to add.
-   * @return (ResponseEntity < Question >) The added question.
+   * @return (ResponseEntity &lt;Question&gt;) The added question.
    */
   @PostMapping("/add")
   @Operation(summary = "Add a question to a quiz")
@@ -136,6 +130,14 @@ public class QuestionController {
   public ResponseEntity<Void> deleteAlternative(@PathVariable Long id) {
     questionService.deleteAlternative(id);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PutMapping("/{questionId}/alternatives")
+  public ResponseEntity<Set<Alternative>> updateAlternatives(
+      @PathVariable Long questionId, @RequestBody List<AlternativeDTO> alternativeDTOs) {
+    Set<Alternative> updatedAlternatives =
+        questionService.updateAlternatives(questionId, alternativeDTOs);
+    return new ResponseEntity<>(updatedAlternatives, HttpStatus.OK);
   }
 
   /**

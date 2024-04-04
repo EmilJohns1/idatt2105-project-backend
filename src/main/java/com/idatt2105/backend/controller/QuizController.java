@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +34,8 @@ public class QuizController {
 
   @GetMapping
   @Operation(summary = "Get all quizzes")
-  public ResponseEntity<List<QuizDTO>> getAllQuizzes() {
-    List<QuizDTO> quizzes = quizService.getAllQuizzes();
+  public ResponseEntity<Page<QuizDTO>> getAllQuizzes(Pageable pageable) {
+    Page<QuizDTO> quizzes = quizService.getAllQuizzes(pageable);
     return new ResponseEntity<>(quizzes, HttpStatus.OK);
   }
 
@@ -119,12 +121,13 @@ public class QuizController {
 
   @GetMapping("/tag")
   @Operation(summary = "Get all quizzes with a specific tag")
-  public ResponseEntity<List<QuizDTO>> getQuizzesByTag(@RequestParam String tag) {
+  public ResponseEntity<Page<QuizDTO>> getQuizzesByTag(
+      @RequestParam String tag, Pageable pageable) {
     if (tag == null || tag.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
 
-    List<QuizDTO> quizzes = quizService.getQuizzesByTag(tag);
+    Page<QuizDTO> quizzes = quizService.getQuizzesByTag(tag, pageable);
 
     return ResponseEntity.ok(quizzes);
   }
@@ -136,6 +139,14 @@ public class QuizController {
     return new ResponseEntity<>(tags, HttpStatus.OK);
   }
 
+  @PostMapping("/filter-by-tags")
+  @Operation(summary = "Get all quizzes with the specified tags")
+  public ResponseEntity<Page<QuizDTO>> filterQuizzesByTags(
+      @RequestBody List<String> tags, Pageable pageable) {
+    Page<QuizDTO> quizzes = quizService.getQuizzesByTags(tags, pageable);
+    return new ResponseEntity<>(quizzes, HttpStatus.OK);
+  }
+
   @PostMapping("/create/category")
   @Operation(summary = "Create a new category")
   public ResponseEntity<Category> createCategory(@RequestBody Category category) {
@@ -145,16 +156,13 @@ public class QuizController {
 
   @GetMapping("/category")
   @Operation(summary = "Get all quizzes with a specific category")
-  public ResponseEntity<List<QuizDTO>> getQuizzesByCategory(@RequestParam String category) {
+  public ResponseEntity<Page<QuizDTO>> getQuizzesByCategory(
+      @RequestParam String category, Pageable pageable) {
     if (category == null || category.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
 
-    List<QuizDTO> quizzes = quizService.getQuizzesByCategory(category);
-    if (quizzes.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-
+    Page<QuizDTO> quizzes = quizService.getQuizzesByCategory(category, pageable);
     return ResponseEntity.ok(quizzes);
   }
 

@@ -24,6 +24,8 @@ public class MultipleChoiceQuestionAttempt extends QuestionAttempt {
     if (alternative == null) {
       throw new IllegalArgumentException("Alternative parameter cannot be null.");
     }
+    alternative.setQuestionAttempt(this);
+    alternative.setId(null);
     this.alternatives.add(alternative);
   }
 

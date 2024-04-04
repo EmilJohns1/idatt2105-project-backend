@@ -5,7 +5,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.idatt2105.backend.dto.QuizDTO;
 import com.idatt2105.backend.dto.UserDTO;
@@ -39,9 +43,8 @@ public class QuizService {
     this.categoryRepository = categoryRepository;
   }
 
-  public List<QuizDTO> getAllQuizzes() {
-    List<Quiz> quizzes = quizRepository.findAll();
-    return quizzes.stream().map(QuizDTO::new).toList();
+  public Page<QuizDTO> getAllQuizzes(Pageable pageable) {
+    return quizRepository.findAll(pageable).map(QuizDTO::new);
   }
 
   public QuizDTO getQuizById(Long id) {
@@ -235,20 +238,52 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
-  public List<QuizDTO> getQuizzesByTag(String tag) {
+  public Page<QuizDTO> getQuizzesByTag(String tag, Pageable pageable) {
     if (tag == null || tag.isEmpty()) {
       throw new IllegalArgumentException("Tag parameter cannot be null or empty.");
     }
     Optional<Tag> foundTag = tagRepository.findByTagName(tag);
-    if (foundTag.isEmpty()) {
-      return new ArrayList<>();
-    }
-    List<Quiz> quizzes = quizRepository.findByTagsContains(foundTag.get());
-    return quizzes.stream().map(QuizDTO::new).toList();
+    return foundTag
+        .map(value -> quizRepository.findByTagsContains(value, pageable).map(QuizDTO::new))
+        .orElseGet(Page::empty);
   }
 
   public List<Tag> getAllTags() {
     return tagRepository.findAll();
+  }
+
+  /**
+   * Fetches quizzes by a list of tags. The result will contain quizzes that have at least one of
+   *
+   * @param tags in the list.
+   * @param pageable Pageable object to control pagination
+   * @return Page of quizzes that have at least one of the tags in the list
+   */
+  @Transactional(readOnly = true)
+  public Page<QuizDTO> getQuizzesByTags(List<String> tags, Pageable pageable) {
+    if (tags == null || tags.isEmpty()) {
+      return Page.empty();
+    }
+
+    Set<Quiz> uniqueQuizzes = new HashSet<>();
+    Set<Tag> uniqueTags = new HashSet<>();
+
+    for (String tag : tags) {
+      Optional<Tag> foundTag = tagRepository.findByTagName(tag);
+      if (foundTag.isPresent()) {
+        uniqueQuizzes.addAll(quizRepository.findByTagsContains(foundTag.get(), pageable).toList());
+        uniqueTags.add(foundTag.get());
+      }
+    }
+
+    // Filter quizzes that contain all the given tags
+    uniqueQuizzes.removeIf(quiz -> !quiz.getTags().containsAll(uniqueTags));
+
+    List<QuizDTO> pageContent =
+        uniqueQuizzes.stream().map(QuizDTO::new).collect(Collectors.toList());
+    int start = (int) pageable.getOffset();
+    int end = Math.min(start + pageable.getPageSize(), pageContent.size());
+    return new PageImpl<>(pageContent.subList(start, end), pageable, pageContent.size());
   }
 
   public Category createCategory(Category category) {
@@ -264,18 +299,14 @@ public class QuizService {
     return categoryRepository.save(category);
   }
 
-  public List<QuizDTO> getQuizzesByCategory(String categoryName) {
+  public Page<QuizDTO> getQuizzesByCategory(String categoryName, Pageable pageable) {
     if (categoryName == null || categoryName.isEmpty()) {
       throw new IllegalArgumentException("Category parameter cannot be null or empty.");
     }
 
     Category foundCategory = findCategoryByName(categoryName);
-    if (foundCategory == null) {
-      return Collections.emptyList();
-    }
 
-    List<Quiz> quizzes = quizRepository.findByCategory(foundCategory);
-    return quizzes.stream().map(QuizDTO::new).collect(Collectors.toList());
+    return quizRepository.findByCategory(foundCategory, pageable).map(QuizDTO::new);
   }
 
   public List<Category> getAllCategories() {

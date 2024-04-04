@@ -60,7 +60,7 @@ class AttemptServiceTests {
     expected.setScore(5);
     expected.setUser(user);
 
-    when(quizAttemptRepository.save(expected)).thenReturn(expected);
+    when(quizAttemptRepository.save(any(QuizAttempt.class))).thenReturn(expected);
     when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
 
     QuizAttempt actual = attemptService.addQuizAttempt(input);

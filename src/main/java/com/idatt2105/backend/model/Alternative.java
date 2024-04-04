@@ -45,6 +45,9 @@ public class Alternative {
       return false;
     }
     Alternative that = (Alternative) o;
+    if (id == null || that.id == null) {
+      return false;
+    }
     return isCorrect == that.isCorrect
         && id.equals(that.id)
         && alternativeText.equals(that.alternativeText);
