@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.dto.CommentDTO;
@@ -109,6 +112,19 @@ public class CommentService {
     } else {
       throw new InvalidIdException("Comment not found with id: " + id);
     }
+  }
+
+  public Page<CommentDTO> getCommentsByQuizId(Long quizId, Pageable pageable) {
+    Page<Comment> comments = commentRepository.findByQuizId(quizId, pageable);
+    Page<CommentDTO> commentDTOPage =
+        comments.map(CommentDTO::new); // Convert Page<Comment> to Page<CommentDTO>
+
+    // Calculate total pages
+    long totalElements = comments.getTotalElements();
+    int pageSize = pageable.getPageSize();
+    int totalPages = (int) Math.ceil((double) totalElements / pageSize);
+
+    return new PageImpl<>(commentDTOPage.getContent(), pageable, totalPages);
   }
 
   private Comment findComment(Long id) {

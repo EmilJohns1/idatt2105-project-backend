@@ -71,6 +71,21 @@ public class UserDTO {
   }
 
   /**
+   * Constructor for UserDTO with parameters.
+   *
+   * @param id The ID of the user
+   * @param username The username of the user
+   * @param profilePictureUrl The URL of the user's profile picture
+   * @param quizzes The quizzes of the user
+   */
+  public UserDTO(Long id, String username, String profilePictureUrl, List<QuizDTO> quizzes) {
+    this.id = id;
+    this.username = username;
+    this.profilePictureUrl = profilePictureUrl;
+    this.quizzes = quizzes;
+  }
+
+  /**
    * Convert UserDTO to User entity.
    *
    * @return the User entity
