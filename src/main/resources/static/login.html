@@ -1,0 +1,62 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Please sign in</title>
+    <link href="./stylesheet.css" rel="stylesheet" type="text/css">
+    <link rel="icon" href="./favicon-32x32.png">
+</head>
+<body>
+<div class="logo">
+    <h1>QuizApp</h1>
+</div>
+<div class="layout-container">
+    <div class="container">
+        <div class="card">
+            <form class="form-signin" method="post" action="/login">
+                <h1 id="header">Log in</h1>
+                <p>
+                    <input type="text" id="username" name="username" class="input-field" placeholder="Username" required="" autofocus="">
+                </p>
+                <p>
+                    <input type="password" id="password" name="password" class="input-field" placeholder="Password" required="">
+                </p>
+                <p class="error-message" id="error">Invalid username and/or password</p>
+                <div class="button-container">
+                    <button type="submit" class="submit-button">Login</button>
+                    <div class="additional-buttons">
+                        <button class="additional-button" id="register">Register</button>
+                        <button class="additional-button" id="forgot-password">Forgot password</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let registerButton = document.getElementById('register');
+        let forgotPasswordButton = document.getElementById('forgot-password');
+
+        if(registerButton) {
+            registerButton.addEventListener('click', function() {
+                window.location.href = 'https://localhost:5173/signup';
+            });
+        }
+
+        if(forgotPasswordButton) {
+            forgotPasswordButton.addEventListener('click', function() {
+                window.location.href = 'https://localhost:5173/forgot-password';
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        let urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('error')) {
+            let errorMessage = document.getElementById('error');
+            errorMessage.style.display = 'block';
+        }
+    });
+</script></html>

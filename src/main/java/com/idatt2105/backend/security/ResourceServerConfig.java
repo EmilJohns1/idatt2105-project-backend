@@ -55,7 +55,11 @@ public class ResourceServerConfig {
                   .permitAll()
                   .requestMatchers("/connect/logout")
                   .permitAll()
-                  .requestMatchers("/login")
+                  .requestMatchers("/login.html")
+                  .permitAll()
+                  .requestMatchers("/stylesheet.css")
+                  .permitAll()
+                  .requestMatchers("/favicon-32x32.png")
                   .permitAll()
                   .requestMatchers(quizApiPath + "/categories")
                   .permitAll()
@@ -86,7 +90,22 @@ public class ResourceServerConfig {
                   .anyRequest()
                   .authenticated();
             })
-        .formLogin(Customizer.withDefaults())
+        .formLogin(
+            custom -> {
+              custom
+                  .loginPage("/login.html")
+                  .usernameParameter("username")
+                  .passwordParameter("password")
+                  .loginProcessingUrl("/login")
+                  .successHandler(
+                      (request, response, authentication) -> {
+                        String originalRequestUrl =
+                            (String) request.getSession().getAttribute("ORIGINAL_REQUEST_URL");
+                        response.sendRedirect(
+                            originalRequestUrl != null ? originalRequestUrl : "/");
+                      });
+            })
+        // .formLogin(Customizer.withDefaults())
         .oauth2ResourceServer(
             oauth2ResourceServer ->
                 oauth2ResourceServer.jwt(
