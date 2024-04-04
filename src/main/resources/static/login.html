@@ -22,6 +22,7 @@
                 <p>
                     <input type="password" id="password" name="password" class="input-field" placeholder="Password" required="">
                 </p>
+                <p class="error-message" id="error">Invalid username and/or password</p>
                 <div class="button-container">
                     <button type="submit" class="submit-button">Login</button>
                     <div class="additional-buttons">
@@ -49,6 +50,13 @@
             forgotPasswordButton.addEventListener('click', function() {
                 window.location.href = 'https://localhost:5173/forgot-password';
             });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        let urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('error')) {
+            let errorMessage = document.getElementById('error');
+            errorMessage.style.display = 'block';
         }
     });
 </script></html>

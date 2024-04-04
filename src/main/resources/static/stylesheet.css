@@ -182,3 +182,9 @@ body {
     margin-left: 2%;
     cursor: default;
 }
+
+.error-message {
+    display:none;
+    color: red;
+    margin-bottom: 10px;
+}
