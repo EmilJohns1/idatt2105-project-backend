@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.idatt2105.backend.controller.CommentController;
@@ -24,10 +25,12 @@ import com.idatt2105.backend.controller.QuizController;
 @EnableWebSecurity
 public class ResourceServerConfig {
   private final JwtDecoder jwtDecoder;
+  private final HttpSessionRequestCache requestCache;
 
   @Autowired
-  public ResourceServerConfig(JwtDecoder jwtDecoder) {
+  public ResourceServerConfig(JwtDecoder jwtDecoder, HttpSessionRequestCache requestCache) {
     this.jwtDecoder = jwtDecoder;
+    this.requestCache = requestCache;
   }
 
   @Bean
@@ -99,10 +102,13 @@ public class ResourceServerConfig {
                   .loginProcessingUrl("/login")
                   .successHandler(
                       (request, response, authentication) -> {
-                        String originalRequestUrl =
+                        var cachedRequest = requestCache.getRequest(request, response);
+                        String authorizeRequestUrl =
                             (String) request.getSession().getAttribute("ORIGINAL_REQUEST_URL");
                         response.sendRedirect(
-                            originalRequestUrl != null ? originalRequestUrl : "/");
+                            authorizeRequestUrl != null
+                                ? authorizeRequestUrl
+                                : cachedRequest.getRedirectUrl());
                       });
             })
         // .formLogin(Customizer.withDefaults())
