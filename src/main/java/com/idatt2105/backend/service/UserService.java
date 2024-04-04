@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
   public UserDTO getUserById(Long id) {
     User user = findUserById(id);
     List<QuizDTO> quizDTOs = user.getQuizzes().stream().map(QuizDTO::new).toList();
-    return new UserDTO(user.getId(), user.getUsername(), quizDTOs);
+    return new UserDTO(user.getId(), user.getUsername(), user.getProfilePictureUrl(), quizDTOs);
   }
 
   /**
