@@ -1,22 +1,24 @@
 package com.idatt2105.backend.util;
 
-import com.idatt2105.backend.dto.AlternativeDTO;
-import com.idatt2105.backend.dto.QuestionDTO;
-import com.idatt2105.backend.dto.QuizDTO;
-import com.idatt2105.backend.enumerator.QuestionType;
-import com.idatt2105.backend.model.Category;
-import com.idatt2105.backend.service.QuestionService;
-import com.idatt2105.backend.service.QuizService;
-import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.idatt2105.backend.dto.AlternativeDTO;
+import com.idatt2105.backend.dto.QuestionDTO;
+import com.idatt2105.backend.dto.QuizDTO;
+import com.idatt2105.backend.enumerator.QuestionType;
+import com.idatt2105.backend.model.Category;
 import com.idatt2105.backend.model.User;
+import com.idatt2105.backend.service.QuestionService;
+import com.idatt2105.backend.service.QuizService;
 import com.idatt2105.backend.service.UserService;
-import java.util.Arrays;
-import java.util.List;
+
+import jakarta.transaction.Transactional;
 
 @Component
 public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
@@ -24,7 +26,8 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
   private final QuizService quizService;
   private final QuestionService questionService;
 
-  public DataLoader(UserService userService, QuizService quizService, QuestionService questionService) {
+  public DataLoader(
+      UserService userService, QuizService quizService, QuestionService questionService) {
     this.userService = userService;
     this.quizService = quizService;
     this.questionService = questionService;
@@ -47,7 +50,9 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
       admin.setPassword("password");
       userService.addUser(admin, "ADMIN");
     }
-    List<String> categoryNames = Arrays.asList("Biology", "Chemistry", "Math", "Science", "Geography", "English", "Physics", "Sports");
+    List<String> categoryNames =
+        Arrays.asList(
+            "Biology", "Chemistry", "Math", "Science", "Geography", "English", "Physics", "Sports");
     List<String> alternatives = Arrays.asList("Oslo", "Stockholm", "Copenhagen", "Helsinki");
     categoryNames.forEach(
         name -> {
@@ -59,18 +64,21 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
             // Do nothing
           }
         });
-    if (quizService.getAllQuizzes(Pageable.ofSize(1)).isEmpty()) { //No quizzes are stored
+    if (quizService.getAllQuizzes(Pageable.ofSize(1)).isEmpty()) { // No quizzes are stored
       for (String category : categoryNames) {
         for (int i = 0; i < 5; i++) { // Create 5 quizzes for each category
-          QuizDTO quiz = new QuizDTO.Builder().setTitle("Quiz title")
-              .setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                  + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
-                  + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
-              .setAuthorId(1L)
-              .setCategoryName(category)
-              .setIsPublic(true)
-              .setRandomizedOrder(false)
-              .build();
+          QuizDTO quiz =
+              new QuizDTO.Builder()
+                  .setTitle("Quiz title")
+                  .setDescription(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                          + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                          + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
+                  .setAuthorId(1L)
+                  .setCategoryName(category)
+                  .setIsPublic(true)
+                  .setRandomizedOrder(false)
+                  .build();
           Long savedId = quizService.save(quiz).getId();
           quizService.addUserToQuiz(1L, savedId);
           Long questionId;
@@ -79,18 +87,19 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
           question.setQuizId(savedId);
 
           question.setType(QuestionType.TRUE_OR_FALSE);
-          question.setQuestionText("Light from the Sun reaches the Earth in exactly 8 minutes and 20 seconds.");
+          question.setQuestionText(
+              "Light from the Sun reaches the Earth in exactly 8 minutes and 20 seconds.");
           question.setIsCorrect(true);
           questionId = questionService.addQuestion(question).getId();
           question.setQuestionId(questionId);
           questionService.updateTrueOrFalseQuestion(question);
 
-          question.setQuestionText("The Great Wall of China is visible from space with the naked eye.");
+          question.setQuestionText(
+              "The Great Wall of China is visible from space with the naked eye.");
           question.setIsCorrect(false);
           questionId = questionService.addQuestion(question).getId();
           question.setQuestionId(questionId);
           questionService.updateTrueOrFalseQuestion(question);
-
 
           question.setType(QuestionType.MULTIPLE_CHOICE);
           question.setQuestionText("What is the capital of Norway?");
