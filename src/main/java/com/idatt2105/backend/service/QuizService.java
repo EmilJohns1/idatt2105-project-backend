@@ -433,7 +433,7 @@ public class QuizService {
   /**
    * Get all pubilc quizzes
    *
-   * @param pageable The page side, number, sort, etc for the returned object.
+   * @param pageable The page side, number, and sorting
    * @return Page<QuizDTO> a page of QuizDTOs
    */
   public Page<QuizDTO> getAllPublicQuizzes(Pageable pageable) {
@@ -441,12 +441,12 @@ public class QuizService {
   }
 
   /**
-  * Find a quiz by id.
-  *
-  * @param id The id of the quiz.
-  * @throws InvalidIdException If the quiz is not found.
-  * @return The quiz.
-  */
+   * Find a quiz by id.
+   *
+   * @param id The id of the quiz.
+   * @throws InvalidIdException If the quiz is not found.
+   * @return The quiz.
+   */
   private Quiz findQuiz(Long id) {
     return quizRepository
         .findById(id)
