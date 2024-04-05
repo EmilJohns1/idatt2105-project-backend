@@ -313,6 +313,10 @@ public class QuizService {
     return categoryRepository.findAll();
   }
 
+  public Page<QuizDTO> getAllPublicQuizzes(Pageable pageable) {
+    return quizRepository.findByIsPublicIsTrue(pageable).map(QuizDTO::new);
+  }
+
   private Quiz findQuiz(Long id) {
     return quizRepository
         .findById(id)

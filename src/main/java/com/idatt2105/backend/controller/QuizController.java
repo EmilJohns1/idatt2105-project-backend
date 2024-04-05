@@ -172,4 +172,10 @@ public class QuizController {
     List<Category> categories = quizService.getAllCategories();
     return new ResponseEntity<>(categories, HttpStatus.OK);
   }
+
+  @GetMapping("/all/public")
+  @Operation(summary = "Get all public quizzes")
+  public ResponseEntity<Page<QuizDTO>> getAllPublicQuizzes(Pageable pageable) {
+    return new ResponseEntity<>(quizService.getAllPublicQuizzes(pageable), HttpStatus.OK);
+  }
 }
