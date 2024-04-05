@@ -19,4 +19,6 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
   Page<Quiz> findByTagsContains(Tag tag, Pageable pageable);
 
   Page<Quiz> findByCategory(Category category, Pageable pageable);
+
+  Page<Quiz> findByIsPublicIsTrue(Pageable pageable);
 }
