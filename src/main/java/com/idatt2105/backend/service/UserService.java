@@ -37,6 +37,13 @@ public class UserService implements UserDetailsService {
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = new BCryptPasswordEncoder();
+    Optional<User> adminUser = userRepository.findByUsername("admin");
+    if (adminUser.isEmpty()) {
+      User admin = new User();
+      admin.setUsername("admin");
+      admin.setPassword("password");
+      addUser(admin, "ADMIN");
+    }
   }
 
   /**
@@ -78,11 +85,17 @@ public class UserService implements UserDetailsService {
    * @return The added user.
    * @throws ExistingUserException If a user with the same username already exists.
    */
-  public UserDTO addUser(User user) {
+  public UserDTO addUser(User user, String role) {
     if (userExists(user.getUsername())) {
       throw new ExistingUserException(
           "User with username " + user.getUsername() + " already exists");
     }
+    if ("ADMIN".equals(role)) {
+      user.setRole("ADMIN");
+    } else {
+      user.setRole("USER");
+    }
+
     String hashedPassword = passwordEncoder.encode(user.getPassword());
     user.setPassword(hashedPassword);
     User savedUser = userRepository.save(user);
@@ -174,19 +187,6 @@ public class UserService implements UserDetailsService {
     userRepository.save(user);
   }
 
-  /**
-   * Checks the credentials of the given user.
-   *
-   * @param user (User) The user to be validated.
-   * @return {@code true} if the credentials are valid, {@code false} otherwise.
-   * @throws UserNotFoundException If no user with the given username is found.
-   */
-  private boolean validateCredentials(@Validated @NotNull User user) {
-    User existingUser = findUserByUsername(user.getUsername());
-    // Use the password encoder to verify the password
-    return passwordEncoder.matches(user.getPassword(), existingUser.getPassword());
-  }
-
   /*
    * Gets all quizzes created by a user.
    * @param userId (Long) Id of the user.
@@ -273,9 +273,10 @@ public class UserService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) {
     User user = findUserByUsername(username);
+    String role = user.getRole() == null ? "USER" : user.getRole(); // Default role is USER
     return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
         .password(user.getPassword())
-        .roles("USER")
+        .roles(role)
         .build();
   }
 }

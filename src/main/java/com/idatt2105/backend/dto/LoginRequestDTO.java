@@ -13,6 +13,7 @@ import lombok.Setter;
 public class LoginRequestDTO {
   private String username;
   private String password;
+  private String role;
 
   /**
    * Constructs a new LoginRequestDTO with the specified username and password.
