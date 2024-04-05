@@ -27,12 +27,6 @@ public class QuestionService {
   private final QuizRepository quizRepository;
   private final AlternativeRepository alternativeRepository;
 
-  /**
-   * Constructor for the QuestionService class.
-   *
-   * @param questionRepository (QuestionRepository) Repository for handling operations on questions.
-   * @param quizRepository (QuizRepository) Repository for handling operations on quizzes.
-   */
   @Autowired
   public QuestionService(
       QuestionRepository questionRepository,

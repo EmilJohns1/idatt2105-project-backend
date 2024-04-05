@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+/** Represents a quiz attempt made by a user. */
 @Entity
 @Data
 public class QuizAttempt {

@@ -12,6 +12,7 @@ import com.idatt2105.backend.model.Comment;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.User;
 
+/** Repository for the Comment entity. */
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
   List<Comment> findByQuiz(Quiz quiz);

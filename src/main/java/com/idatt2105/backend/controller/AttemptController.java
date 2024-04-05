@@ -19,6 +19,7 @@ import com.idatt2105.backend.service.AttemptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/** The AttemptController class handles HTTP requests related to attempts. */
 @RestController
 @Tag(name = "Attempts", description = "Operations related to attempts")
 @RequestMapping("/api/attempts")
@@ -30,6 +31,12 @@ public class AttemptController {
     this.attemptService = attemptService;
   }
 
+  /**
+   * Add a quiz attempt
+   *
+   * @param quizAttemptDTO The DTO containing the quiz attempt data
+   * @return The created QuizAttempt
+   */
   @PostMapping("/add")
   @Operation(summary = "Add a quiz attempt")
   public ResponseEntity<QuizAttempt> addQuizAttempt(@RequestBody QuizAttemptDTO quizAttemptDTO) {
@@ -37,6 +44,12 @@ public class AttemptController {
     return new ResponseEntity<>(quizAttempt, HttpStatus.CREATED);
   }
 
+  /**
+   * Get all attempts for a user
+   *
+   * @param userId The ID of the user
+   * @return A collection of QuizAttempts
+   */
   @GetMapping("/all/{userId}")
   @Operation(summary = "Get all attempts for a user")
   public ResponseEntity<Page<QuizAttempt>> getAllAttemptsForUser(
@@ -45,6 +58,12 @@ public class AttemptController {
     return new ResponseEntity<>(quizAttempts, HttpStatus.OK);
   }
 
+  /**
+   * Get an attempt by id
+   *
+   * @param id The ID of the attempt
+   * @return The QuizAttempt
+   */
   @GetMapping("/{id}")
   @Operation(summary = "Get an attempt by id")
   public ResponseEntity<QuizAttempt> getAttemptById(@PathVariable Long id) {

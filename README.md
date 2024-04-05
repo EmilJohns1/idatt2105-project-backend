@@ -7,10 +7,22 @@ This is the backend for a fullstack project. The project should be run using the
 This guide requires:
 <ul>
   <li>A pc with docker installed</li>
-  <li>An environment variable with the name "KEYSTORE_PASSWORD", set to a value of your own choosing</li>
+  <li>The ability to set environment variables</li>
 </ul>
 
 Setting an environment variable is done by running `set KEYSTORE_PASSWORD=changeit` (Windows) or by `export KEYSTORE_PASSWORD=changeit` (Unix). If, for whatever reason, you are unable to set variables, you can edit the docker-compose.yml file and replace each occurence of `${KEYSTORE_PASSWORD}` with you password (replace the entire thing). 
+
+The following environment variables are needed:
+<ul>
+  <li>KEYSTORE_PASSWORD - Whatever value you want. THIS IS REQUIRED FOR THE PROJECT TO RUN</li>
+  <li>SMTP_PASSWORD</li>
+  <li>SMTP_EMAIL</li>
+  <li>SMTP_HOST</li>
+  <li>ENDPOINT_URL</li>
+  <li>ACCESS_KEY</li>
+  <li>SECRET_KEY</li>
+  <li>BUCKET_NAME</li>
+</ul>
 
 After this is done:
 <ol>
@@ -22,6 +34,8 @@ After this is done:
 </ol>
 The project should now be up and running, and can be accessed from https://localhost:5173 (note that it's https and not http). Your browser will likely alert you that the certificate is not trusted, due to the project using dev-certificates. This can be safely ignored by pressing advanced options and "continue to site", but might required an extra step for chrome browsers: https://superuser.com/questions/772762/how-can-i-disable-security-checks-for-localhost
 
+## Notes
+The backend is set up to fill the database with placeholder quizzes when it runs, this happens in the `util/Dataloader.java` class. Comment this class out if this is not desired. 
 # API-doc:
 For API documentation, download the project, run `mvn clean install` and `mvn spring-boot:run`, and then navigate to `localhost:8443/swagger-ui/index.html` in your browser. Log in with username:`admin` and password: `password` You will land on this page:
 

@@ -23,11 +23,6 @@ public class CommentController {
 
   private final CommentService commentService;
 
-  /**
-   * Constructs a new CommentController with the specified CommentService.
-   *
-   * @param commentService the CommentService to be used
-   */
   @Autowired
   public CommentController(CommentService commentService) {
     this.commentService = commentService;

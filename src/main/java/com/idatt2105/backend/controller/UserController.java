@@ -18,6 +18,7 @@ import com.idatt2105.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/** The UserController class handles HTTP requests related to users. */
 @RestController
 @RequestMapping("/api/user")
 @Tag(name = "Users", description = "Operations related to users")
