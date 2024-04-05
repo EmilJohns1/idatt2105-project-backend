@@ -7,10 +7,22 @@ This is the backend for a fullstack project. The project should be run using the
 This guide requires:
 <ul>
   <li>A pc with docker installed</li>
-  <li>An environment variable with the name "KEYSTORE_PASSWORD", set to a value of your own choosing</li>
+  <li>The ability to set environment variables</li>
 </ul>
 
 Setting an environment variable is done by running `set KEYSTORE_PASSWORD=changeit` (Windows) or by `export KEYSTORE_PASSWORD=changeit` (Unix). If, for whatever reason, you are unable to set variables, you can edit the docker-compose.yml file and replace each occurence of `${KEYSTORE_PASSWORD}` with you password (replace the entire thing). 
+
+The following environment variables are needed:
+<ul>
+  <li>KEYSTORE_PASSWORD - Whatever value you want</li>
+  <li>SMTP_PASSWORD</li>
+  <li>SMTP_EMAIL</li>
+  <li>SMTP_HOST</li>
+  <li>ENDPOINT_URL</li>
+  <li>ACCESS_KEY</li>
+  <li>SECRET_KEY</li>
+  <li>BUCKET_NAME</li>
+</ul>
 
 After this is done:
 <ol>
