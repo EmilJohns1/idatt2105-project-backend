@@ -2,6 +2,7 @@ package com.idatt2105.backend.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.idatt2105.backend.model.User;
 
 import lombok.Data;
@@ -22,6 +23,8 @@ public class UserDTO {
   private String username;
   private List<QuizDTO> quizzes;
   private String profilePictureUrl;
+
+  @JsonIgnore private String role;
 
   /**
    * Constructor for UserDTO with User entity.

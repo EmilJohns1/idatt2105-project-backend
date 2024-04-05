@@ -90,6 +90,8 @@ public class ResourceServerConfig {
                   .permitAll()
                   .requestMatchers(HttpMethod.GET, questionApiPath + "/get/all/*")
                   .permitAll()
+                  .requestMatchers("/swagger-ui/index.html")
+                  .hasRole("ADMIN")
                   .anyRequest()
                   .authenticated();
             })
@@ -102,6 +104,7 @@ public class ResourceServerConfig {
                   .loginProcessingUrl("/login")
                   .successHandler(
                       (request, response, authentication) -> {
+                        System.out.println(authentication.getAuthorities().iterator().next());
                         var cachedRequest = requestCache.getRequest(request, response);
                         String authorizeRequestUrl =
                             (String) request.getSession().getAttribute("ORIGINAL_REQUEST_URL");
