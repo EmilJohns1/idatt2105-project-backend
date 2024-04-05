@@ -1,8 +1,8 @@
 package com.idatt2105.backend.controller;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +39,9 @@ public class AttemptController {
 
   @GetMapping("/all/{userId}")
   @Operation(summary = "Get all attempts for a user")
-  public ResponseEntity<Collection<QuizAttempt>> getAllAttemptsForUser(@PathVariable Long userId) {
-    Collection<QuizAttempt> quizAttempts = attemptService.getAllAttemptsForUser(userId);
+  public ResponseEntity<Page<QuizAttempt>> getAllAttemptsForUser(
+      @PathVariable Long userId, Pageable pageable) {
+    Page<QuizAttempt> quizAttempts = attemptService.getAllAttemptsForUser(userId, pageable);
     return new ResponseEntity<>(quizAttempts, HttpStatus.OK);
   }
 

@@ -1,6 +1,5 @@
 package com.idatt2105.backend.service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -11,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import com.idatt2105.backend.dto.QuestionAttemptDTO;
 import com.idatt2105.backend.dto.QuizAttemptDTO;
@@ -85,17 +87,22 @@ class AttemptServiceTests {
     quizAttempt.setId(1L);
     User user = new User();
     user.setId(1L);
-    when(quizAttemptRepository.findByUserId(1L)).thenReturn(List.of(quizAttempt));
+
+    Page<QuizAttempt> expected = new PageImpl<>(List.of(quizAttempt));
+    when(quizAttemptRepository.findByUserId(any(Long.class), any(Pageable.class)))
+        .thenReturn(expected);
     when(userRepository.existsById(1L)).thenReturn(true);
 
-    Collection<QuizAttempt> actual = attemptService.getAllAttemptsForUser(1L);
-    assertEquals(List.of(quizAttempt), actual);
+    Page<QuizAttempt> actual = attemptService.getAllAttemptsForUser(1L, Pageable.ofSize(1));
+    assertEquals(expected, actual);
   }
 
   @Test
   void getAllAttemptsForUserWithInvalidUserIdThrowsException() {
     when(userRepository.findById(1L)).thenReturn(Optional.empty());
-    assertThrows(InvalidIdException.class, () -> attemptService.getAllAttemptsForUser(1L));
+    assertThrows(
+        InvalidIdException.class,
+        () -> attemptService.getAllAttemptsForUser(1L, Pageable.ofSize(1)));
   }
 
   @Test
@@ -105,7 +112,9 @@ class AttemptServiceTests {
 
   @Test
   void getAllAttemptsForUserWithNullAsParameterThrowsException() {
-    assertThrows(InvalidIdException.class, () -> attemptService.getAllAttemptsForUser(null));
+    assertThrows(
+        InvalidIdException.class,
+        () -> attemptService.getAllAttemptsForUser(null, Pageable.ofSize(1)));
   }
 
   @Nested

@@ -10,6 +10,7 @@ import lombok.Data;
 
 @Data
 public class QuizAttemptDTO {
+  private String title;
   private LocalDateTime attemptTime;
   private int score;
   private Long userId;
