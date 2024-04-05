@@ -62,8 +62,8 @@ public class UserService implements UserDetailsService {
    * Gets a user by a unique id.
    *
    * @param id (Long) Unique id of the user.
-   * @return Optional of the user with the given id.
    * @throws UserNotFoundException If no user with the given id is found.
+   * @return Optional of the user with the given id.
    */
   public UserDTO getUserById(Long id) {
     User user = findUserById(id);
@@ -201,8 +201,9 @@ public class UserService implements UserDetailsService {
     userRepository.save(user);
   }
 
-  /*
+  /**
    * Gets all quizzes created by a user.
+   *
    * @param userId (Long) Id of the user.
    * @return Set of quizzes created by the user.
    */

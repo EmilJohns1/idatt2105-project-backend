@@ -203,11 +203,11 @@ public class QuizService {
   }
 
   /**
-   * Get all quizzes by a user.
+   * Get users by quiz id.
    *
    * @param quizId The id of the quiz.
    * @throws IllegalArgumentException If the quizId parameter is null.
-   * @return Set of UserDTOs containing all users that have taken the quiz.
+   * @return Set of UserDTOs containing the users.
    */
   public Set<UserDTO> getUsersByQuizId(Long quizId) {
     if (quizId == null) {
@@ -221,11 +221,11 @@ public class QuizService {
   }
 
   /**
-   * Get all quizzes by a user.
+   * Add tags to a quiz.
    *
    * @param dto The DTO containing the updated quiz data.
    * @throws IllegalArgumentException If the userId parameter is null.
-   * @return List of QuizDTOs containing all quizzes created by the user.
+   * @return QuizDTO containing the updated quiz.
    */
   public QuizDTO addTags(QuizDTO dto) {
     if (dto == null) {
@@ -339,21 +339,22 @@ public class QuizService {
   }
 
   /**
-   * Get a tag by name.
+   * Get all tags.
    *
-   * @return Tag containing the tag.
+   * @return List<Tag> containing all tags.
    */
   public List<Tag> getAllTags() {
     return tagRepository.findAll();
   }
 
   /**
-   * Fetches quizzes by a list of tags. The result will contain quizzes that have at least one of
+   * Fetches quizzes by a list of tags. The result will contain quizzes that match the tags in the
+   * input, or these tags and more.
    *
-   * @param tags in the list.
-   * @param pageable Pageable object to control pagination
+   * @param tags List of tags to search for.
+   * @param pageable Pageable object to control pagination.
    * @throws IllegalArgumentException If the tags parameter is null or empty.
-   * @return Page of quizzes that have at least one of the tags in the list
+   * @return Page of quizzes that have the given tags or more.
    */
   @Transactional(readOnly = true)
   public Page<QuizDTO> getQuizzesByTags(List<String> tags, Pageable pageable) {
@@ -403,11 +404,11 @@ public class QuizService {
   }
 
   /**
-   * Update a category.
+   * Fetches quizzes by a category.
    *
-   * @param categoryName The name of the category to update.
+   * @param categoryName The name of the category to search for.
    * @param pageable Pageable object to control pagination
-   * @throws IllegalArgumentException If the categoryName parameter is null or empty.
+   * @throws IllegalArgumentException If the category parameter is null or empty.
    * @return Page of quizzes that have the given category
    */
   public Page<QuizDTO> getQuizzesByCategory(String categoryName, Pageable pageable) {
@@ -421,20 +422,20 @@ public class QuizService {
   }
 
   /**
-   * Update a category.
+   * Get all categories.
    *
-   * @return Category containing the updated category.
+   * @return List of categories.
    */
   public List<Category> getAllCategories() {
     return categoryRepository.findAll();
   }
 
   /**
-   * Update a category.
+   * Find a quiz by id.
    *
-   * @param id The id of the category.
-   * @throws IllegalArgumentException If the id parameter is null.
-   * @return Category containing the updated category.
+   * @param id The id of the quiz.
+   * @throws InvalidIdException If the quiz is not found.
+   * @return The quiz.
    */
   private Quiz findQuiz(Long id) {
     return quizRepository

@@ -20,11 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class FeedbackController {
   private final FeedbackService feedbackService;
 
-  /**
-   * Constructs a new FeedbackController with the specified FeedbackService.
-   *
-   * @param feedbackService The FeedbackService to be used for handling feedback operations.
-   */
   @Autowired
   public FeedbackController(FeedbackService feedbackService) {
     this.feedbackService = feedbackService;

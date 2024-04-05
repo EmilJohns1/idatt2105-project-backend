@@ -35,7 +35,8 @@ public class ResourceServerConfig {
   }
 
   /**
-   * Configures the security filter chain for the Resource Server.
+   * Configures the security filter chain for the Resource Server. Gives access to certain API
+   * endpoints without authentication.
    *
    * @param http The HttpSecurity object to configure
    * @return The SecurityFilterChain object
