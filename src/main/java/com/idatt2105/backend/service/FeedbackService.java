@@ -34,6 +34,7 @@ public class FeedbackService {
    * Creates a new feedback based on the provided FeedbackDTO.
    *
    * @param feedbackDTO The DTO containing the feedback data.
+   * @throws IllegalArgumentException If the provided FeedbackDTO is null.
    * @return The created FeedbackDTO.
    */
   public FeedbackDTO createFeedback(FeedbackDTO feedbackDTO) {
@@ -56,6 +57,7 @@ public class FeedbackService {
    *
    * @param feedbackId The ID of the feedback to update.
    * @param feedbackDTO The DTO containing the updated feedback data.
+   * @throws IllegalArgumentException If the provided feedbackId or FeedbackDTO is null.
    */
   public void updateFeedback(Long feedbackId, FeedbackDTO feedbackDTO) {
     if (feedbackId == null) {
@@ -81,6 +83,7 @@ public class FeedbackService {
    * Deletes the feedback with the provided feedbackId.
    *
    * @param feedbackId The ID of the feedback to delete.
+   * @throws IllegalArgumentException If the provided feedbackId is null.
    */
   public void deleteFeedback(Long feedbackId) {
     if (feedbackId == null) {
@@ -92,6 +95,7 @@ public class FeedbackService {
   /**
    * Retrieves all feedback entities and converts them to a list of FeedbackDTOs.
    *
+   * @throws IllegalArgumentException If the provided feedbackId is null.
    * @return A list of FeedbackDTOs representing all feedback entities.
    */
   public List<FeedbackDTO> getAllFeedback() {
@@ -104,6 +108,7 @@ public class FeedbackService {
    * list of FeedbackDTOs.
    *
    * @param userId The ID of the user to retrieve feedback for.
+   * @throws IllegalArgumentException If the provided userId is null.
    * @return A list of FeedbackDTOs representing the feedback entities associated with the specified
    *     userId.
    */

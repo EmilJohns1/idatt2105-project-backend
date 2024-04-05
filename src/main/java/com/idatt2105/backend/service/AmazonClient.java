@@ -19,6 +19,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import jakarta.annotation.PostConstruct;
 
+/** Service for handling Amazon S3 file uploads and deletions. */
 @Service
 public class AmazonClient {
 
@@ -29,6 +30,7 @@ public class AmazonClient {
   private String secretKey;
   private String bucketName;
 
+  /** Initializes the AmazonClient with the necessary environment variables. */
   @PostConstruct
   private void init() {
     endpointUrl = env.getProperty("ENDPOINT_URL");
@@ -37,6 +39,13 @@ public class AmazonClient {
     bucketName = env.getProperty("BUCKET_NAME");
   }
 
+  /**
+   * Converts a MultipartFile to a File.
+   *
+   * @param file MultipartFile to convert.
+   * @return File representation of the MultipartFile.
+   * @throws IOException if the file cannot be converted.
+   */
   private File convertMultiPartToFile(MultipartFile file) throws IOException {
     File convFile = new File(file.getOriginalFilename());
     FileOutputStream fos = new FileOutputStream(convFile);
@@ -45,6 +54,12 @@ public class AmazonClient {
     return convFile;
   }
 
+  /**
+   * Generates a unique file name for a MultipartFile.
+   *
+   * @param multiPart MultipartFile to generate a file name for.
+   * @return Unique file name for the MultipartFile.
+   */
   private String generateFileName(MultipartFile multiPart) {
     String originalFileName = multiPart.getOriginalFilename();
     String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
@@ -52,6 +67,12 @@ public class AmazonClient {
     return uniqueId + "_" + originalFileName;
   }
 
+  /**
+   * Uploads a file to an S3 bucket.
+   *
+   * @param fileName Name of the file to upload.
+   * @param file File to upload.
+   */
   private void uploadFileToS3Bucket(String fileName, File file) {
     BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
     AmazonS3 s3client =
@@ -63,6 +84,12 @@ public class AmazonClient {
     s3client.putObject(new PutObjectRequest(bucketName, fileName, file));
   }
 
+  /**
+   * Uploads a MultipartFile to an S3 bucket.
+   *
+   * @param multipartFile MultipartFile to upload.
+   * @return URL of the uploaded file.
+   */
   public String uploadFile(MultipartFile multipartFile) {
     String fileUrl = "";
     try {
@@ -77,6 +104,12 @@ public class AmazonClient {
     return fileUrl;
   }
 
+  /**
+   * Deletes a file from an S3 bucket.
+   *
+   * @param fileUrl URL of the file to delete.
+   * @return Message indicating the success of the deletion.
+   */
   public String deleteFileFromS3Bucket(String fileUrl) {
     String fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
     String bucketName = fileUrl.substring(fileUrl.indexOf("://") + 3, fileUrl.indexOf(".s3."));

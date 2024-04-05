@@ -20,9 +20,17 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/** Configuration for the Security. */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+  /**
+   * Configures the security filter chain for the Resource Server.
+   *
+   * @param http The HttpSecurity object to configure
+   * @return The SecurityFilterChain object
+   * @throws Exception If an error occurs
+   */
   @Bean
   @Order(3)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -33,11 +41,21 @@ public class SecurityConfig {
     return http.build();
   }
 
+  /**
+   * Configures the password encoder.
+   *
+   * @return (BCryptPasswordEncoder) The password encoder
+   */
   @Bean
   public BCryptPasswordEncoder encoder() {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * Configures the CORS settings.
+   *
+   * @return (WebMvcConfigurer) The CORS settings
+   */
   @Bean
   public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
@@ -52,6 +70,11 @@ public class SecurityConfig {
     };
   }
 
+  /**
+   * Configures the servlet container.
+   *
+   * @return (ServletWebServerFactory) The servlet container
+   */
   @Bean
   public ServletWebServerFactory servletContainer() {
     // Configure the factory however you need
@@ -75,16 +98,31 @@ public class SecurityConfig {
     return connector;
   }
 
+  /**
+   * Configures the session registry.
+   *
+   * @return (SessionRegistry) The session registry
+   */
   @Bean
   public SessionRegistry sessionRegistry() {
     return new SessionRegistryImpl();
   }
 
+  /**
+   * Configures the HttpSessionEventPublisher.
+   *
+   * @return (HttpSessionEventPublisher) The HttpSessionEventPublisher
+   */
   @Bean
   public HttpSessionEventPublisher httpSessionEventPublisher() {
     return new HttpSessionEventPublisher();
   }
 
+  /**
+   * Configures the request cache.
+   *
+   * @return (HttpSessionRequestCache) The request cache
+   */
   @Bean
   public HttpSessionRequestCache requestCache() {
     return new HttpSessionRequestCache();

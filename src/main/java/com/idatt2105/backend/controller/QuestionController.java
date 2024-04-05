@@ -28,12 +28,6 @@ import io.swagger.v3.oas.annotations.Operation;
 public class QuestionController {
   private final QuestionService questionService;
 
-  /**
-   * Constructor for the QuestionController class. It initializes the questionService which will be
-   * used to perform operations on questions.
-   *
-   * @param questionService (QuestionService) Service for handling questions.
-   */
   @Autowired
   public QuestionController(QuestionService questionService) {
     this.questionService = questionService;

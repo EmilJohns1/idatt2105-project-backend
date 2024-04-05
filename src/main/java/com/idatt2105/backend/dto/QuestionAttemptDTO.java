@@ -11,6 +11,10 @@ import com.idatt2105.backend.model.TrueOrFalseQuestionAttempt;
 
 import lombok.Data;
 
+/**
+ * A Data Transfer Object (DTO) class representing a question attempt. This class is used to
+ * transfer question attempt data between different layers of the application.
+ */
 @Data
 public class QuestionAttemptDTO {
   private QuestionType type;
