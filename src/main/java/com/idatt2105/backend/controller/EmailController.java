@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.idatt2105.backend.service.PasswordResetTokenService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 /** Controller for sending emails. */
 @RestController
+@Tag(name = "Email", description = "Operations related to sending emails")
 public class EmailController {
 
   private final JavaMailSender emailSender;
@@ -40,7 +42,7 @@ public class EmailController {
    * @return a message indicating if the email was sent successfully
    */
   @PostMapping("/api/sendEmail")
-  @Operation(summary = "Send an email")
+  @Operation(summary = "Send an email to the specified email address with a reset password link")
   public ResponseEntity<Map<String, String>> sendEmail(@RequestParam String to) {
     MimeMessage message = emailSender.createMimeMessage();
     MimeMessageHelper helper;

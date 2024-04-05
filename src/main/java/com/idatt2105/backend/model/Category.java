@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+/** Entity representing a category of quizzes. */
 @Entity
 @Data
 public class Category {

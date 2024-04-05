@@ -21,6 +21,7 @@ import com.idatt2105.backend.controller.PasswordResetTokenController;
 import com.idatt2105.backend.controller.QuestionController;
 import com.idatt2105.backend.controller.QuizController;
 
+/** Configuration for the Resource Server. */
 @Configuration
 @EnableWebSecurity
 public class ResourceServerConfig {
@@ -33,6 +34,13 @@ public class ResourceServerConfig {
     this.requestCache = requestCache;
   }
 
+  /**
+   * Configures the security filter chain for the Resource Server.
+   *
+   * @param http The HttpSecurity object to configure
+   * @return The SecurityFilterChain object
+   * @throws Exception If an error occurs
+   */
   @Bean
   @Order(2)
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -127,6 +135,11 @@ public class ResourceServerConfig {
     return http.build();
   }
 
+  /**
+   * Configures the JwtAuthenticationConverter.
+   *
+   * @return The JwtAuthenticationConverter
+   */
   private JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
         new JwtGrantedAuthoritiesConverter();

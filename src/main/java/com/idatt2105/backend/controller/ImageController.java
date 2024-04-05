@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.idatt2105.backend.service.AmazonClient;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /** The ImageController class handles HTTP requests related to image storage. */
@@ -31,6 +32,7 @@ public class ImageController {
    * @return a ResponseEntity containing the URL of the uploaded file
    */
   @PostMapping("/uploadFile")
+  @Operation(summary = "Upload a file")
   public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
     try {
       String imageUrl = this.amazonClient.uploadFile(file);
@@ -47,6 +49,7 @@ public class ImageController {
    * @return a message indicating if the file was deleted successfully
    */
   @DeleteMapping("/deleteFile")
+  @Operation(summary = "Delete a file")
   public String deleteFile(@RequestBody Map<String, String> payload) {
     try {
       this.amazonClient.deleteFileFromS3Bucket(payload.get("fileUrl"));

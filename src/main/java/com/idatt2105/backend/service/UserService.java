@@ -75,8 +75,8 @@ public class UserService implements UserDetailsService {
    * Adds a new user to the database.
    *
    * @param user (User) User to add.
-   * @return The added user.
    * @throws ExistingUserException If a user with the same username already exists.
+   * @return The added user.
    */
   public UserDTO addUser(User user) {
     if (userExists(user.getUsername())) {
@@ -95,8 +95,8 @@ public class UserService implements UserDetailsService {
    *
    * @param user (User) The user to add.
    * @param role (String) The role of the user.
+   * @throws UserNotFoundException If no user with the given id is found.
    * @return A DTO representing the added user.
-   * @throws ExistingUserException If a user with the same username already exists.
    */
   public UserDTO addUser(User user, String role) {
     if (userExists(user.getUsername())) {
@@ -133,8 +133,8 @@ public class UserService implements UserDetailsService {
    *
    * @param id (Long) Id of the user to update.
    * @param user (User) User with updated information.
-   * @return The updated user.
    * @throws UserNotFoundException If no user with the given id is found.
+   * @return The updated user.
    */
   public UserDTO updateUser(Long id, @Validated @NotNull User user) {
     User existingUser = findUserById(id);
@@ -152,8 +152,8 @@ public class UserService implements UserDetailsService {
    * Gets a user by username.
    *
    * @param username (String) Username of the user.
-   * @return User with the given username.
    * @throws UserNotFoundException If no user with the given username is found.
+   * @return User with the given username.
    */
   public UserDTO getUserByUsername(String username) {
     User user = findUserByUsername(username);
@@ -174,6 +174,7 @@ public class UserService implements UserDetailsService {
    * Logs a user in.
    *
    * @param user (User) The user to log in.
+   * @throws InvalidCredentialsException If the user credentials are invalid.
    * @return A token for future authentication.
    */
   public String login(User user) {
@@ -243,6 +244,7 @@ public class UserService implements UserDetailsService {
    * Finds a user by id.
    *
    * @param id (Long) Id of the user to find.
+   * @throws UserNotFoundException If no user with the given id is found.
    * @return User entity.
    */
   private User findUserById(Long id) {
@@ -255,6 +257,7 @@ public class UserService implements UserDetailsService {
    * Finds a user by username.
    *
    * @param username (String) Username of the user to find.
+   * @throws UserNotFoundException If no user with the given username is found.
    * @return User entity.
    */
   private User findUserByUsername(String username) {
@@ -269,7 +272,8 @@ public class UserService implements UserDetailsService {
    *
    * @param loginRequest (LoginRequestDTO) Password reset request containing username and new
    *     password.
-   * @return {@code true} if the password was reset successfully, {@code false} otherwise.
+   * @throws UserNotFoundException If no user with the given username is found.
+   * @return true if the password was reset successfully, false otherwise.
    */
   public boolean resetPassword(LoginRequestDTO loginRequest) {
     try {
@@ -283,6 +287,12 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  /**
+   * Loads a user by username.
+   *
+   * @param username the username identifying the user whose data is required.
+   * @return UserDetails object containing the user's data.
+   */
   @Override
   public UserDetails loadUserByUsername(String username) {
     User user = findUserByUsername(username);

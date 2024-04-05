@@ -34,9 +34,17 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
+/** Configuration for the Authorization Server. */
 @Configuration
 @EnableWebSecurity
 public class AuthorizationServerConfig {
+  /**
+   * Configures the security filter chain for the Authorization Server.
+   *
+   * @param http The HttpSecurity object to configure
+   * @return The SecurityFilterChain object
+   * @throws Exception If an error occurs
+   */
   @Bean
   @Order(1)
   public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
@@ -62,6 +70,11 @@ public class AuthorizationServerConfig {
     return http.build();
   }
 
+  /**
+   * Configures the RegisteredClientRepository bean.
+   *
+   * @return The RegisteredClientRepository bean
+   */
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
     RegisteredClient oidcClient =
@@ -89,6 +102,11 @@ public class AuthorizationServerConfig {
     return new InMemoryRegisteredClientRepository(oidcClient);
   }
 
+  /**
+   * Configures the JWKSource bean.
+   *
+   * @return The JWKSource bean
+   */
   @Bean
   public JWKSource<SecurityContext> jwkSource() {
     KeyPair keyPair = generateRsaKey();
@@ -103,6 +121,11 @@ public class AuthorizationServerConfig {
     return new ImmutableJWKSet<>(jwkSet);
   }
 
+  /**
+   * Generates an RSA key pair.
+   *
+   * @return The generated RSA key pair
+   */
   private static KeyPair generateRsaKey() {
     KeyPair keyPair;
     try {
@@ -115,11 +138,22 @@ public class AuthorizationServerConfig {
     return keyPair;
   }
 
+  /**
+   * Configures the JwtDecoder bean.
+   *
+   * @param jwkSource The JWKSource bean
+   * @return The JwtDecoder bean
+   */
   @Bean
   public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
     return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
   }
 
+  /**
+   * Configures the AuthorizationServerSettings bean.
+   *
+   * @return The AuthorizationServerSettings bean
+   */
   @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
     return AuthorizationServerSettings.builder()

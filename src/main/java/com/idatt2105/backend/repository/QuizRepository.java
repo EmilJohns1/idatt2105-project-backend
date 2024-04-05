@@ -11,6 +11,7 @@ import com.idatt2105.backend.model.Category;
 import com.idatt2105.backend.model.Quiz;
 import com.idatt2105.backend.model.Tag;
 
+/** Repository for Quiz entities. */
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
   Optional<Quiz> findByTitle(String title);

@@ -88,6 +88,7 @@ public class QuizDTO {
     tags.stream().filter(Objects::nonNull).forEach(this.tags::add);
   }
 
+  /** Builder class for QuizDTO. */
   public static class Builder {
     private Long id;
     private String title;
@@ -162,6 +163,11 @@ public class QuizDTO {
       return this;
     }
 
+    /**
+     * Builds a QuizDTO object with the specified attributes.
+     *
+     * @return The QuizDTO object.
+     */
     public QuizDTO build() {
       return new QuizDTO(
           id,

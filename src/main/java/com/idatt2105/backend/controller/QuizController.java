@@ -18,6 +18,7 @@ import com.idatt2105.backend.service.QuizService;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+/** The QuizController class handles HTTP requests related to quiz operations. */
 @RestController
 @RequestMapping("/api/quizzes")
 @io.swagger.v3.oas.annotations.tags.Tag(
@@ -32,6 +33,12 @@ public class QuizController {
     this.quizService = quizService;
   }
 
+  /**
+   * Get all quizzes
+   *
+   * @param pageable (Pageable) Pageable object for pagination
+   * @return (ResponseEntity <Page<QuizDTO>>) Page of quizzes
+   */
   @GetMapping
   @Operation(summary = "Get all quizzes")
   public ResponseEntity<Page<QuizDTO>> getAllQuizzes(Pageable pageable) {
@@ -39,12 +46,24 @@ public class QuizController {
     return new ResponseEntity<>(quizzes, HttpStatus.OK);
   }
 
+  /**
+   * Get quiz by id
+   *
+   * @param id (Long) The id of the quiz to get
+   * @return (ResponseEntity <QuizDTO>) The quiz with the given id
+   */
   @GetMapping("/{id}")
   @Operation(summary = "Get quiz by id")
   public ResponseEntity<QuizDTO> getQuizById(@PathVariable("id") Long id) {
     return new ResponseEntity<>(quizService.getQuizById(id), HttpStatus.OK);
   }
 
+  /**
+   * Create quiz
+   *
+   * @param quizDTO (QuizDTO) The quiz to create
+   * @return (ResponseEntity <QuizDTO>) The created quiz
+   */
   @PostMapping
   @Operation(summary = "Create quiz")
   public ResponseEntity<QuizDTO> createQuiz(@RequestBody QuizDTO quizDTO) {
@@ -52,6 +71,12 @@ public class QuizController {
     return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
   }
 
+  /**
+   * Delete quiz
+   *
+   * @param id (Long) The id of the quiz to delete
+   * @return (ResponseEntity <Void>) ResponseEntity with no content
+   */
   @DeleteMapping("/{id}")
   @Operation(summary = "Delete quiz")
   public ResponseEntity<Void> deleteQuiz(@PathVariable("id") Long id) {
@@ -59,6 +84,13 @@ public class QuizController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Add user to quiz
+   *
+   * @param quizId (Long) The id of the quiz
+   * @param userId (Long) The id of the user
+   * @return (ResponseEntity <Void>) ResponseEntity with no content
+   */
   @PostMapping("/{quizId}/users/{userId}")
   @Operation(summary = "Add user to quiz")
   public ResponseEntity<Void> addUserToQuiz(
@@ -67,6 +99,13 @@ public class QuizController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  /**
+   * Remove user from quiz
+   *
+   * @param quizId (Long) The id of the quiz
+   * @param userId (Long) The id of the user
+   * @return (ResponseEntity <Void>) ResponseEntity with no content
+   */
   @DeleteMapping("/{quizId}/users/{userId}")
   @Operation(summary = "Remove user from quiz")
   public ResponseEntity<Void> removeUserFromQuiz(
@@ -75,6 +114,13 @@ public class QuizController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Update quiz
+   *
+   * @param id (Long) The id of the quiz to update
+   * @param requestDTO (QuizDTO) The updated quiz
+   * @return (ResponseEntity <Void>) ResponseEntity with no content
+   */
   @PutMapping("/{id}")
   @Operation(summary = "Update quiz")
   public ResponseEntity<Void> updateQuiz(
@@ -83,6 +129,12 @@ public class QuizController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  /**
+   * Get users by quiz id
+   *
+   * @param quizId (Long) The id of the quiz
+   * @return (ResponseEntity <Set<UserDTO>>) Set of users
+   */
   @GetMapping("/users/{quizId}")
   @Operation(summary = "Get users by quiz id")
   public ResponseEntity<Set<UserDTO>> getUsersByQuizId(@PathVariable("quizId") Long quizId) {
@@ -90,6 +142,13 @@ public class QuizController {
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
+  /**
+   * Add tags to quiz
+   *
+   * @param quizId (Long) The id of the quiz
+   * @param tags (List<Tag>) The tags to add
+   * @return (ResponseEntity <QuizDTO>) The updated quiz
+   */
   @PatchMapping("/add/tags/{quizId}")
   @Operation(summary = "Adds one or more tags to a quiz")
   public ResponseEntity<QuizDTO> addTags(@PathVariable Long quizId, @RequestBody List<Tag> tags) {
@@ -100,6 +159,13 @@ public class QuizController {
     return new ResponseEntity<>(q, HttpStatus.OK);
   }
 
+  /**
+   * Update tags of a quiz
+   *
+   * @param quizId (Long) The id of the quiz
+   * @param updatedTags (List<Tag>) The updated tags
+   * @return (ResponseEntity <QuizDTO>) The updated quiz
+   */
   @PatchMapping("/{quizId}/tags")
   @Operation(summary = "Update tags of a quiz")
   public ResponseEntity<QuizDTO> updateTags(
@@ -108,6 +174,13 @@ public class QuizController {
     return new ResponseEntity<>(dto, HttpStatus.OK);
   }
 
+  /**
+   * Delete tags from quiz
+   *
+   * @param quizId (Long) The id of the quiz
+   * @param tags (List<Tag>) The tags to delete
+   * @return (ResponseEntity <QuizDTO>) The updated quiz
+   */
   @DeleteMapping("/delete/tags/{quizId}")
   @Operation(summary = "Deletes the given tags from a quiz")
   public ResponseEntity<QuizDTO> deleteTags(
@@ -119,6 +192,13 @@ public class QuizController {
     return new ResponseEntity<>(q, HttpStatus.OK);
   }
 
+  /**
+   * Get all quizzes with a specific tag
+   *
+   * @param tag (String) The tag to filter by
+   * @param pageable (Pageable) Pageable object for pagination
+   * @return (ResponseEntity <Page<QuizDTO>>) Page of quizzes
+   */
   @GetMapping("/tag")
   @Operation(summary = "Get all quizzes with a specific tag")
   public ResponseEntity<Page<QuizDTO>> getQuizzesByTag(
@@ -132,6 +212,11 @@ public class QuizController {
     return ResponseEntity.ok(quizzes);
   }
 
+  /**
+   * Get all tags currently in use
+   *
+   * @return (ResponseEntity <List<Tag>>) List of tags
+   */
   @GetMapping("/all/tags")
   @Operation(summary = "Get all tags currently in use")
   public ResponseEntity<List<Tag>> getAllTags() {
@@ -139,6 +224,13 @@ public class QuizController {
     return new ResponseEntity<>(tags, HttpStatus.OK);
   }
 
+  /**
+   * Get all quizzes with the specified tags
+   *
+   * @param tags (List<String>) The tags to filter by
+   * @param pageable (Pageable) Pageable object for pagination
+   * @return (ResponseEntity <Page<QuizDTO>>) Page of quizzes
+   */
   @PostMapping("/filter-by-tags")
   @Operation(summary = "Get all quizzes with the specified tags")
   public ResponseEntity<Page<QuizDTO>> filterQuizzesByTags(
@@ -147,6 +239,12 @@ public class QuizController {
     return new ResponseEntity<>(quizzes, HttpStatus.OK);
   }
 
+  /**
+   * Create a new category
+   *
+   * @param category (Category) The category to create
+   * @return (ResponseEntity <Category>) The created category
+   */
   @PostMapping("/create/category")
   @Operation(summary = "Create a new category")
   public ResponseEntity<Category> createCategory(@RequestBody Category category) {
@@ -154,6 +252,13 @@ public class QuizController {
     return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
   }
 
+  /**
+   * Get all quizzes with a specific category
+   *
+   * @param category (String) The category to filter by
+   * @param pageable (Pageable) Pageable object for pagination
+   * @return (ResponseEntity <Page<QuizDTO>>) Page of quizzes
+   */
   @GetMapping("/category")
   @Operation(summary = "Get all quizzes with a specific category")
   public ResponseEntity<Page<QuizDTO>> getQuizzesByCategory(
@@ -166,6 +271,11 @@ public class QuizController {
     return ResponseEntity.ok(quizzes);
   }
 
+  /**
+   * Get all categories
+   *
+   * @return (ResponseEntity <List<Category>>) List of categories
+   */
   @GetMapping("/categories")
   @Operation(summary = "Get all categories")
   public ResponseEntity<List<Category>> getAllCategories() {

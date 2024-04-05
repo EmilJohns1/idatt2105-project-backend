@@ -23,6 +23,7 @@ import com.idatt2105.backend.repository.TagRepository;
 import com.idatt2105.backend.repository.UserRepository;
 import com.idatt2105.backend.util.InvalidIdException;
 
+/** Service class for Quiz entities. Handles business logic for Quiz entities. */
 @Service
 public class QuizService {
 
@@ -43,10 +44,22 @@ public class QuizService {
     this.categoryRepository = categoryRepository;
   }
 
+  /**
+   * Get all quizzes.
+   *
+   * @param pageable Pageable object to control pagination
+   * @return Page of quizzes
+   */
   public Page<QuizDTO> getAllQuizzes(Pageable pageable) {
     return quizRepository.findAll(pageable).map(QuizDTO::new);
   }
 
+  /**
+   * Get a quiz by id.
+   *
+   * @param id The id of the quiz.
+   * @return QuizDTO containing the quiz.
+   */
   public QuizDTO getQuizById(Long id) {
     if (id == null) {
       throw new IllegalArgumentException("Id parameter cannot be null.");
@@ -55,6 +68,13 @@ public class QuizService {
     return new QuizDTO(quiz);
   }
 
+  /**
+   * Save a quiz.
+   *
+   * @param quizDTO The quiz to save.
+   * @throws IllegalArgumentException If the quiz parameter is null.
+   * @return QuizDTO containing the saved quiz.
+   */
   public QuizDTO save(QuizDTO quizDTO) {
     if (quizDTO == null) {
       throw new IllegalArgumentException("Quiz parameter cannot be null.");
@@ -68,6 +88,12 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
+  /**
+   * Delete a quiz by id.
+   *
+   * @throws IllegalArgumentException If the id parameter is null.
+   * @param id The id of the quiz.
+   */
   public void deleteQuiz(Long id) {
     if (id == null) {
       throw new IllegalArgumentException("Id parameter cannot be null.");
@@ -75,6 +101,13 @@ public class QuizService {
     quizRepository.deleteById(id);
   }
 
+  /**
+   * Update a quiz.
+   *
+   * @param id The id of the quiz.
+   * @param updatedQuiz The updated quiz.
+   * @throws IllegalArgumentException If the id or updatedQuiz parameter is null.
+   */
   public void updateQuiz(Long id, QuizDTO updatedQuiz) {
     if (id == null) {
       throw new IllegalArgumentException("Id parameter cannot be null.");
@@ -102,6 +135,13 @@ public class QuizService {
     quizRepository.save(existingQuiz);
   }
 
+  /**
+   * Add a user to a quiz.
+   *
+   * @param userId The id of the user.
+   * @param quizId The id of the quiz.
+   * @throws IllegalArgumentException If the userId or quizId parameter is null.
+   */
   public void addUserToQuiz(Long userId, Long quizId) {
     if (userId == null) {
       throw new IllegalArgumentException("User id parameter cannot be null.");
@@ -122,6 +162,13 @@ public class QuizService {
     quizRepository.save(foundQuiz);
   }
 
+  /**
+   * Remove a user from a quiz.
+   *
+   * @param userId The id of the user.
+   * @param quizId The id of the quiz.
+   * @throws IllegalArgumentException If the userId or quizId parameter is null.
+   */
   public void removeUserFromQuiz(Long userId, Long quizId) {
     if (userId == null) {
       throw new IllegalArgumentException("User id parameter cannot be null.");
@@ -136,6 +183,12 @@ public class QuizService {
     quizRepository.save(foundQuiz);
   }
 
+  /**
+   * Get a quiz by title.
+   *
+   * @param title The title of the quiz.
+   * @return QuizDTO containing the quiz.
+   */
   public QuizDTO getQuizByTitle(String title) {
     if (title == null) {
       throw new IllegalArgumentException("Title parameter cannot be null.");
@@ -149,6 +202,13 @@ public class QuizService {
     }
   }
 
+  /**
+   * Get all quizzes by a user.
+   *
+   * @param quizId The id of the quiz.
+   * @throws IllegalArgumentException If the quizId parameter is null.
+   * @return Set of UserDTOs containing all users that have taken the quiz.
+   */
   public Set<UserDTO> getUsersByQuizId(Long quizId) {
     if (quizId == null) {
       throw new IllegalArgumentException("Quiz id parameter cannot be null.");
@@ -160,6 +220,13 @@ public class QuizService {
         .collect(Collectors.toSet());
   }
 
+  /**
+   * Get all quizzes by a user.
+   *
+   * @param dto The DTO containing the updated quiz data.
+   * @throws IllegalArgumentException If the userId parameter is null.
+   * @return List of QuizDTOs containing all quizzes created by the user.
+   */
   public QuizDTO addTags(QuizDTO dto) {
     if (dto == null) {
       throw new IllegalArgumentException("Question parameter cannot be null.");
@@ -185,6 +252,13 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
+  /**
+   * Delete tags from a quiz.
+   *
+   * @param dto The DTO containing the updated quiz data.
+   * @throws IllegalArgumentException If the userId parameter is null.
+   * @return QuizDTO containing the updated quiz.
+   */
   public QuizDTO deleteTags(QuizDTO dto) {
     if (dto == null) {
       throw new IllegalArgumentException("Question parameter cannot be null.");
@@ -196,6 +270,14 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
+  /**
+   * Update tags for a quiz.
+   *
+   * @param quizId The id of the quiz.
+   * @param updatedTags The updated tags.
+   * @throws IllegalArgumentException If the quizId parameter is null.
+   * @return QuizDTO containing the updated quiz.
+   */
   public QuizDTO updateTags(Long quizId, List<Tag> updatedTags) {
     if (quizId == null) {
       throw new IllegalArgumentException("Quiz id parameter cannot be null.");
@@ -238,6 +320,14 @@ public class QuizService {
     return new QuizDTO(savedQuiz);
   }
 
+  /**
+   * Fetches quizzes by a tag.
+   *
+   * @param tag The tag to search for.
+   * @param pageable Pageable object to control pagination
+   * @throws IllegalArgumentException If the tag parameter is null or empty.
+   * @return Page of quizzes that have the given tag
+   */
   public Page<QuizDTO> getQuizzesByTag(String tag, Pageable pageable) {
     if (tag == null || tag.isEmpty()) {
       throw new IllegalArgumentException("Tag parameter cannot be null or empty.");
@@ -248,6 +338,11 @@ public class QuizService {
         .orElseGet(Page::empty);
   }
 
+  /**
+   * Get a tag by name.
+   *
+   * @return Tag containing the tag.
+   */
   public List<Tag> getAllTags() {
     return tagRepository.findAll();
   }
@@ -257,6 +352,7 @@ public class QuizService {
    *
    * @param tags in the list.
    * @param pageable Pageable object to control pagination
+   * @throws IllegalArgumentException If the tags parameter is null or empty.
    * @return Page of quizzes that have at least one of the tags in the list
    */
   @Transactional(readOnly = true)
@@ -286,6 +382,13 @@ public class QuizService {
     return new PageImpl<>(pageContent.subList(start, end), pageable, pageContent.size());
   }
 
+  /**
+   * Create a category.
+   *
+   * @param category The category to create.
+   * @throws IllegalArgumentException If the category parameter is null.
+   * @return Category containing the created category.
+   */
   public Category createCategory(Category category) {
     if (category == null) {
       throw new IllegalArgumentException("Category parameter cannot be null.");
@@ -299,6 +402,14 @@ public class QuizService {
     return categoryRepository.save(category);
   }
 
+  /**
+   * Update a category.
+   *
+   * @param categoryName The name of the category to update.
+   * @param pageable Pageable object to control pagination
+   * @throws IllegalArgumentException If the categoryName parameter is null or empty.
+   * @return Page of quizzes that have the given category
+   */
   public Page<QuizDTO> getQuizzesByCategory(String categoryName, Pageable pageable) {
     if (categoryName == null || categoryName.isEmpty()) {
       throw new IllegalArgumentException("Category parameter cannot be null or empty.");
@@ -309,22 +420,48 @@ public class QuizService {
     return quizRepository.findByCategory(foundCategory, pageable).map(QuizDTO::new);
   }
 
+  /**
+   * Update a category.
+   *
+   * @return Category containing the updated category.
+   */
   public List<Category> getAllCategories() {
     return categoryRepository.findAll();
   }
 
+  /**
+   * Update a category.
+   *
+   * @param id The id of the category.
+   * @throws IllegalArgumentException If the id parameter is null.
+   * @return Category containing the updated category.
+   */
   private Quiz findQuiz(Long id) {
     return quizRepository
         .findById(id)
         .orElseThrow(() -> new InvalidIdException("Quiz with id " + id + " not found"));
   }
 
+  /**
+   * Find a user by id.
+   *
+   * @param id The id of the user.
+   * @throws InvalidIdException If the user is not found.
+   * @return The user.
+   */
   private User findUser(Long id) {
     return userRepository
         .findById(id)
         .orElseThrow(() -> new InvalidIdException("User with id " + id + " not found"));
   }
 
+  /**
+   * Find a category by name.
+   *
+   * @param name The name of the category.
+   * @throws InvalidIdException If the category is not found.
+   * @return The category.
+   */
   private Category findCategoryByName(String name) {
     return categoryRepository
         .findByName(name)
