@@ -37,13 +37,6 @@ public class UserService implements UserDetailsService {
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = new BCryptPasswordEncoder();
-    Optional<User> adminUser = userRepository.findByUsername("admin");
-    if (adminUser.isEmpty()) {
-      User admin = new User();
-      admin.setUsername("admin");
-      admin.setPassword("password");
-      addUser(admin, "ADMIN");
-    }
   }
 
   /**
@@ -83,6 +76,26 @@ public class UserService implements UserDetailsService {
    *
    * @param user (User) User to add.
    * @return The added user.
+   * @throws ExistingUserException If a user with the same username already exists.
+   */
+  public UserDTO addUser(User user) {
+    if (userExists(user.getUsername())) {
+      throw new ExistingUserException(
+          "User with username " + user.getUsername() + " already exists");
+    }
+
+    String hashedPassword = passwordEncoder.encode(user.getPassword());
+    user.setPassword(hashedPassword);
+    User savedUser = userRepository.save(user);
+    return new UserDTO(savedUser.getId(), savedUser.getUsername(), Collections.emptyList());
+  }
+
+  /**
+   * Adds a new user with the given role.
+   *
+   * @param user (User) The user to add.
+   * @param role (String) The role of the user.
+   * @return A DTO representing the added user.
    * @throws ExistingUserException If a user with the same username already exists.
    */
   public UserDTO addUser(User user, String role) {

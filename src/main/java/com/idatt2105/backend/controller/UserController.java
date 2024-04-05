@@ -41,7 +41,6 @@ public class UserController {
     return new ResponseEntity<>(userDTOs, HttpStatus.OK);
   }
 
-  // TODO implement hashing of password and secure login
   /**
    * Registers a new user.
    *
@@ -59,11 +58,14 @@ public class UserController {
     User user = new User();
     user.setUsername(registrationRequest.getUsername());
     user.setPassword(registrationRequest.getPassword());
-    userService.addUser(user, role);
+    if (role == null) {
+      userService.addUser(user);
+    } else {
+      userService.addUser(user, role);
+    }
     return ResponseEntity.ok("Registered successfully");
   }
 
-  // TODO implement hashing of password and secure login
   /**
    * Logs in a user.
    *
@@ -80,7 +82,6 @@ public class UserController {
     return ResponseEntity.ok("Logged in successfully");
   }
 
-  // TODO implement
   /**
    * Updates a user.
    *

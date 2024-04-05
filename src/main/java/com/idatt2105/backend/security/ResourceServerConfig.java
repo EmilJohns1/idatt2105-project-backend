@@ -90,7 +90,8 @@ public class ResourceServerConfig {
                   .permitAll()
                   .requestMatchers(HttpMethod.GET, questionApiPath + "/get/all/*")
                   .permitAll()
-                  .requestMatchers("/swagger-ui/index.html").hasRole("ADMIN")
+                  .requestMatchers("/swagger-ui/index.html")
+                  .hasRole("ADMIN")
                   .anyRequest()
                   .authenticated();
             })

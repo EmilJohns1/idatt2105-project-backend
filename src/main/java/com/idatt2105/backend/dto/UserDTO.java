@@ -24,8 +24,7 @@ public class UserDTO {
   private List<QuizDTO> quizzes;
   private String profilePictureUrl;
 
-  @JsonIgnore
-  private String role;
+  @JsonIgnore private String role;
 
   /**
    * Constructor for UserDTO with User entity.
