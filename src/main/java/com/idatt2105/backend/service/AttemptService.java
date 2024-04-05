@@ -1,10 +1,11 @@
 package com.idatt2105.backend.service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.idatt2105.backend.dto.QuestionAttemptDTO;
@@ -53,14 +54,14 @@ public class AttemptService {
    * @throws InvalidIdException If the user id is invalid.
    * @return A collection of all quiz attempts for the user.
    */
-  public Collection<QuizAttempt> getAllAttemptsForUser(Long userId) {
+  public Page<QuizAttempt> getAllAttemptsForUser(Long userId, Pageable pageable) {
     if (userId == null) {
       throw new InvalidIdException("User id cannot be null");
     }
     if (!userRepository.existsById(userId)) {
       throw new InvalidIdException("User with id " + userId + " not found");
     }
-    return quizAttemptRepository.findByUserId(userId);
+    return quizAttemptRepository.findByUserId(userId, pageable);
   }
 
   /**
@@ -88,6 +89,7 @@ public class AttemptService {
    */
   private QuizAttempt parseQuizAttemptDTO(QuizAttemptDTO quizAttemptDTO) {
     QuizAttempt quizAttempt = new QuizAttempt();
+    quizAttempt.setTitle(quizAttemptDTO.getTitle());
     quizAttempt.setAttemptTime(LocalDateTime.now());
     quizAttempt.setScore(quizAttemptDTO.getScore());
     quizAttempt.setUser(

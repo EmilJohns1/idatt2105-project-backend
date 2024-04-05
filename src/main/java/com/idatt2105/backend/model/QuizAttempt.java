@@ -25,6 +25,8 @@ public class QuizAttempt {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private String title;
+
   @Column(name = "attempt_time")
   private LocalDateTime attemptTime;
 
