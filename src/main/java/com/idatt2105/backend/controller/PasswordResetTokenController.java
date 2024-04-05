@@ -1,5 +1,6 @@
 package com.idatt2105.backend.controller;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.idatt2105.backend.dto.LoginRequestDTO;
 import com.idatt2105.backend.dto.PasswordResetTokenDTO;
+import com.idatt2105.backend.dto.ResetRequestDTO;
 import com.idatt2105.backend.model.PasswordResetToken;
 import com.idatt2105.backend.service.PasswordResetTokenService;
 import com.idatt2105.backend.service.UserService;
@@ -88,14 +90,38 @@ public class PasswordResetTokenController {
    */
   @PutMapping("/reset-password")
   @Operation(summary = "Reset a user's password")
-  public ResponseEntity<String> resetPassword(@RequestBody LoginRequestDTO resetRequestDTO) {
-    // Check if the provided token matches the email and reset the password
-    boolean passwordResetSuccessful = userService.resetPassword(resetRequestDTO);
+  public ResponseEntity<String> resetPassword(@RequestBody ResetRequestDTO resetRequestDTO) {
+    Optional<PasswordResetToken> tokenEntityOptional =
+        tokenService.findByEmail(resetRequestDTO.getUsername());
+    if (tokenEntityOptional.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("Failed to reset password. No token found for the provided email.");
+    }
+
+    // Check if the provided token matches the retrieved token
+    PasswordResetToken tokenEntity = tokenEntityOptional.get();
+    if (!tokenEntity.getToken().equals(resetRequestDTO.getToken())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("Failed to reset password. Invalid token.");
+    }
+
+    // Check if the token has expired
+    LocalDateTime expirationDateTime = tokenEntity.getExpirationDateTime();
+    if (expirationDateTime.isBefore(LocalDateTime.now())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("Failed to reset password. Token has expired.");
+    }
+
+    LoginRequestDTO loginRequestDTO = new LoginRequestDTO();
+    loginRequestDTO.setUsername(resetRequestDTO.getUsername());
+    loginRequestDTO.setPassword(resetRequestDTO.getPassword());
+
+    boolean passwordResetSuccessful = userService.resetPassword(loginRequestDTO);
     if (passwordResetSuccessful) {
+      tokenService.deleteTokenByEmail(resetRequestDTO.getUsername());
       return ResponseEntity.ok("Password reset successfully");
     } else {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("Failed to reset password. Invalid or expired token.");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to reset password.");
     }
   }
 

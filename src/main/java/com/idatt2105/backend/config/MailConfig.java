@@ -15,6 +15,11 @@ public class MailConfig {
     this.env = env;
   }
 
+  /**
+   * Configure the JavaMailSender.
+   *
+   * @return JavaMailSender
+   */
   @Bean
   public JavaMailSender javaMailSender() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
