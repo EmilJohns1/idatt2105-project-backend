@@ -90,6 +90,8 @@ public class ResourceServerConfig {
                   .permitAll()
                   .requestMatchers(HttpMethod.GET, questionApiPath + "/get/all/*")
                   .permitAll()
+                  .requestMatchers(HttpMethod.PUT, "/api/password-reset/reset-password")
+                  .permitAll()
                   .requestMatchers("/swagger-ui/index.html")
                   .hasRole("ADMIN")
                   .anyRequest()

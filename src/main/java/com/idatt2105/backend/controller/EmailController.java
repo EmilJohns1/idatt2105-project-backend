@@ -53,7 +53,7 @@ public class EmailController {
       // Generate token using PasswordResetTokenService
       String token = passwordResetTokenService.generateToken(to).getToken();
 
-      String resetLink = "http://localhost:5173/reset-password?token=" + token;
+      String resetLink = "https://localhost:5173/reset-password?token=" + token;
 
       String htmlContent =
           "<html><body><h1>Hello!</h1><p>You requested to reset your password. "
