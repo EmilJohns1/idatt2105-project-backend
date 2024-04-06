@@ -20,6 +20,10 @@ import com.idatt2105.backend.service.UserService;
 
 import jakarta.transaction.Transactional;
 
+/**
+ * The DataLoader class is a class that initializes the database with some default data when the
+ * application starts.
+ */
 @Component
 public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
   private final UserService userService;
@@ -39,6 +43,7 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
     initialize();
   }
 
+  /** Initializes the database with some default data. */
   @Transactional
   public void initialize() {
     try {

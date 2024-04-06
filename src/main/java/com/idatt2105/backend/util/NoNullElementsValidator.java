@@ -6,6 +6,7 @@ import java.util.Objects;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+/** Validator for the NoNullElements annotation. */
 public class NoNullElementsValidator implements ConstraintValidator<NoNullElements, Collection<?>> {
   @Override
   public boolean isValid(Collection<?> collection, ConstraintValidatorContext context) {

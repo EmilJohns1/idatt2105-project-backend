@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** ErrorResponse class for handling error responses. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

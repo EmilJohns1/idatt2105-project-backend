@@ -10,6 +10,7 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 
+/** Annotation for validating that a collection does not contain null elements. */
 @Documented
 @Constraint(validatedBy = NoNullElementsValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
