@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.idatt2105.backend.dto.LoginRequestDTO;
-import com.idatt2105.backend.dto.PasswordResetTokenDTO;
 import com.idatt2105.backend.dto.ResetRequestDTO;
 import com.idatt2105.backend.model.PasswordResetToken;
 import com.idatt2105.backend.service.PasswordResetTokenService;
