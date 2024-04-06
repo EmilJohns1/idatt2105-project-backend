@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** The QuizAttemptTests class is a test class that tests the QuizAttempt class. */
 class QuizAttemptTests {
@@ -156,6 +157,95 @@ class QuizAttemptTests {
       Set<QuestionAttempt> expectedQuestionAttempts = new HashSet<>();
       quizAttempt.setQuestionAttempts(expectedQuestionAttempts);
       assertEquals(expectedQuestionAttempts, quizAttempt.getQuestionAttempts());
+    }
+  }
+
+  @Nested
+  class TestToStringEqualsHashCode {
+    /**
+     * This method tests the toString method of the QuizAttempt class. It verifies that the method
+     * returns the correct string.
+     */
+    @Test
+    void testToStringReturnsCorrectString() {
+      Long id = 1L;
+      quizAttempt.setId(id);
+      String expectedString =
+          "QuizAttempt(id=1, attemptTime=null, score=0, user=null, quizId=null, questionAttempts=[])";
+      assertEquals(expectedString, quizAttempt.toString());
+    }
+
+    /**
+     * This method tests the equals method of the QuizAttempt class. It verifies that the method
+     * returns true when comparing two objects with the same values and false when comparing two
+     * objects with different values.
+     */
+    @Test
+    void testEqualsReturnsTrueWhenComparingObjectsWithSameValues() {
+      QuizAttempt quizAttempt1 = new QuizAttempt();
+      quizAttempt1.setId(1L);
+      quizAttempt1.setScore(85);
+      quizAttempt1.setUser(new User());
+      quizAttempt1.setQuizId(1L);
+      quizAttempt1.setQuestionAttempts(new HashSet<>());
+
+      QuizAttempt quizAttempt2 = new QuizAttempt();
+      quizAttempt2.setId(1L);
+      quizAttempt2.setScore(85);
+      quizAttempt2.setUser(new User());
+      quizAttempt2.setQuizId(1L);
+      quizAttempt2.setQuestionAttempts(new HashSet<>());
+
+      assertEquals(quizAttempt1, quizAttempt2);
+    }
+
+    /**
+     * This method tests the equals method of the QuizAttempt class. It verifies that the method
+     * returns false when comparing two objects with different values.
+     */
+    @Test
+    void testEqualsReturnsFalseWhenComparingObjectsWithDifferentValues() {
+      QuizAttempt quizAttempt1 = new QuizAttempt();
+      quizAttempt1.setId(1L);
+      quizAttempt1.setScore(85);
+      quizAttempt1.setAttemptTime(LocalDateTime.now());
+      quizAttempt1.setUser(new User());
+      quizAttempt1.setQuizId(1L);
+      quizAttempt1.setQuestionAttempts(new HashSet<>());
+
+      QuizAttempt quizAttempt2 = new QuizAttempt();
+      quizAttempt2.setId(2L);
+      quizAttempt2.setScore(85);
+      quizAttempt2.setAttemptTime(LocalDateTime.now());
+      quizAttempt2.setUser(new User());
+      quizAttempt2.setQuizId(1L);
+
+      assertEquals(false, quizAttempt1.equals(quizAttempt2));
+      assertTrue(quizAttempt1.canEqual(quizAttempt2));
+    }
+
+    /**
+     * This method tests the hashCode method of the QuizAttempt class. It verifies that the method
+     * returns the same value for two objects with the same values and different values for two
+     * objects with different values.
+     */
+    @Test
+    void testHashCodeReturnsSameValueForObjectsWithSameValues() {
+      QuizAttempt quizAttempt1 = new QuizAttempt();
+      quizAttempt1.setId(1L);
+      quizAttempt1.setScore(85);
+      quizAttempt1.setUser(new User());
+      quizAttempt1.setQuizId(1L);
+      quizAttempt1.setQuestionAttempts(new HashSet<>());
+
+      QuizAttempt quizAttempt2 = new QuizAttempt();
+      quizAttempt2.setId(1L);
+      quizAttempt2.setScore(85);
+      quizAttempt2.setUser(new User());
+      quizAttempt2.setQuizId(1L);
+      quizAttempt2.setQuestionAttempts(new HashSet<>());
+
+      assertEquals(quizAttempt1.hashCode(), quizAttempt2.hashCode());
     }
   }
 }

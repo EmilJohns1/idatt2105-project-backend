@@ -169,6 +169,25 @@ class QuestionServiceTests {
       questionService.deleteAlternative(1L);
       verify(alternativeRepository).deleteById(1L);
     }
+
+    /**
+     * The addQuestion_ValidQuestionDTO_ReturnsQuestion method tests the addQuestion method of the
+     * QuestionService class. It verifies that the method returns a question.
+     */
+    @Test
+    void addQuestion_ValidQuestionDTO_ReturnsQuestion() {
+      // Arrange
+      QuestionDTO questionDTO = new QuestionDTO();
+      questionDTO.setQuizId(1L);
+      questionDTO.setType(QuestionType.MULTIPLE_CHOICE);
+      questionDTO.setQuestionText("What is the capital of Norway?");
+
+      // Act
+      Question question = questionService.addQuestion(questionDTO);
+
+      // Assert
+      assertInstanceOf(MultipleChoiceQuestion.class, question);
+    }
   }
 
   /**
@@ -177,6 +196,17 @@ class QuestionServiceTests {
    */
   @Nested
   class InvalidParameterTests {
+    /**
+     * The addQuestion_NullQuestionDTO_ThrowsIllegalArgumentException method tests the addQuestion
+     * method of the QuestionService class. It verifies that the method throws an
+     * IllegalArgumentException when the parameter is null.
+     */
+    @Test
+    void addQuestion_NullQuestionDTO_ThrowsIllegalArgumentException() {
+      // Act & Assert
+      assertThrows(IllegalArgumentException.class, () -> questionService.addQuestion(null));
+    }
+
     /**
      * The addQuestionThrowsExceptionWhenGivenNullAsParameter method tests the addQuestion method of
      * the QuestionService class. It verifies that the method throws an IllegalArgumentException

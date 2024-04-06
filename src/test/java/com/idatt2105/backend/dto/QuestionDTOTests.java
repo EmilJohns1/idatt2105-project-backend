@@ -178,4 +178,92 @@ class QuestionDTOTests {
       assertTrue(question.isCorrect());
     }
   }
+
+  /**
+   * The toStringHashCodeEqualsTests class is a test class that tests the toString, hashCode, and
+   * equals methods of the QuestionDTO class.
+   */
+  @Nested
+  class toStringHashCodeEqualsTests {
+    /**
+     * This method tests the equals method of the QuestionDTO class. It verifies that the method
+     * returns true when the objects are equal and false when the objects are not equal.
+     */
+    @Test
+    void testEquals() {
+      QuestionDTO question1 = new QuestionDTO();
+      question1.setQuizId(1L);
+      question1.setQuestionText("Test question");
+      question1.setType(QuestionType.MULTIPLE_CHOICE);
+      question1.setQuestionId(2L);
+      question1.setMediaUrl("test.com");
+      question1.isCorrect(true);
+
+      QuestionDTO question2 = new QuestionDTO();
+      question2.setQuizId(1L);
+      question2.setQuestionText("Test question");
+      question2.setType(QuestionType.MULTIPLE_CHOICE);
+      question2.setQuestionId(2L);
+      question2.setMediaUrl("test.com");
+      question2.isCorrect(true);
+
+      QuestionDTO question3 = new QuestionDTO();
+      question3.setQuizId(2L);
+      question3.setQuestionText("Different question");
+      question3.setType(QuestionType.TRUE_OR_FALSE);
+      question3.setQuestionId(3L);
+      question3.setMediaUrl("different.com");
+      question3.isCorrect(false);
+
+      assertEquals(question1, question2);
+      assertEquals(question1.hashCode(), question2.hashCode());
+      assertEquals(question1, question1);
+      assertEquals(question1.hashCode(), question1.hashCode());
+      assertTrue(question1.canEqual(question3));
+    }
+
+    /**
+     * This method tests the hashCode method of the QuestionDTO class. It verifies that the method
+     * returns the correct hash code and that the hash code is the same for equal objects.
+     */
+    @Test
+    void testHashCode() {
+      QuestionDTO question1 = new QuestionDTO();
+      question1.setQuizId(1L);
+      question1.setQuestionText("Test question");
+      question1.setType(QuestionType.MULTIPLE_CHOICE);
+      question1.setQuestionId(2L);
+      question1.setMediaUrl("test.com");
+      question1.isCorrect(true);
+
+      QuestionDTO question2 = new QuestionDTO();
+      question2.setQuizId(1L);
+      question2.setQuestionText("Test question");
+      question2.setType(QuestionType.MULTIPLE_CHOICE);
+      question2.setQuestionId(2L);
+      question2.setMediaUrl("test.com");
+      question2.isCorrect(true);
+
+      assertEquals(question1.hashCode(), question2.hashCode());
+    }
+
+    /**
+     * This method tests the toString method of the QuestionDTO class. It verifies that the method
+     * returns the correct string representation of the object.
+     */
+    @Test
+    void testToString() {
+      QuestionDTO question = new QuestionDTO();
+      question.setQuizId(1L);
+      question.setQuestionText("Test question");
+      question.setType(QuestionType.MULTIPLE_CHOICE);
+      question.setQuestionId(2L);
+      question.setMediaUrl("test.com");
+      question.isCorrect(true);
+
+      String expected =
+          "QuestionDTO(questionId=2, questionText=Test question, mediaUrl=test.com, points=0, quizId=1, type=multiple_choice, isCorrect=true)";
+      assertEquals(expected, question.toString());
+    }
+  }
 }

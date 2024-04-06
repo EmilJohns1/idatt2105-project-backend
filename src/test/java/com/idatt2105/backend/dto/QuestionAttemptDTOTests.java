@@ -14,6 +14,7 @@ import com.idatt2105.backend.model.TrueOrFalseQuestionAttempt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /** The QuestionAttemptDTOTests class is a test class that tests the QuestionAttemptDTO class. */
 class QuestionAttemptDTOTests {
@@ -210,5 +211,66 @@ class QuestionAttemptDTOTests {
     questionAttemptDTO.setType(QuestionType.MULTIPLE_CHOICE);
     assertInstanceOf(
         MultipleChoiceQuestionAttempt.class, questionAttemptDTO.instantiateQuestionAttempt());
+  }
+
+  /**
+   * This method tests the equals, toString and canEqual methods of the QuestionAttemptDTO class. It
+   * verifies that the methods return the correct values.
+   */
+  @Test
+  void testEqualsAndHashCode() {
+    QuestionAttemptDTO questionAttemptDTO1 = new QuestionAttemptDTO();
+    questionAttemptDTO1.setQuestionText("This is a question.");
+    questionAttemptDTO1.setPoints(10);
+    questionAttemptDTO1.setUserAnswer(true);
+    questionAttemptDTO1.setCorrectAnswer(false);
+
+    QuestionAttemptDTO questionAttemptDTO2 = new QuestionAttemptDTO();
+    questionAttemptDTO2.setQuestionText("This is a question.");
+    questionAttemptDTO2.setPoints(10);
+    questionAttemptDTO2.setUserAnswer(true);
+    questionAttemptDTO2.setCorrectAnswer(false);
+
+    QuestionAttemptDTO questionAttemptDTO3 = new QuestionAttemptDTO();
+    questionAttemptDTO3.setQuestionText("This is a different question.");
+    questionAttemptDTO3.setPoints(20);
+    questionAttemptDTO3.setUserAnswer(false);
+    questionAttemptDTO3.setCorrectAnswer(true);
+
+    assertEquals(questionAttemptDTO1, questionAttemptDTO2);
+    assertEquals(questionAttemptDTO1.hashCode(), questionAttemptDTO2.hashCode());
+    assertEquals(questionAttemptDTO1, questionAttemptDTO1);
+    assertEquals(questionAttemptDTO1.hashCode(), questionAttemptDTO1.hashCode());
+    assertNotEquals(questionAttemptDTO2, questionAttemptDTO3);
+    assertNotEquals(questionAttemptDTO2.hashCode(), questionAttemptDTO3.hashCode());
+    assertInstanceOf(String.class, questionAttemptDTO1.toString());
+  }
+
+  /**
+   * This method tests the canEqual method of the QuestionAttemptDTO class. It verifies that the
+   * method returns the correct value.
+   */
+  @Test
+  void testCanEqual() {
+    QuestionAttemptDTO questionAttemptDTO1 = new QuestionAttemptDTO();
+    questionAttemptDTO1.setQuestionText("This is a question.");
+    questionAttemptDTO1.setPoints(10);
+    questionAttemptDTO1.setUserAnswer(true);
+    questionAttemptDTO1.setCorrectAnswer(false);
+
+    QuestionAttemptDTO questionAttemptDTO2 = new QuestionAttemptDTO();
+    questionAttemptDTO2.setQuestionText("This is a question.");
+    questionAttemptDTO2.setPoints(10);
+    questionAttemptDTO2.setUserAnswer(true);
+    questionAttemptDTO2.setCorrectAnswer(false);
+
+    QuestionAttemptDTO questionAttemptDTO3 = new QuestionAttemptDTO();
+    questionAttemptDTO3.setQuestionText("This is a different question.");
+    questionAttemptDTO3.setPoints(20);
+    questionAttemptDTO3.setUserAnswer(false);
+    questionAttemptDTO3.setCorrectAnswer(true);
+
+    assertEquals(questionAttemptDTO1.canEqual(questionAttemptDTO2), true);
+    assertEquals(questionAttemptDTO1.canEqual(questionAttemptDTO3), true);
   }
 }
