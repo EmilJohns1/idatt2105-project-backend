@@ -89,19 +89,6 @@ public class QuizService {
   }
 
   /**
-   * Delete a quiz by id.
-   *
-   * @throws IllegalArgumentException If the id parameter is null.
-   * @param id The id of the quiz.
-   */
-  public void deleteQuiz(Long id) {
-    if (id == null) {
-      throw new IllegalArgumentException("Id parameter cannot be null.");
-    }
-    quizRepository.deleteById(id);
-  }
-
-  /**
    * Update a quiz.
    *
    * @param id The id of the quiz.

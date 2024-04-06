@@ -72,19 +72,6 @@ public class QuizController {
   }
 
   /**
-   * Delete quiz
-   *
-   * @param id (Long) The id of the quiz to delete
-   * @return (ResponseEntity <Void>) ResponseEntity with no content
-   */
-  @DeleteMapping("/{id}")
-  @Operation(summary = "Delete quiz")
-  public ResponseEntity<Void> deleteQuiz(@PathVariable("id") Long id) {
-    quizService.deleteQuiz(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  /**
    * Add user to quiz
    *
    * @param quizId (Long) The id of the quiz

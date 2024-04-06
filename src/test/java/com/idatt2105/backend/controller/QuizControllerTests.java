@@ -128,19 +128,6 @@ public class QuizControllerTests {
     }
 
     /**
-     * This method tests the deleteQuiz endpoint with a valid quiz ID.
-     *
-     * <p>It verifies that the endpoint returns an HTTP status code of 204 No Content when the quiz
-     * is successfully deleted.
-     *
-     * @throws Exception if the test fails
-     */
-    @Test
-    void deleteQuizReturnsNoContent() throws Exception {
-      mockMvc.perform(delete("/api/quizzes/1").secure(true)).andExpect(status().isNoContent());
-    }
-
-    /**
      * This method tests the updateQuiz endpoint with a valid quiz ID and body.
      *
      * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the quiz is
