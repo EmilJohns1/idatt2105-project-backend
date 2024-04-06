@@ -1,15 +1,11 @@
 package com.idatt2105.backend.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.idatt2105.backend.enumerator.QuestionType;
 import com.idatt2105.backend.model.MultipleChoiceQuestion;
-import com.idatt2105.backend.model.Tag;
 import com.idatt2105.backend.model.TrueOrFalseQuestion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,20 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** The QuestionDTOTests class is a test class that tests the QuestionDTO class. */
 class QuestionDTOTests {
-  private List<Tag> tags;
-
-  // Do we need??
-  @BeforeEach
-  void setUp() {
-    tags = new ArrayList<>();
-    Tag tag1 = new Tag();
-    Tag tag2 = new Tag();
-    tag1.setId(1L);
-    tag2.setId(2L);
-    tags.add(tag1);
-    tags.add(null);
-    tags.add(tag2);
-  }
 
   /** The Getters class is a test class that tests the getters of the QuestionDTO class. */
   @Nested
