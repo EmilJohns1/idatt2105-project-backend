@@ -12,6 +12,7 @@ import jakarta.validation.Validator;
 
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /** The QuizAttemptDTOTests class is a test class that tests the QuizAttemptDTO class. */
 class QuizAttemptDTOTests {
@@ -144,6 +145,48 @@ class QuizAttemptDTOTests {
       questionAttempts.add(questionAttemptDTO);
       quizAttemptDTO.setQuestionAttempts(questionAttempts);
       assertEquals(questionAttempts, quizAttemptDTO.getQuestionAttempts());
+    }
+  }
+
+  /**
+   * The toStringHashCodeEqualsTests class is a test class that tests the toString, hashCode, and
+   * equals methods of the QuizAttemptDTO class.
+   */
+  @Nested
+  class toStringHashCodeEqualsTests {
+    /** Test the equals method of the QuizAttemptDTO class. */
+    @Test
+    void testEquals() {
+      QuizAttemptDTO quizAttemptDTO1 = new QuizAttemptDTO();
+      quizAttemptDTO1.setUserId(1L);
+      quizAttemptDTO1.setQuizId(1L);
+
+      QuizAttemptDTO quizAttemptDTO2 = new QuizAttemptDTO();
+      quizAttemptDTO2.setUserId(1L);
+      quizAttemptDTO2.setQuizId(1L);
+
+      QuizAttemptDTO quizAttemptDTO3 = new QuizAttemptDTO();
+      quizAttemptDTO3.setUserId(2L);
+      quizAttemptDTO3.setQuizId(2L);
+
+      assertEquals(quizAttemptDTO1, quizAttemptDTO2);
+      assertEquals(quizAttemptDTO1.hashCode(), quizAttemptDTO2.hashCode());
+      assertEquals(quizAttemptDTO1, quizAttemptDTO1);
+      assertNotEquals(quizAttemptDTO2, quizAttemptDTO3);
+    }
+
+    /** Test the hashCode method of the QuizAttemptDTO class. */
+    @Test
+    void testHashCode() {
+      QuizAttemptDTO quizAttemptDTO1 = new QuizAttemptDTO();
+      quizAttemptDTO1.setUserId(1L);
+      quizAttemptDTO1.setQuizId(1L);
+
+      QuizAttemptDTO quizAttemptDTO2 = new QuizAttemptDTO();
+      quizAttemptDTO2.setUserId(1L);
+      quizAttemptDTO2.setQuizId(1L);
+
+      assertEquals(quizAttemptDTO1.hashCode(), quizAttemptDTO2.hashCode());
     }
   }
 

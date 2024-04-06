@@ -11,6 +11,7 @@ import com.idatt2105.backend.dto.AlternativeDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The MultipleChoiceQuestionTests class is a test class that tests the MultipleChoiceQuestion
@@ -98,6 +99,55 @@ class MultipleChoiceQuestionTests {
     void addAlternativeThrowsExceptionWhenParameterIsNull() {
       assertThrows(
           IllegalArgumentException.class, () -> multipleChoiceQuestion.addAlternative(null));
+    }
+  }
+
+  /**
+   * The TestToStringEqualsHashCode class is a test class that tests the toString, equals, and
+   * hashCode methods of the MultipleChoiceQuestion class.
+   */
+  @Nested
+  class TestToStringEqualsHashCode {
+    /**
+     * This method tests the toString method of the MultipleChoiceQuestion class. It verifies that
+     * the method returns the correct string representation of the object.
+     */
+    @Test
+    void testToString() {
+      Long id = 1L;
+      multipleChoiceQuestion.setId(id);
+      assertEquals("MultipleChoiceQuestion(alternatives=[])", multipleChoiceQuestion.toString());
+    }
+
+    /**
+     * This method tests the equals method of the MultipleChoiceQuestion class. It verifies that the
+     * method returns true when the objects are equal and false when they are not.
+     */
+    @Test
+    void testEquals() {
+      MultipleChoiceQuestion multipleChoiceQuestion1 = new MultipleChoiceQuestion();
+      multipleChoiceQuestion1.setId(1L);
+
+      MultipleChoiceQuestion multipleChoiceQuestion2 = new MultipleChoiceQuestion();
+      multipleChoiceQuestion2.setId(1L);
+
+      assertEquals(true, multipleChoiceQuestion1.equals(multipleChoiceQuestion2));
+      assertTrue(multipleChoiceQuestion1.canEqual(multipleChoiceQuestion2));
+    }
+
+    /**
+     * This method tests the hashCode method of the MultipleChoiceQuestion class. It verifies that
+     * the method returns the correct hash code.
+     */
+    @Test
+    void testHashCode() {
+      MultipleChoiceQuestion multipleChoiceQuestion1 = new MultipleChoiceQuestion();
+      multipleChoiceQuestion1.setId(1L);
+
+      MultipleChoiceQuestion multipleChoiceQuestion2 = new MultipleChoiceQuestion();
+      multipleChoiceQuestion2.setId(1L);
+
+      assertEquals(multipleChoiceQuestion1.hashCode(), multipleChoiceQuestion2.hashCode());
     }
   }
 

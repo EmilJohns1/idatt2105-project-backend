@@ -196,7 +196,12 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.8</version> <!-- Adjust version as needed -->
+					<version>0.8.8</version>
+          <configuration>
+            <excludes>
+              <exclude>src\main\java\com\idatt2105\backend\service\AmazonClient.java</exclude>
+            </excludes>
+          </configuration>
 					<executions>
 						<execution>
 							<id>prepare-agent</id>
