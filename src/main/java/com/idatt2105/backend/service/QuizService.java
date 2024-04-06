@@ -51,7 +51,7 @@ public class QuizService {
    * @return Page of quizzes
    */
   public Page<QuizDTO> getAllQuizzes(Pageable pageable) {
-    return quizRepository.findAll(pageable).map(QuizDTO::new);
+    return quizRepository.findByIsPublicIsTrue(pageable).map(QuizDTO::new);
   }
 
   /**
@@ -194,7 +194,7 @@ public class QuizService {
       throw new IllegalArgumentException("Title parameter cannot be null.");
     }
 
-    Optional<Quiz> quiz = quizRepository.findByTitle(title);
+    Optional<Quiz> quiz = quizRepository.findByTitleAndIsPublicIsTrue(title);
     if (quiz.isEmpty()) {
       throw new InvalidIdException("Quiz with title " + title + " not found");
     } else {
@@ -334,7 +334,11 @@ public class QuizService {
     }
     Optional<Tag> foundTag = tagRepository.findByTagName(tag);
     return foundTag
-        .map(value -> quizRepository.findByTagsContains(value, pageable).map(QuizDTO::new))
+        .map(
+            value ->
+                quizRepository
+                    .findByTagsContainsAndIsPublicIsTrue(value, pageable)
+                    .map(QuizDTO::new))
         .orElseGet(Page::empty);
   }
 
@@ -368,7 +372,8 @@ public class QuizService {
     for (String tag : tags) {
       Optional<Tag> foundTag = tagRepository.findByTagName(tag);
       if (foundTag.isPresent()) {
-        uniqueQuizzes.addAll(quizRepository.findByTagsContains(foundTag.get(), pageable).toList());
+        uniqueQuizzes.addAll(
+            quizRepository.findByTagsContainsAndIsPublicIsTrue(foundTag.get(), pageable).toList());
         uniqueTags.add(foundTag.get());
       }
     }
@@ -418,7 +423,9 @@ public class QuizService {
 
     Category foundCategory = findCategoryByName(categoryName);
 
-    return quizRepository.findByCategory(foundCategory, pageable).map(QuizDTO::new);
+    return quizRepository
+        .findByCategoryAndIsPublicIsTrue(foundCategory, pageable)
+        .map(QuizDTO::new);
   }
 
   /**

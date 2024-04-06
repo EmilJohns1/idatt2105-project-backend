@@ -14,11 +14,11 @@ import com.idatt2105.backend.model.Tag;
 /** Repository for Quiz entities. */
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
-  Optional<Quiz> findByTitle(String title);
+  Optional<Quiz> findByTitleAndIsPublicIsTrue(String title);
 
-  Page<Quiz> findByTagsContains(Tag tag, Pageable pageable);
+  Page<Quiz> findByTagsContainsAndIsPublicIsTrue(Tag tag, Pageable pageable);
 
-  Page<Quiz> findByCategory(Category category, Pageable pageable);
+  Page<Quiz> findByCategoryAndIsPublicIsTrue(Category category, Pageable pageable);
 
   Page<Quiz> findByIsPublicIsTrue(Pageable pageable);
 }
