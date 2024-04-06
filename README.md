@@ -10,7 +10,7 @@ This guide requires:
   <li>The ability to set environment variables</li>
 </ul>
 
-Setting an environment variable is done by running `set KEYSTORE_PASSWORD=changeit` (Windows) or by `export KEYSTORE_PASSWORD=changeit` (Unix). If, for whatever reason, you are unable to set variables, you can edit the docker-compose.yml file and replace each occurence of `${KEYSTORE_PASSWORD}` with you password (replace the entire thing). 
+Setting an environment variable is done by running `set KEYSTORE_PASSWORD=changeit` (Windows) or by `export KEYSTORE_PASSWORD=changeit` (Unix). If, for whatever reason, you are unable to set variables, you can edit the docker-compose.yml file and replace each occurence of `${KEYSTORE_PASSWORD}` with your password (replace the entire thing). 
 
 The following environment variables are needed:
 <ul>
@@ -32,7 +32,13 @@ After this is done:
   <li>Clone the frontend project as well: https://github.com/1Cezzo/idatt2105-project-frontend</li>
   <li>Run `docker compose up` (this will take several minutes the first time around)</li>
 </ol>
-The project should now be up and running, and can be accessed from https://localhost:5173 (note that it's https and not http). Your browser will likely alert you that the certificate is not trusted, due to the project using dev-certificates. This can be safely ignored by pressing advanced options and "continue to site", but might required an extra step for chrome browsers: https://superuser.com/questions/772762/how-can-i-disable-security-checks-for-localhost
+The project should now be up and running, and can be accessed from https://localhost:5173 (note that it's https and not http). Your browser will likely alert you that the certificate is not trusted, due to the project using dev-certificates. This can be safely ignored by pressing advanced options and "continue to site", but you will have to allow insecure localhost connections as well to communicate with the backend:
+<ul>
+  <li>Edge - Go to <code>edge://flags/#allow-insecure-localhost</code> and set the highligthed option to enabled</li>
+  <li>Chrome - Go to <code>chrome://flags/#allow-insecure-localhost</code> and set the highlighted option to enabled</li>
+  <li>Opera GX - From the terminal, run: <code>"C:\path\to\opergx\launcher.exe" --allow-insecure-localhost</code></li>
+  <li>Firefox - There seems to be a lot of problems with how firefox handles self-signed certificates, so we do not recommend using firefox. Going to localhost:5173 and accepting the warning, then going to localhost:8443/login and accepting the warning, will get you to the site, but there might be problems loading images and such. </li>
+</ul>
 
 ## Notes
 The backend is set up to fill the database with placeholder quizzes when it runs, this happens in the `util/Dataloader.java` class. Comment this class out if this is not desired. 
