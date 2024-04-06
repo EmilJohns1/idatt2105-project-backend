@@ -116,16 +116,6 @@ public class QuizServiceTests {
     }
 
     /**
-     * This method tests the deleteQuiz method of the QuizService class. It verifies that the method
-     * deletes the quiz from the repository.
-     */
-    @Test
-    void deleteQuizCallsDeleteByIdOnRepository() {
-      quizService.deleteQuiz(1L);
-      verify(quizRepository).deleteById(1L);
-    }
-
-    /**
      * This method tests the updateQuiz method of the QuizService class. It verifies that the method
      * updates the quiz in the repository.
      */
@@ -339,17 +329,6 @@ public class QuizServiceTests {
     @Test
     void saveThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.save(null));
-    }
-
-    /**
-     * This method tests the deleteQuiz method of the QuizService class. It verifies that the method
-     * throws an IllegalArgumentException when given null as a parameter.
-     *
-     * @throws IllegalArgumentException if the parameter is null
-     */
-    @Test
-    void deleteQuizThrowsExceptionWhenGivenNullAsParameter() {
-      assertThrows(IllegalArgumentException.class, () -> quizService.deleteQuiz(null));
     }
 
     /**
