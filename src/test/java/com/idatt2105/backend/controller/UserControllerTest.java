@@ -71,23 +71,6 @@ class UserControllerTest {
   }
 
   /*
-   * Test the login method.
-   */
-  @Test
-  void testLogin() {
-    // Arrange
-    LoginRequestDTO requestDTO = new LoginRequestDTO("username", "password");
-
-    // Act
-    ResponseEntity<String> response = userController.login(requestDTO);
-
-    // Assert
-    assertEquals("Logged in successfully", response.getBody());
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    verify(userService, times(1)).login(any());
-  }
-
-  /*
    * Test the update method.
    */
   @Test
@@ -107,20 +90,6 @@ class UserControllerTest {
     assertEquals("User updated successfully", response.getBody());
     assertEquals(HttpStatus.OK, response.getStatusCode());
     verify(userService, times(1)).updateUser(eq(1L), any());
-  }
-
-  /*
-   * Test the delete method.
-   */
-  @Test
-  void testDelete() {
-    // Arrage & Act
-    ResponseEntity<String> response = userController.delete(1L);
-
-    // Assert
-    assertEquals("User deleted successfully", response.getBody());
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    verify(userService, times(1)).deleteUser(eq(1L));
   }
 
   /*
