@@ -80,7 +80,7 @@ public class QuizServiceTests {
       quiz.setId(1L);
       quiz.setTitle("Quiz");
       Page<Quiz> page = new PageImpl<>(List.of(quiz));
-      when(quizRepository.findAll(any(Pageable.class))).thenReturn(page);
+      when(quizRepository.findByIsPublicIsTrue(any(Pageable.class))).thenReturn(page);
       List<QuizDTO> actual = quizService.getAllQuizzes(Pageable.ofSize(1)).toList();
       assertEquals(new QuizDTO(quiz), actual.get(0));
     }
@@ -180,7 +180,7 @@ public class QuizServiceTests {
       Quiz quiz = new Quiz();
       quiz.setId(1L);
       quiz.setTitle("Quiz");
-      when(quizRepository.findByTitle("Quiz")).thenReturn(Optional.of(quiz));
+      when(quizRepository.findByTitleAndIsPublicIsTrue("Quiz")).thenReturn(Optional.of(quiz));
       QuizDTO actual = quizService.getQuizByTitle("Quiz");
       assertEquals(new QuizDTO(quiz), actual);
     }
@@ -295,7 +295,8 @@ public class QuizServiceTests {
       quiz.setTitle("Quiz");
       quiz.addTags(Set.of(tag));
       Page<Quiz> page = new PageImpl<>(List.of(quiz));
-      when(quizRepository.findByTagsContains(eq(tag), any(Pageable.class))).thenReturn(page);
+      when(quizRepository.findByTagsContainsAndIsPublicIsTrue(eq(tag), any(Pageable.class)))
+          .thenReturn(page);
       Page<QuizDTO> actual = quizService.getQuizzesByTag("Test", Pageable.ofSize(1));
       assertEquals(new QuizDTO(quiz), actual.iterator().next());
     }
