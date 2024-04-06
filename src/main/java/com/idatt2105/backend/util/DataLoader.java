@@ -111,7 +111,8 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
                   .setCategoryName(category)
                   .setIsPublic(true)
                   .setRandomizedOrder(false)
-                  .setQuizPictureUrl("https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/4fc152a3-490c-4526-a992-377d45cd1056_thuringia-germany.jpg")
+                  .setQuizPictureUrl(
+                      "https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/4fc152a3-490c-4526-a992-377d45cd1056_thuringia-germany.jpg")
                   .build();
           Long savedId = quizService.save(quiz).getId();
 
@@ -132,7 +133,8 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
           question.setType(QuestionType.TRUE_OR_FALSE);
           question.setQuestionText(
               "Light from the Sun reaches the Earth in exactly 8 minutes and 20 seconds.");
-          question.setMediaUrl("https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/6070053b-40a4-4298-a6b3-5261b9a6b9fc_sunny.jpg");
+          question.setMediaUrl(
+              "https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/6070053b-40a4-4298-a6b3-5261b9a6b9fc_sunny.jpg");
           question.setIsCorrect(true);
           questionId = questionService.addQuestion(question).getId();
           question.setQuestionId(questionId);
@@ -140,21 +142,24 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
 
           question.setQuestionText(
               "The Great Wall of China is visible from space with the naked eye.");
-          question.setMediaUrl("https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/f25044df-4d56-4fd4-91bc-ded89c470c4b_wall-of-china.jpg");
+          question.setMediaUrl(
+              "https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/f25044df-4d56-4fd4-91bc-ded89c470c4b_wall-of-china.jpg");
           question.setIsCorrect(false);
           questionId = questionService.addQuestion(question).getId();
           question.setQuestionId(questionId);
           questionService.updateTrueOrFalseQuestion(question);
 
           question.setQuestionText("Sharks are mammals.");
-          question.setMediaUrl("https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/f9e81f9d-ed80-48e9-ae70-a74cf6d79201_Baby+shark.jpg");
+          question.setMediaUrl(
+              "https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/f9e81f9d-ed80-48e9-ae70-a74cf6d79201_Baby+shark.jpg");
           question.setIsCorrect(false);
           questionId = questionService.addQuestion(question).getId();
           question.setQuestionId(questionId);
           questionService.updateTrueOrFalseQuestion(question);
 
           question.setQuestionText("Octopuses have three hearts.");
-          question.setMediaUrl("https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/67c869db-b69b-46b7-b2c9-4c3738cf023a_octopus.jpg");
+          question.setMediaUrl(
+              "https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/67c869db-b69b-46b7-b2c9-4c3738cf023a_octopus.jpg");
           question.setIsCorrect(true);
           questionId = questionService.addQuestion(question).getId();
           question.setQuestionId(questionId);
@@ -162,7 +167,8 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
 
           question.setType(QuestionType.MULTIPLE_CHOICE);
           question.setQuestionText("What is the capital of Norway?");
-          question.setMediaUrl("https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/900899b3-f1e8-4cfc-a79c-2254ad82a56a_norge.jpg");
+          question.setMediaUrl(
+              "https://quiz-project-fullstack.s3.eu-north-1.amazonaws.com/900899b3-f1e8-4cfc-a79c-2254ad82a56a_norge.jpg");
           questionId = questionService.addQuestion(question).getId();
 
           AlternativeDTO alternative = new AlternativeDTO();
