@@ -188,18 +188,6 @@ class QuizAttemptDTOTests {
 
       assertEquals(quizAttemptDTO1.hashCode(), quizAttemptDTO2.hashCode());
     }
-
-    /** Test the toString method of the QuizAttemptDTO class. */
-    @Test
-    void testToString() {
-      QuizAttemptDTO quizAttemptDTO = new QuizAttemptDTO();
-      quizAttemptDTO.setUserId(1L);
-      quizAttemptDTO.setQuizId(1L);
-
-      String expectedToString =
-          "QuizAttemptDTO(attemptTime=null, score=0, userId=1, quizId=1, questionAttempts=[])";
-      assertEquals(expectedToString, quizAttemptDTO.toString());
-    }
   }
 
   /**

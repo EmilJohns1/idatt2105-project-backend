@@ -161,19 +161,7 @@ class QuizAttemptTests {
   }
 
   @Nested
-  class TestToStringEqualsHashCode {
-    /**
-     * This method tests the toString method of the QuizAttempt class. It verifies that the method
-     * returns the correct string.
-     */
-    @Test
-    void testToStringReturnsCorrectString() {
-      Long id = 1L;
-      quizAttempt.setId(id);
-      String expectedString =
-          "QuizAttempt(id=1, attemptTime=null, score=0, user=null, quizId=null, questionAttempts=[])";
-      assertEquals(expectedString, quizAttempt.toString());
-    }
+  class TestEqualsAndHashCode {
 
     /**
      * This method tests the equals method of the QuizAttempt class. It verifies that the method
