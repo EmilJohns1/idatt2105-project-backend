@@ -47,3 +47,5 @@ For API documentation, run the project using the above guide, and then navigate 
 
 ![Swagger UI](https://github.com/1Cezzo/idatt2105-project-backend/assets/111747340/36e9da03-c618-436f-b4da-0417027b927a)
 
+# Testing
+The project uses JUnit tests, which can be run with Maven from the commandline with `mvn clean test`
