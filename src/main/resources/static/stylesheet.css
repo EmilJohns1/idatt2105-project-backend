@@ -177,10 +177,12 @@ body {
 
 .logo {
     position: fixed;
-    font-size: 1.5em;
     margin-right: 5%;
     margin-left: 2%;
     cursor: default;
+    float: left;
+    font-size: 35px;
+    font-family: 'Amita', serif
 }
 
 .error-message {
