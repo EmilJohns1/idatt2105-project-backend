@@ -32,56 +32,6 @@ public class PasswordResetTokenController {
   @Autowired private UserService userService;
 
   /**
-   * Generates a new password reset token for the given email.
-   *
-   * @param email (String) Email to generate token for.
-   * @return PasswordResetTokenDTO containing the generated token.
-   */
-  @PostMapping("/generate-token")
-  @Operation(summary = "Generate a password reset token")
-  public PasswordResetTokenDTO generateToken(@RequestParam String email) {
-    PasswordResetToken token = tokenService.generateToken(email);
-    return convertToDTO(token);
-  }
-
-  /**
-   * Finds a password reset token by the token value.
-   *
-   * @param token (String) Token value to search for.
-   * @return PasswordResetTokenDTO containing the token.
-   */
-  @GetMapping("/find-by-token")
-  @Operation(summary = "Find a password reset token by token")
-  public PasswordResetTokenDTO findByToken(@RequestParam String token) {
-    PasswordResetToken tokenEntity = tokenService.findByToken(token);
-    return convertToDTO(tokenEntity);
-  }
-
-  /**
-   * Finds a password reset token by the email.
-   *
-   * @param email (String) Email to search for.
-   * @return PasswordResetTokenDTO containing the token.
-   */
-  @GetMapping("/find-by-email")
-  @Operation(summary = "Find a password reset token by email")
-  public PasswordResetTokenDTO findByEmail(@RequestParam String email) {
-    Optional<PasswordResetToken> tokenEntity = tokenService.findByEmail(email);
-    return convertToDTO(tokenEntity.get());
-  }
-
-  /**
-   * Deletes a password reset token by the email.
-   *
-   * @param email (String) Email to delete token for.
-   */
-  @DeleteMapping("/delete-by-email")
-  @Operation(summary = "Delete a password reset token by email")
-  public void deleteTokenByEmail(@RequestParam String email) {
-    tokenService.deleteTokenByEmail(email);
-  }
-
-  /**
    * Resets a user's password.
    *
    * @param resetRequestDTO (PasswordResetRequestDTO) Password reset request containing email and
@@ -123,19 +73,5 @@ public class PasswordResetTokenController {
     } else {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to reset password.");
     }
-  }
-
-  /**
-   * Converts a PasswordResetToken entity to a PasswordResetTokenDTO.
-   *
-   * @param token (PasswordResetToken) Token entity to convert.
-   * @return PasswordResetTokenDTO containing the token.
-   */
-  private PasswordResetTokenDTO convertToDTO(PasswordResetToken token) {
-    PasswordResetTokenDTO dto = new PasswordResetTokenDTO();
-    dto.setToken(token.getToken());
-    dto.setEmail(token.getEmail());
-    dto.setExpirationDateTime(token.getExpirationDateTime());
-    return dto;
   }
 }
