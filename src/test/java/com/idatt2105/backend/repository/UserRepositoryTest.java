@@ -12,16 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/*
- * Test class for the UserRepository class.
- */
+/** The UserRepositoryTest class is a test class that tests the UserRepository class. */
 @DataJpaTest
 public class UserRepositoryTest {
 
   @Autowired private UserRepository userRepository;
 
-  /*
-   * Test the findByUsername method with an existing username.
+  /**
+   * Test the findByUsername method with an existing username. It verifies that the method returns
+   * the correct user.
    */
   @Test
   public void testFindByUsername_ExistingUsername_ReturnsUser() {
@@ -37,8 +36,9 @@ public class UserRepositoryTest {
     assertEquals("testuser", optionalUser.get().getUsername());
   }
 
-  /*
-   * Test the findByUsername method with a non-existing username.
+  /**
+   * Test the findByUsername method with a non-existing username. It verifies that the method
+   * returns an empty optional.
    */
   @Test
   public void testFindByUsername_NonExistingUsername_ReturnsEmptyOptional() {
@@ -49,8 +49,8 @@ public class UserRepositoryTest {
     assertFalse(optionalUser.isPresent());
   }
 
-  /*
-   * Test the CRUD operations.
+  /**
+   * Test the CRUD operations of the UserRepository. It verifies that the operations are successful.
    */
   @Test
   public void testCRUD() {

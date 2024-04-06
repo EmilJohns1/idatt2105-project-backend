@@ -9,7 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/** The QuizTests class is a test class that tests the Quiz class. */
 class QuizTests {
+  /**
+   * This method tests the getTags method of the Quiz class. It verifies that the method returns the
+   * correct tags.
+   */
   @Test
   void getTagsReturnsCorrectTags() {
     Quiz quiz = new Quiz();
@@ -20,6 +25,10 @@ class QuizTests {
     assertEquals(tags, quiz.getTags());
   }
 
+  /**
+   * This method tests the setTags method of the Quiz class. It verifies that the method sets the
+   * correct tags.
+   */
   @Test
   void setTagsSetsCorrectTags() {
     Quiz quiz = new Quiz();
@@ -30,6 +39,10 @@ class QuizTests {
     assertEquals(tags, quiz.getTags());
   }
 
+  /**
+   * This method tests the addTags method of the Quiz class. It verifies that the method adds the
+   * correct tags.
+   */
   @Test
   void addTagsCorrectlyAddsTags() {
     Quiz quiz = new Quiz();
@@ -43,6 +56,10 @@ class QuizTests {
     assertFalse(quiz.getTags().contains(null));
   }
 
+  /**
+   * This method tests the removeTags method of the Quiz class. It verifies that the method removes
+   * the correct tags.
+   */
   @Test
   void deleteTagsCorrectlyDeletesTags() {
     Quiz quiz = new Quiz();
