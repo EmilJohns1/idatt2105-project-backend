@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/** The QuizControllerTests class is a test class that tests the QuizController class. */
 @WebMvcTest(QuizController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class QuizControllerTests {
@@ -36,6 +37,10 @@ public class QuizControllerTests {
 
   @MockBean private QuizService quizService;
 
+  /**
+   * The BasicFunctionalityTests class is a test class that tests the basic functionality of the
+   * QuizController class.
+   */
   @Nested
   class BasicFunctionalityTests {
     QuizDTO quizDTO;
@@ -76,16 +81,40 @@ public class QuizControllerTests {
       when(quizService.getAllQuizzes(any())).thenReturn(quizPage);
     }
 
+    /**
+     * This method tests the behavior of the getAllQuizzes endpoint.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the quizzes are
+     * successfully retrieved.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void getAllQuizzesReturnsOkAndQuizzes() throws Exception {
       mockMvc.perform(get("/api/quizzes").secure(true)).andExpect(status().isOk());
     }
 
+    /**
+     * This method tests the behavior of the getQuizById endpoint with a valid quiz ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when a quiz with the
+     * specified ID exists.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void getQuizByIdReturnsOkAndQuiz() throws Exception {
       mockMvc.perform(get("/api/quizzes/1").secure(true)).andExpect(status().isOk());
     }
 
+    /**
+     * This method tests the behavior of the createQuiz endpoint with a valid body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 201 Created when the quiz is
+     * successfully created.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void createQuizReturnsCreatedAndQuiz() throws Exception {
       mockMvc
@@ -98,11 +127,27 @@ public class QuizControllerTests {
           .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * This method tests the deleteQuiz endpoint with a valid quiz ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 204 No Content when the quiz
+     * is successfully deleted.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void deleteQuizReturnsNoContent() throws Exception {
       mockMvc.perform(delete("/api/quizzes/1").secure(true)).andExpect(status().isNoContent());
     }
 
+    /**
+     * This method tests the updateQuiz endpoint with a valid quiz ID and body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the quiz is
+     * successfully updated.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void updateQuizReturnsOk() throws Exception {
       mockMvc
@@ -114,11 +159,27 @@ public class QuizControllerTests {
           .andExpect(status().isOk());
     }
 
+    /**
+     * This method tests the addUserToQuiz endpoint with a valid quiz ID and user ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 201 Created when the user is
+     * successfully added to the quiz.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void addUserToQuizReturnsCreated() throws Exception {
       mockMvc.perform(post("/api/quizzes/1/users/1").secure(true)).andExpect(status().isCreated());
     }
 
+    /**
+     * This method tests the removeUserFromQuiz endpoint with a valid quiz ID and user ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 204 No Content when the user
+     * is successfully removed from the quiz.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void removeUserFromQuizReturnsNoContent() throws Exception {
       mockMvc
@@ -126,6 +187,14 @@ public class QuizControllerTests {
           .andExpect(status().isNoContent());
     }
 
+    /**
+     * This method tests the getUsersByQuizId endpoint with a valid quiz ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the users are
+     * successfully retrieved.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void getUsersByQuizIdReturnsOkAndUsers() throws Exception {
       mockMvc
@@ -134,6 +203,14 @@ public class QuizControllerTests {
           .andExpect(jsonPath("$[0].id").value(1));
     }
 
+    /**
+     * This method tests the addTags endpoint with a valid quiz ID and body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the tags are
+     * successfully added to the quiz.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void addTagsReturnsOkAndQuiz() throws Exception {
       mockMvc
@@ -146,6 +223,14 @@ public class QuizControllerTests {
           .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * This method tests the deleteTags endpoint with a valid quiz ID and body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the tags are
+     * successfully deleted from the quiz.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void deleteTagsReturnsOkAndQuiz() throws Exception {
       mockMvc
@@ -159,6 +244,12 @@ public class QuizControllerTests {
     }
   }
 
+  /**
+   * This method converts an object to a JSON string.
+   *
+   * @param obj the object to convert
+   * @return the JSON string
+   */
   public static String asJsonString(final Object obj) {
     try {
       return new ObjectMapper().writeValueAsString(obj);

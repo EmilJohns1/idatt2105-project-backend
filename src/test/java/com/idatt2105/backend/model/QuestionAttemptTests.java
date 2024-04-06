@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/** The QuestionAttemptTests class is a test class that tests the QuestionAttempt class. */
 class QuestionAttemptTests {
   private QuestionAttempt questionAttempt;
 
@@ -16,8 +17,13 @@ class QuestionAttemptTests {
     questionAttempt = new QuestionAttempt();
   }
 
+  /** The GetterTests class is a test class that tests the getters of the QuestionAttempt class. */
   @Nested
   class GetterTests {
+    /**
+     * This method tests the getId method of the QuestionAttempt class. It verifies that the method
+     * returns the correct id.
+     */
     @Test
     void getIdReturnsCorrectId() {
       Long expectedId = 1L;
@@ -25,6 +31,10 @@ class QuestionAttemptTests {
       assertEquals(expectedId, questionAttempt.getId());
     }
 
+    /**
+     * This method tests the getQuestionText method of the QuestionAttempt class. It verifies that
+     * the method returns the correct question text.
+     */
     @Test
     void getQuestionTextReturnsCorrectQuestionText() {
       String expectedQuestionText = "What is the capital of France?";
@@ -32,6 +42,10 @@ class QuestionAttemptTests {
       assertEquals(expectedQuestionText, questionAttempt.getQuestionText());
     }
 
+    /**
+     * This method tests the getMediaUrl method of the QuestionAttempt class. It verifies that the
+     * method returns the correct media url.
+     */
     @Test
     void getMediaUrlReturnsCorrectMediaUrl() {
       String expectedMediaUrl = "https://example.com/image.jpg";
@@ -39,6 +53,10 @@ class QuestionAttemptTests {
       assertEquals(expectedMediaUrl, questionAttempt.getMediaUrl());
     }
 
+    /**
+     * This method tests the getPoints method of the QuestionAttempt class. It verifies that the
+     * method returns the correct points.
+     */
     @Test
     void getPointsReturnsCorrectPoints() {
       int expectedPoints = 5;
@@ -46,6 +64,10 @@ class QuestionAttemptTests {
       assertEquals(expectedPoints, questionAttempt.getPoints());
     }
 
+    /**
+     * This method tests the getQuizAttempt method of the QuestionAttempt class. It verifies that
+     * the method returns the correct quiz attempt.
+     */
     @Test
     void getQuizAttemptReturnsCorrectQuizAttempt() {
       QuizAttempt expectedQuizAttempt = new QuizAttempt();
@@ -54,8 +76,13 @@ class QuestionAttemptTests {
     }
   }
 
+  /** The SetterTests class is a test class that tests the setters of the QuestionAttempt class. */
   @Nested
   class SetterTests {
+    /**
+     * This method tests the setId method of the QuestionAttempt class. It verifies that the method
+     * sets the correct id.
+     */
     @Test
     void setIdSetsIdCorrectly() {
       Long expectedId = 1L;
@@ -63,6 +90,10 @@ class QuestionAttemptTests {
       assertEquals(expectedId, questionAttempt.getId());
     }
 
+    /**
+     * This method tests the setQuestionText method of the QuestionAttempt class. It verifies that
+     * the method sets the correct question text.
+     */
     @Test
     void setQuestionTextSetsQuestionTextCorrectly() {
       String expectedQuestionText = "What is the capital of France?";
@@ -70,6 +101,10 @@ class QuestionAttemptTests {
       assertEquals(expectedQuestionText, questionAttempt.getQuestionText());
     }
 
+    /**
+     * This method tests the setMediaUrl method of the QuestionAttempt class. It verifies that the
+     * method sets the correct media url.
+     */
     @Test
     void setMediaUrlSetsMediaUrlCorrectly() {
       String expectedMediaUrl = "https://example.com/image.jpg";
@@ -77,6 +112,10 @@ class QuestionAttemptTests {
       assertEquals(expectedMediaUrl, questionAttempt.getMediaUrl());
     }
 
+    /**
+     * This method tests the setPoints method of the QuestionAttempt class. It verifies that the
+     * method sets the correct points.
+     */
     @Test
     void setPointsSetsPointsCorrectly() {
       int expectedPoints = 5;
@@ -84,6 +123,10 @@ class QuestionAttemptTests {
       assertEquals(expectedPoints, questionAttempt.getPoints());
     }
 
+    /**
+     * This method tests the setQuizAttempt method of the QuestionAttempt class. It verifies that
+     * the method sets the correct quiz attempt.
+     */
     @Test
     void setQuizAttemptSetsQuizAttemptCorrectly() {
       QuizAttempt expectedQuizAttempt = new QuizAttempt();
@@ -92,6 +135,10 @@ class QuestionAttemptTests {
     }
   }
 
+  /**
+   * This method tests the equals method of the QuestionAttempt class. It verifies that the method
+   * returns the correct boolean value.
+   */
   @Test
   void equalObjectsHashToSameValue() {
     QuestionAttempt q1 = new QuestionAttempt();

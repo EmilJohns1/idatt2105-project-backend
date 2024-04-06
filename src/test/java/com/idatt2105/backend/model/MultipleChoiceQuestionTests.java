@@ -12,6 +12,10 @@ import com.idatt2105.backend.dto.AlternativeDTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * The MultipleChoiceQuestionTests class is a test class that tests the MultipleChoiceQuestion
+ * class.
+ */
 class MultipleChoiceQuestionTests {
 
   private MultipleChoiceQuestion multipleChoiceQuestion;
@@ -21,8 +25,16 @@ class MultipleChoiceQuestionTests {
     multipleChoiceQuestion = new MultipleChoiceQuestion();
   }
 
+  /**
+   * The GetterTests class is a test class that tests the getters of the MultipleChoiceQuestion
+   * class.
+   */
   @Nested
   class GetterTests {
+    /**
+     * This method tests the getId method of the MultipleChoiceQuestion class. It verifies that the
+     * method returns the correct id.
+     */
     @Test
     void testGetId() {
       Long id = 1L;
@@ -30,6 +42,10 @@ class MultipleChoiceQuestionTests {
       assertEquals(id, multipleChoiceQuestion.getId());
     }
 
+    /**
+     * This method tests the getAlternatives method of the MultipleChoiceQuestion class. It verifies
+     * that the method returns the correct alternatives.
+     */
     @Test
     void testGetAlternatives() {
       Set<Alternative> alternatives = new HashSet<>();
@@ -41,8 +57,16 @@ class MultipleChoiceQuestionTests {
     }
   }
 
+  /**
+   * The SetterTests class is a test class that tests the setters of the MultipleChoiceQuestion
+   * class.
+   */
   @Nested
   class SetterTests {
+    /**
+     * This method tests the setId method of the MultipleChoiceQuestion class. It verifies that the
+     * method sets the correct id.
+     */
     @Test
     void testSetId() {
       Long id = 1L;
@@ -50,6 +74,10 @@ class MultipleChoiceQuestionTests {
       assertEquals(id, multipleChoiceQuestion.getId());
     }
 
+    /**
+     * This method tests the setAlternatives method of the MultipleChoiceQuestion class. It verifies
+     * that the method sets the correct alternatives.
+     */
     @Test
     void testSetAlternatives() {
       Set<Alternative> alternatives = new HashSet<>();
@@ -60,6 +88,12 @@ class MultipleChoiceQuestionTests {
       assertEquals(alternatives, multipleChoiceQuestion.getAlternatives());
     }
 
+    /**
+     * This method tests the setQuestionText method of the MultipleChoiceQuestion class. It verifies
+     * that the method throws an exception when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void addAlternativeThrowsExceptionWhenParameterIsNull() {
       assertThrows(
@@ -67,6 +101,10 @@ class MultipleChoiceQuestionTests {
     }
   }
 
+  /**
+   * This method tests the addAlternative method of the MultipleChoiceQuestion class. It verifies
+   * that the method adds the correct alternative.
+   */
   @Test
   void testAddAlternative() {
     AlternativeDTO alternative = new AlternativeDTO();

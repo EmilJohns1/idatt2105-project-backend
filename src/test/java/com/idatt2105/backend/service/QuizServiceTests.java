@@ -38,6 +38,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/** The QuizServiceTests class is a test class that tests the QuizService class. */
 @SpringBootTest
 public class QuizServiceTests {
   @InjectMocks private QuizService quizService;
@@ -63,8 +64,16 @@ public class QuizServiceTests {
     when(categoryRepository.findByName(any(String.class))).thenReturn(Optional.of(category));
   }
 
+  /**
+   * The BasicFunctionality class is a test class that tests the basic functionality of the
+   * QuizService class.
+   */
   @Nested
   class BasicFunctionality {
+    /**
+     * This method tests the getAllQuizzes method of the QuizService class. It verifies that the
+     * method returns a list of all quizzes.
+     */
     @Test
     void getAllQuizzes() {
       Quiz quiz = new Quiz();
@@ -76,6 +85,10 @@ public class QuizServiceTests {
       assertEquals(new QuizDTO(quiz), actual.get(0));
     }
 
+    /**
+     * This method tests the getQuizById method of the QuizService class. It verifies that the
+     * method returns the correct quiz.
+     */
     @Test
     void getQuizById() {
       Quiz quiz = new Quiz();
@@ -86,6 +99,10 @@ public class QuizServiceTests {
       assertEquals(new QuizDTO(quiz), actual);
     }
 
+    /**
+     * This method tests the save method of the QuizService class. It verifies that the method saves
+     * the quiz to the repository.
+     */
     @Test
     void saveStoresEntityInRepository() {
       QuizDTO input = new QuizDTO();
@@ -98,12 +115,20 @@ public class QuizServiceTests {
       verify(quizRepository).save(any(Quiz.class));
     }
 
+    /**
+     * This method tests the deleteQuiz method of the QuizService class. It verifies that the method
+     * deletes the quiz from the repository.
+     */
     @Test
     void deleteQuizCallsDeleteByIdOnRepository() {
       quizService.deleteQuiz(1L);
       verify(quizRepository).deleteById(1L);
     }
 
+    /**
+     * This method tests the updateQuiz method of the QuizService class. It verifies that the method
+     * updates the quiz in the repository.
+     */
     @Test
     void updateQuizCallsRepository() {
       QuizDTO dto = new QuizDTO();
@@ -114,6 +139,10 @@ public class QuizServiceTests {
       verify(quizRepository).save(any(Quiz.class));
     }
 
+    /**
+     * This method tests the addUserToQuiz method of the QuizService class. It verifies that the
+     * method adds a user to a quiz.
+     */
     @Test
     void addUserToQuizCallsSaveOnQuizRepository() {
       Quiz quiz = new Quiz();
@@ -126,6 +155,10 @@ public class QuizServiceTests {
       verify(quizRepository).save(quiz);
     }
 
+    /**
+     * This method tests the removeUserFromQuiz method of the QuizService class. It verifies that
+     * the method removes a user from a quiz.
+     */
     @Test
     void deleteUserFromQuizCallsSaveOnQuizRepository() {
       Quiz quiz = new Quiz();
@@ -138,6 +171,10 @@ public class QuizServiceTests {
       verify(quizRepository).save(quiz);
     }
 
+    /**
+     * This method tests the getQuizByTitle method of the QuizService class. It verifies that the
+     * method returns the correct quiz.
+     */
     @Test
     void getQuizByTitle() {
       Quiz quiz = new Quiz();
@@ -148,6 +185,10 @@ public class QuizServiceTests {
       assertEquals(new QuizDTO(quiz), actual);
     }
 
+    /**
+     * This method tests the getUsersByQuizId method of the QuizService class. It verifies that the
+     * method returns the correct user.
+     */
     @Test
     void getUsersByQuizId() {
       User user = new User();
@@ -162,6 +203,10 @@ public class QuizServiceTests {
       assertEquals(new UserDTO(user), actual.iterator().next());
     }
 
+    /**
+     * This method tests the addTags method of the QuizService class. It verifies that the method
+     * adds tags to the quiz.
+     */
     @Test
     void addTagsAddsNonExistingTagsToTagRepository() {
       QuizDTO input = new QuizDTO();
@@ -173,6 +218,10 @@ public class QuizServiceTests {
       verify(tagRepository).save(any());
     }
 
+    /**
+     * This method tests the addTags method of the QuizService class. It verifies that the method
+     * does not add existing tags to the repository.
+     */
     @Test
     void addTagsDoesNotAddExistingTagsToRepository() {
       QuizDTO input = new QuizDTO();
@@ -186,6 +235,10 @@ public class QuizServiceTests {
       verify(tagRepository, never()).save(any());
     }
 
+    /**
+     * This method tests the addTags method of the QuizService class. It verifies that the method
+     * adds tags to the quiz.
+     */
     @Test
     void addTagsAddsTagsToQuiz() {
       QuizDTO input = new QuizDTO();
@@ -197,6 +250,10 @@ public class QuizServiceTests {
       assertEquals(actual.getTags().iterator().next().getTagName(), tag.getTagName());
     }
 
+    /**
+     * This method tests the deleteTags method of the QuizService class. It verifies that the method
+     * deletes tags from the quiz.
+     */
     @Test
     void deleteTagsDeletesSpecifiedTagsFromQuiz() {
       Quiz quiz = new Quiz();
@@ -225,6 +282,10 @@ public class QuizServiceTests {
       assertTrue(actual.getTags().contains(tag2));
     }
 
+    /**
+     * This method tests the getQuizzesByTag method of the QuizService class. It verifies that the
+     * method returns the correct quiz.
+     */
     @Test
     void getQuizzesByTag() {
       Tag tag = new Tag();
@@ -240,49 +301,107 @@ public class QuizServiceTests {
     }
   }
 
+  /**
+   * The InvalidParameters class is a test class that tests the invalid parameters of the
+   * QuizService class.
+   */
   @Nested
   class InvalidParameters {
+    /**
+     * This method tests the getQuizById method of the QuizService class. It verifies that the
+     * method throws an InvalidIdException when given an invalid id.
+     *
+     * @throws InvalidIdException if the id is invalid
+     */
     @Test
     void getQuizByIdThrowsExceptionWhenGivenInvalidId() {
       assertThrows(InvalidIdException.class, () -> quizService.getQuizById(2L));
     }
 
+    /**
+     * This method tests the getQuizById method of the QuizService class. It verifies that the
+     * method throws an IllegalArgumentException when given null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void getQuizByIdThrowsExceptionWhenGivenNull() {
       assertThrows(IllegalArgumentException.class, () -> quizService.getQuizById(null));
     }
 
+    /**
+     * This method tests the save method of the QuizService class. It verifies that the method
+     * throws an IllegalArgumentException when given null as a parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void saveThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.save(null));
     }
 
+    /**
+     * This method tests the deleteQuiz method of the QuizService class. It verifies that the method
+     * throws an IllegalArgumentException when given null as a parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void deleteQuizThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.deleteQuiz(null));
     }
 
+    /**
+     * This method tests the updateQuiz method of the QuizService class. It verifies that the method
+     * throws an IllegalArgumentException when given null as an id parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void updateQuizThrowsExceptionWhenGivenNullAsIdParameter() {
       QuizDTO dto = new QuizDTO();
       assertThrows(IllegalArgumentException.class, () -> quizService.updateQuiz(null, dto));
     }
 
+    /**
+     * This method tests the updateQuiz method of the QuizService class. It verifies that the method
+     * throws an IllegalArgumentException when given null as a DTO parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void updateQuizThrowsExceptionWhenGivenNullAsDtoParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.updateQuiz(1L, null));
     }
 
+    /**
+     * This method tests the addUserToQuiz method of the QuizService class. It verifies that the
+     * method throws an IllegalArgumentException when the user id is null.
+     *
+     * @throws IllegalArgumentException if the user id is null
+     */
     @Test
     void addUserToQuizThrowsExceptionWhenUserIdIsNull() {
       assertThrows(IllegalArgumentException.class, () -> quizService.addUserToQuiz(null, 1L));
     }
 
+    /**
+     * This method tests the addUserToQuiz method of the QuizService class. It verifies that the
+     * method throws an IllegalArgumentException when the quiz id is null.
+     *
+     * @throws IllegalArgumentException if the quiz id is null
+     */
     @Test
     void addUserToQuizThrowsExceptionWhenQuizIdIsNull() {
       assertThrows(IllegalArgumentException.class, () -> quizService.addUserToQuiz(1L, null));
     }
 
+    /**
+     * This method tests the addUserToQuiz method of the QuizService class. It verifies that the
+     * method throws an InvalidIdException when the user is not found.
+     *
+     * @throws InvalidIdException if the user is not found
+     */
     @Test
     void addUserToQuizThrowsExceptionWhenUserIsNotFound() {
       Quiz quiz = new Quiz();
@@ -291,36 +410,78 @@ public class QuizServiceTests {
       assertThrows(InvalidIdException.class, () -> quizService.addUserToQuiz(1L, 1L));
     }
 
+    /**
+     * This method tests the addUserToQuiz method of the QuizService class. It verifies that the
+     * method throws an InvalidIdException when user is null.
+     *
+     * @throws InvalidIdException if the user is null
+     */
     @Test
     void deleteUserFromQuizThrowsExceptionWhenUserIdIsNull() {
       assertThrows(IllegalArgumentException.class, () -> quizService.removeUserFromQuiz(null, 1L));
     }
 
+    /**
+     * This method tests the deleteUserFromQuiz method of the QuizService class. It verifies that
+     * the method throws an InvalidIdException when the quiz is null.
+     *
+     * @throws InvalidIdException if the quiz is null.
+     */
     @Test
     void deleteUserFromQuizThrowsExceptionWhenQuizIdIsNull() {
       assertThrows(IllegalArgumentException.class, () -> quizService.removeUserFromQuiz(1L, null));
     }
 
+    /**
+     * This method tests the getQuizByTitle method of the QuizService class. It verifies that the
+     * method throws an InvalidIdException when the quiz is null
+     *
+     * @throws InvalidIdException if the quiz is null.
+     */
     @Test
     void getQuizByTitleThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.getQuizByTitle(null));
     }
 
+    /**
+     * This method tests the getUsersByQuizId method of the QuizService class. It verifies that the
+     * method throws an IllegalArgumentException when given null as a parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void getUsersByQuizIdThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.getUsersByQuizId(null));
     }
 
+    /**
+     * This method tests the addTags method of the QuizService class. It verifies that the method
+     * throws an IllegalArgumentException when given null as a parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void addTagsThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.addTags(null));
     }
 
+    /**
+     * This method tests the deleteTags method of the QuizService class. It verifies that the method
+     * throws an IllegalArgumentException when given null as a parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void deleteTagsThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> quizService.deleteTags(null));
     }
 
+    /**
+     * This method tests the getQuizzesByTag method of the QuizService class. It verifies that the
+     * method throws an IllegalArgumentException when given null as a parameter.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void getQuizzesByTagThrowsExceptionWhenParameterIsNull() {
       assertThrows(

@@ -33,6 +33,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/** The QuestionServiceTests class is a test class that tests the QuestionService class. */
 @SpringBootTest
 class QuestionServiceTests {
   @InjectMocks private QuestionService questionService;
@@ -40,6 +41,10 @@ class QuestionServiceTests {
   @Mock private QuizRepository quizRepository;
   @Mock private AlternativeRepository alternativeRepository;
 
+  /**
+   * The BasicFunctionality class is a test class that tests the basic functionality of the
+   * QuestionService class.
+   */
   @Nested
   class BasicFunctionality {
     @BeforeEach
@@ -50,6 +55,11 @@ class QuestionServiceTests {
       when(questionRepository.findById(2L)).thenReturn(Optional.of(new TrueOrFalseQuestion()));
     }
 
+    /**
+     * The addQuestionCreatesMultipleChoiceQuestionFromDTO method tests the addQuestion method of
+     * the QuestionService class. It verifies that the method creates a multiple choice question
+     * from a DTO.
+     */
     @Test
     void addQuestionCreatesMultipleChoiceQuestionFromDTO() {
       QuestionDTO input = new QuestionDTO();
@@ -61,6 +71,11 @@ class QuestionServiceTests {
       assertDoesNotThrow(() -> (MultipleChoiceQuestion) actual);
     }
 
+    /**
+     * The addQuestionCreatesTrueOrFalseQuestionFromDTO method tests the addQuestion method of the
+     * QuestionService class. It verifies that the method creates a true or false question from a
+     * DTO.
+     */
     @Test
     void addQuestionCreatesTrueOrFalseQuestionFromDTO() {
       QuestionDTO input = new QuestionDTO();
@@ -72,18 +87,30 @@ class QuestionServiceTests {
       assertDoesNotThrow(() -> (TrueOrFalseQuestion) actual);
     }
 
+    /**
+     * The getQuestionByIdReturnsQuestion method tests the getQuestionById method of the
+     * QuestionService class. It verifies that the method returns a question.
+     */
     @Test
     void getQuestionByIdReturnsQuestion() {
       Question actual = questionService.getQuestionById(1L);
       assertDoesNotThrow(() -> (MultipleChoiceQuestion) actual);
     }
 
+    /**
+     * The deleteQuestionDeletesQuestionById method tests the deleteQuestion method of the
+     * QuestionService class. It verifies that the method deletes a question by id.
+     */
     @Test
     void deleteQuestionDeletesQuestionById() {
       questionService.deleteQuestion(1L);
       verify(questionRepository).delete(any());
     }
 
+    /**
+     * The updateQuestionUpdatesQuestionFromDTO method tests the updateQuestion method of the
+     * QuestionService class. It verifies that the method updates a question from a DTO.
+     */
     @Test
     void updateQuestionUpdatesQuestionFromDTO() {
       QuestionDTO input = new QuestionDTO();
@@ -95,6 +122,11 @@ class QuestionServiceTests {
       assertEquals("Updated question text", actual.getQuestionText());
     }
 
+    /**
+     * The updateTrueOrFalseQuestionUpdatesQuestion method tests the updateTrueOrFalseQuestion
+     * method of the QuestionService class. It verifies that the method updates a true or false
+     * question.
+     */
     @Test
     void updateTrueOrFalseQuestionUpdatesQuestion() {
       QuestionDTO input = new QuestionDTO();
@@ -103,12 +135,20 @@ class QuestionServiceTests {
       assertTrue(questionService.updateTrueOrFalseQuestion(input).getCorrectAnswer());
     }
 
+    /**
+     * The getQuestionsByQuizIdReturnsListOfQuestions method tests the getQuestionsByQuizId method
+     * of the QuestionService class. It verifies that the method returns a list of questions.
+     */
     @Test
     void getQuestionsByQuizIdReturnsListOfQuestions() {
       questionService.getQuestionsByQuizId(1L);
       verify(questionRepository).findQuestionsByQuizId(1L);
     }
 
+    /**
+     * The addAlternativeCorrectlyParsesDTO method tests the addAlternative method of the
+     * QuestionService class. It verifies that the method correctly parses a DTO.
+     */
     @Test
     void addAlternativeCorrectlyParsesDTO() {
       AlternativeDTO expected = new AlternativeDTO();
@@ -120,6 +160,10 @@ class QuestionServiceTests {
       assertInstanceOf(MultipleChoiceQuestion.class, actual.getQuestion());
     }
 
+    /**
+     * The deleteAlternativeDeletesAlternative method tests the deleteAlternative method of the
+     * QuestionService class. It verifies that the method deletes an alternative.
+     */
     @Test
     void deleteAlternativeDeletesAlternative() {
       questionService.deleteAlternative(1L);
@@ -127,13 +171,31 @@ class QuestionServiceTests {
     }
   }
 
+  /**
+   * The InvalidParameterTests class is a test class that tests the invalid parameters of the
+   * QuestionService class.
+   */
   @Nested
   class InvalidParameterTests {
+    /**
+     * The addQuestionThrowsExceptionWhenGivenNullAsParameter method tests the addQuestion method of
+     * the QuestionService class. It verifies that the method throws an IllegalArgumentException
+     * when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void addQuestionThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> questionService.addQuestion(null));
     }
 
+    /**
+     * The addQuestionThrowsExceptionWhenDTOIdIsNull method tests the addQuestion method of the
+     * QuestionService class. It verifies that the method throws an InvalidIdException when the DTO
+     * id is null.
+     *
+     * @throws InvalidIdException if the DTO id is null
+     */
     @Test
     void addQuestionThrowsExceptionWhenDTOIdIsNull() {
       QuestionDTO test = new QuestionDTO();
@@ -142,6 +204,13 @@ class QuestionServiceTests {
       assertThrows(InvalidIdException.class, () -> questionService.addQuestion(test));
     }
 
+    /**
+     * The addQuestionThrowsExceptionWhenQuizIsNotFound method tests the addQuestion method of the
+     * QuestionService class. It verifies that the method throws an InvalidIdException when the quiz
+     * is not found.
+     *
+     * @throws InvalidIdException if the quiz is not found
+     */
     @Test
     void addQuestionThrowsExceptionWhenQuizIsNotFound() {
       QuestionDTO test = new QuestionDTO();
@@ -151,11 +220,25 @@ class QuestionServiceTests {
       assertThrows(InvalidIdException.class, () -> questionService.addQuestion(test));
     }
 
+    /**
+     * The getQuestionByIdThrowsExceptionWhenParameterIsNull method tests the getQuestionById method
+     * of the QuestionService class. It verifies that the method throws an IllegalArgumentException
+     * when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void getQuestionByIdThrowsExceptionWhenParameterIsNull() {
       assertThrows(IllegalArgumentException.class, () -> questionService.getQuestionById(null));
     }
 
+    /**
+     * The getQuestionByIdThrowsExceptionWhenQuestionIsNotFound method tests the getQuestionById
+     * method of the QuestionService class. It verifies that the method throws an InvalidIdException
+     * when the question is not found.
+     *
+     * @throws InvalidIdException if the question is not found
+     */
     @Test
     void getQuestionByIdThrowsExceptionWhenQuestionIsNotFound() {
       when(questionRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -163,22 +246,48 @@ class QuestionServiceTests {
       assertThrows(InvalidIdException.class, () -> questionService.getQuestionById(1L));
     }
 
+    /**
+     * The deleteQuestionThrowsExceptionWhenGivenNullAsParameter method tests the deleteQuestion
+     * method of the QuestionService class. It verifies that the method throws an
+     * IllegalArgumentException when the parameter is null.
+     */
     @Test
     void deleteQuestionThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> questionService.deleteQuestion(null));
     }
 
+    /**
+     * The updateQuestionThrowsExceptionWhenGivenNullAsParameter method tests the updateQuestion
+     * method of the QuestionService class. It verifies that the method throws an
+     * IllegalArgumentException when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void updateQuestionThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> questionService.updateQuestion(null));
     }
 
+    /**
+     * The updateTrueOrFalseQuestionThrowsExceptionWhenGivenNullAsParameter method tests the
+     * updateTrueOrFalseQuestion method of the QuestionService class. It verifies that the method
+     * throws an IllegalArgumentException when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void updateTrueOrFalseQuestionThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(
           IllegalArgumentException.class, () -> questionService.updateTrueOrFalseQuestion(null));
     }
 
+    /**
+     * The updateTrueOrFalseQuestionThrowsExceptionWhenIdIsDifferentType method tests the
+     * updateTrueOrFalseQuestion method of the QuestionService class. It verifies that the method
+     * throws an InvalidIdException when the id is of a different type.
+     *
+     * @throws InvalidIdException if the id is of a different type
+     */
     @Test
     void updateTrueOrFalseQuestionThrowsExceptionWhenIdIsDifferentType() {
       when(questionRepository.findById(1L)).thenReturn(Optional.of(new MultipleChoiceQuestion()));
@@ -188,6 +297,13 @@ class QuestionServiceTests {
       assertThrows(InvalidIdException.class, () -> questionService.updateTrueOrFalseQuestion(test));
     }
 
+    /**
+     * The updateTrueOrFalseQuestionThrowsExceptionWhenIsCorrectFieldIsNull method tests the
+     * updateTrueOrFalseQuestion method of the QuestionService class. It verifies that the method
+     * throws an IllegalArgumentException when the isCorrect field is null.
+     *
+     * @throws IllegalArgumentException if the isCorrect field is null
+     */
     @Test
     void updateTrueOrFalseQuestionThrowsExceptionWhenIsCorrectFieldIsNull() {
       QuestionDTO input = new QuestionDTO();
@@ -196,17 +312,38 @@ class QuestionServiceTests {
           IllegalArgumentException.class, () -> questionService.updateTrueOrFalseQuestion(input));
     }
 
+    /**
+     * The getQuestionsByQuizIdThrowsExceptionWhenParameterIsNull method tests the
+     * getQuestionsByQuizId method of the QuestionService class. It verifies that the method throws
+     * an IllegalArgumentException when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void getQuestionsByQuizIdThrowsExceptionWhenParameterIsNull() {
       assertThrows(
           IllegalArgumentException.class, () -> questionService.getQuestionsByQuizId(null));
     }
 
+    /**
+     * The addAlternativeThrowsExceptionWhenGivenNullAsParameter method tests the addAlternative
+     * method of the QuestionService class. It verifies that the method throws an
+     * IllegalArgumentException when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void addAlternativeThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> questionService.addAlternative(null));
     }
 
+    /**
+     * The addAlternativeThrowsExceptionWhenQuestionTypeIsNotMultipleChoice method tests the
+     * addAlternative method of the QuestionService class. It verifies that the method throws an
+     * InvalidIdException when the question type is not multiple choice.
+     *
+     * @throws InvalidIdException if the question type is not multiple choice
+     */
     @Test
     void addAlternativeThrowsExceptionWhenQuestionTypeIsNotMultipleChoice() {
       when(questionRepository.findById(1L)).thenReturn(Optional.of(new TrueOrFalseQuestion()));
@@ -216,6 +353,11 @@ class QuestionServiceTests {
       assertThrows(InvalidIdException.class, () -> questionService.addAlternative(input));
     }
 
+    /**
+     * The deleteAlternativeThrowsExceptionWhenGivenNullAsParameter method tests the
+     * deleteAlternative method of the QuestionService class. It verifies that the method throws an
+     * IllegalArgumentException when the parameter is null.
+     */
     @Test
     void deleteAlternativeThrowsExceptionWhenGivenNullAsParameter() {
       assertThrows(IllegalArgumentException.class, () -> questionService.deleteAlternative(null));
