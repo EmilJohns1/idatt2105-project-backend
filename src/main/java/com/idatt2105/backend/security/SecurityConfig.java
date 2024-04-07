@@ -77,7 +77,6 @@ public class SecurityConfig {
    */
   @Bean
   public ServletWebServerFactory servletContainer() {
-    // Configure the factory however you need
     TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
     tomcat.addAdditionalTomcatConnectors(redirectConnector());
     return tomcat;

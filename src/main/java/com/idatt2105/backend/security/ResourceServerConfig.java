@@ -47,7 +47,6 @@ public class ResourceServerConfig {
   public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
-        // .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
         .authorizeHttpRequests(
             authorize -> {
               // This gets the base api path for the quiz controller from the "RequestMapping"
@@ -115,7 +114,9 @@ public class ResourceServerConfig {
                   .loginProcessingUrl("/login")
                   .successHandler(
                       (request, response, authentication) -> {
-                        System.out.println(authentication.getAuthorities().iterator().next());
+                        // The redirect url can be stored in different places depending on the type
+                        // of request,
+                        // so two checks are required.
                         var cachedRequest = requestCache.getRequest(request, response);
                         String authorizeRequestUrl =
                             (String) request.getSession().getAttribute("ORIGINAL_REQUEST_URL");
@@ -125,7 +126,6 @@ public class ResourceServerConfig {
                                 : cachedRequest.getRedirectUrl());
                       });
             })
-        // .formLogin(Customizer.withDefaults())
         .oauth2ResourceServer(
             oauth2ResourceServer ->
                 oauth2ResourceServer.jwt(
@@ -144,10 +144,8 @@ public class ResourceServerConfig {
   private JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
         new JwtGrantedAuthoritiesConverter();
-    grantedAuthoritiesConverter.setAuthoritiesClaimName(
-        "roles"); // Customize according to your JWT structure
-    grantedAuthoritiesConverter.setAuthorityPrefix(
-        ""); // Use this to customize the prefix for authorities (default is "SCOPE_")
+    grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+    grantedAuthoritiesConverter.setAuthorityPrefix("");
 
     JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
     jwtConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

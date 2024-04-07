@@ -68,22 +68,6 @@ public class UserController {
   }
 
   /**
-   * Logs in a user.
-   *
-   * @param loginRequest (LoginRequestDTO) User to log in.
-   * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
-   */
-  @PostMapping("/login")
-  @Operation(summary = "Log in a user")
-  public ResponseEntity<String> login(@RequestBody @Validated LoginRequestDTO loginRequest) {
-    User user = new User();
-    user.setUsername(loginRequest.getUsername());
-    user.setPassword(loginRequest.getPassword());
-    userService.login(user);
-    return ResponseEntity.ok("Logged in successfully");
-  }
-
-  /**
    * Updates a user.
    *
    * @param user (User) User to update.
@@ -94,19 +78,6 @@ public class UserController {
   public ResponseEntity<String> update(@RequestBody @Validated User user) {
     userService.updateUser(user.getId(), user);
     return ResponseEntity.ok("User updated successfully");
-  }
-
-  /**
-   * Deletes a user.
-   *
-   * @param id (Long) Id of the user to delete.
-   * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
-   */
-  @DeleteMapping("/{id}")
-  @Operation(summary = "Delete a user")
-  public ResponseEntity<String> delete(@PathVariable("id") Long id) {
-    userService.deleteUser(id);
-    return ResponseEntity.ok("User deleted successfully");
   }
 
   /**

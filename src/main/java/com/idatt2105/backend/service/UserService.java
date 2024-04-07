@@ -83,7 +83,7 @@ public class UserService implements UserDetailsService {
       throw new ExistingUserException(
           "User with username " + user.getUsername() + " already exists");
     }
-
+    user.setRole("USER");
     String hashedPassword = passwordEncoder.encode(user.getPassword());
     user.setPassword(hashedPassword);
     User savedUser = userRepository.save(user);
