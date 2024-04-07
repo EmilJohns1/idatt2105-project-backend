@@ -24,7 +24,7 @@
 
 /* semantic color variables for this project */
 :root {
-    --color-background: var(--vt-c-white);
+    --color-background: #f6f7fb;
     --color-background-soft: var(--vt-c-white-soft);
     --color-background-mute: var(--vt-c-white-mute);
 
@@ -62,7 +62,7 @@
 body {
     min-height: 100vh;
     color: var(--color-text);
-    background: var(--color-background);
+    background-color: var(--color-background);
     transition:
             color 0.5s,
             background-color 0.5s;
@@ -99,6 +99,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #f6f7fb;
 }
 
 
@@ -121,7 +122,7 @@ body {
 .card {
     border: 2px solid #818181;
     border-radius: 8px;
-    background-image: linear-gradient(to bottom right, #f7f7f7, #f8f8f8);
+    background-color: #fff;
     margin-bottom: 20px;
     width:100%;
 }
