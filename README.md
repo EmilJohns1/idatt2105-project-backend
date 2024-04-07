@@ -42,6 +42,9 @@ The project should now be up and running, and can be accessed from https://local
 
 ## Notes
 The backend is set up to fill the database with placeholder quizzes when it runs, this happens in the `util/Dataloader.java` class. Comment this class out if this is not desired. 
+
+To run the project you only need to set the KEYSTORE_PASSWORD environment variable, however you won't be able to upload pictures or send emails for password retrieval. To do this, you need to set the remaining environment variables. We created a simple guide on how to set this up for your own project [here](https://github.com/1Cezzo/idatt2105-project-backend/wiki/Amazon-S3-bucket-and-SMTP-server-integration). The guide is simple to follow and it won't take long before you have these services set up for your own project!
+
 # API-doc:
 For API documentation, run the project using the above guide, and then navigate to `localhost:8443/swagger-ui/index.html` in your browser. Log in with username:`admin` and password: `password` You will land on this page:
 
