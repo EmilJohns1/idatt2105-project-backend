@@ -10,6 +10,7 @@ import com.idatt2105.backend.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/** The FeedbackDTOTests class is a test class that tests the FeedbackDTO class. */
 class FeedbackDTOTests {
   private FeedbackDTO feedbackDTO;
 
@@ -18,8 +19,13 @@ class FeedbackDTOTests {
     feedbackDTO = new FeedbackDTO();
   }
 
+  /** The Constructor class is a test class that tests the constructors of the FeedbackDTO class. */
   @Nested
   class Constructor {
+    /**
+     * This method tests the no-args constructor of the FeedbackDTO class. It verifies that the
+     * object is instantiated correctly.
+     */
     @Test
     void allArgsConstructorInstantiatesObject() {
       FeedbackDTO dto =
@@ -34,6 +40,10 @@ class FeedbackDTOTests {
     }
   }
 
+  /**
+   * This method tests the constructor of the FeedbackDTO class with a Feedback parameter. It
+   * verifies that the object is instantiated correctly.
+   */
   @Test
   void constructorWithFeedbackParameter() {
     Feedback input = new Feedback();
@@ -54,6 +64,10 @@ class FeedbackDTOTests {
     assertEquals(1L, dto.getUserId());
   }
 
+  /**
+   * This method tests the convertToEntity method of the FeedbackDTO class. It verifies that the
+   * method returns the correct Feedback object.
+   */
   @Test
   void toEntity() {
     FeedbackDTO dto = new FeedbackDTO();
@@ -70,8 +84,13 @@ class FeedbackDTOTests {
     assertEquals("Test message", feedback.getContent());
   }
 
+  /** The GetterTests class is a test class that tests the getters of the FeedbackDTO class. */
   @Nested
   class GetterTests {
+    /**
+     * This method tests the getFirstName method of the FeedbackDTO class. It verifies that the
+     * method returns the correct first name.
+     */
     @Test
     void testGetFirstName() {
       String firstName = "John";
@@ -79,6 +98,10 @@ class FeedbackDTOTests {
       assertEquals(firstName, feedbackDTO.getFirstName());
     }
 
+    /**
+     * This method tests the getLastName method of the FeedbackDTO class. It verifies that the
+     * method returns the correct last name.
+     */
     @Test
     void testGetLastName() {
       String lastName = "Doe";
@@ -86,6 +109,10 @@ class FeedbackDTOTests {
       assertEquals(lastName, feedbackDTO.getLastName());
     }
 
+    /**
+     * This method tests the getEmail method of the FeedbackDTO class. It verifies that the method
+     * returns the correct email.
+     */
     @Test
     void testGetEmail() {
       String email = "john.doe@example.com";
@@ -93,6 +120,10 @@ class FeedbackDTOTests {
       assertEquals(email, feedbackDTO.getEmail());
     }
 
+    /**
+     * This method tests the getFeedbackType method of the FeedbackDTO class. It verifies that the
+     * method returns the correct feedback type.
+     */
     @Test
     void testGetFeedbackType() {
       FeedbackType feedbackType = FeedbackType.ASSISTANCE;
@@ -100,6 +131,10 @@ class FeedbackDTOTests {
       assertEquals(feedbackType, feedbackDTO.getFeedbackType());
     }
 
+    /**
+     * This method tests the getContent method of the FeedbackDTO class. It verifies that the method
+     * returns the correct content.
+     */
     @Test
     void testGetContent() {
       String content = "This is a feedback content.";
@@ -107,6 +142,10 @@ class FeedbackDTOTests {
       assertEquals(content, feedbackDTO.getContent());
     }
 
+    /**
+     * This method tests the getUserId method of the FeedbackDTO class. It verifies that the method
+     * returns the correct user id.
+     */
     @Test
     void testGetUserId() {
       Long userId = 1L;
@@ -115,8 +154,13 @@ class FeedbackDTOTests {
     }
   }
 
+  /** The SetterTests class is a test class that tests the setters of the FeedbackDTO class. */
   @Nested
   class SetterTests {
+    /**
+     * This method tests the setFirstName method of the FeedbackDTO class. It verifies that the
+     * method sets the correct first name.
+     */
     @Test
     void testSetFirstName() {
       String firstName = "John";
@@ -124,6 +168,10 @@ class FeedbackDTOTests {
       assertEquals(firstName, feedbackDTO.getFirstName());
     }
 
+    /**
+     * This method tests the setLastName method of the FeedbackDTO class. It verifies that the
+     * method sets the correct last name.
+     */
     @Test
     void testSetLastName() {
       String lastName = "Doe";
@@ -131,6 +179,10 @@ class FeedbackDTOTests {
       assertEquals(lastName, feedbackDTO.getLastName());
     }
 
+    /**
+     * This method tests the setEmail method of the FeedbackDTO class. It verifies that the method
+     * sets the correct email.
+     */
     @Test
     void testSetEmail() {
       String email = "john.doe@example.com";
@@ -138,6 +190,10 @@ class FeedbackDTOTests {
       assertEquals(email, feedbackDTO.getEmail());
     }
 
+    /**
+     * This method tests the setFeedbackType method of the FeedbackDTO class. It verifies that the
+     * method sets the correct feedback type.
+     */
     @Test
     void testSetFeedbackType() {
       FeedbackType feedbackType = FeedbackType.ASSISTANCE;
@@ -145,6 +201,10 @@ class FeedbackDTOTests {
       assertEquals(feedbackType, feedbackDTO.getFeedbackType());
     }
 
+    /**
+     * This method tests the setContent method of the FeedbackDTO class. It verifies that the method
+     * sets the correct content.
+     */
     @Test
     void testSetContent() {
       String content = "This is a feedback content.";
@@ -152,6 +212,10 @@ class FeedbackDTOTests {
       assertEquals(content, feedbackDTO.getContent());
     }
 
+    /**
+     * This method tests the setUserId method of the FeedbackDTO class. It verifies that the method
+     * sets the correct user id.
+     */
     @Test
     void testSetUserId() {
       Long userId = 1L;
@@ -160,6 +224,10 @@ class FeedbackDTOTests {
     }
   }
 
+  /**
+   * This method tests the equals method of the FeedbackDTO class. It verifies that the method
+   * returns the correct boolean value.
+   */
   @Test
   void equalObjectsGenerateEqualHashCodes() {
     FeedbackDTO dto1 = new FeedbackDTO();

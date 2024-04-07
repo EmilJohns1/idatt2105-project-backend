@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+/** Entity representing a Multiple Choice question attempt, with a number of alternatives. */
 @Entity
 @Table(name = "multiple_choice_question_attempts")
 @Data
@@ -24,6 +25,8 @@ public class MultipleChoiceQuestionAttempt extends QuestionAttempt {
     if (alternative == null) {
       throw new IllegalArgumentException("Alternative parameter cannot be null.");
     }
+    alternative.setQuestionAttempt(this);
+    alternative.setId(null);
     this.alternatives.add(alternative);
   }
 

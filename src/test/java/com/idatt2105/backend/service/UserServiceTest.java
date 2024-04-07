@@ -42,9 +42,7 @@ class UserServiceTest {
     MockitoAnnotations.openMocks(this);
   }
 
-  /*
-   * Test the getUsers method.
-   */
+  /** Test the getUsers method. It verifies that the method returns a list of users. */
   @Test
   public void testGetUsers() {
     // Arrange
@@ -62,9 +60,7 @@ class UserServiceTest {
     assertEquals("user2", userDTOs.get(1).getUsername());
   }
 
-  /*
-   * Test the addUser method.
-   */
+  /** Test the addUser method. It verifies that the method adds a user to the database. */
   @Test
   public void testAddUser() {
     // Arrange
@@ -92,8 +88,11 @@ class UserServiceTest {
     verify(userRepository, times(1)).save(any());
   }
 
-  /*
-   * Test the addUser method with an existing user.
+  /**
+   * Test the addUser method with an existing user. It verifies that the method throws an
+   * ExistingUserException.
+   *
+   * @throws ExistingUserException if the user already exists
    */
   @Test
   public void testAddUser_ExistingUser() {
@@ -111,9 +110,7 @@ class UserServiceTest {
     verify(userRepository, never()).save(any());
   }
 
-  /*
-   * Test the deleteUser method.
-   */
+  /** Test the deleteUser method. It verifies that the method deletes a user from the database. */
   @Test
   public void testDeleteUser() {
     // Arrange
@@ -130,8 +127,11 @@ class UserServiceTest {
     verify(userRepository, times(1)).deleteById(userId);
   }
 
-  /*
-   * Test the deleteUser method with a user not found.
+  /**
+   * Test the deleteUser method with a user not found. It verifies that the method throws a
+   * UserNotFoundException.
+   *
+   * @throws UserNotFoundException if the user is not found
    */
   @Test
   public void testDeleteUser_UserNotFound() {
@@ -146,9 +146,7 @@ class UserServiceTest {
     verify(userRepository, never()).deleteById(userId);
   }
 
-  /*
-   * Test the updateUser method.
-   */
+  /** Test the updateUser method. It verifies that the method updates a user in the database. */
   @Test
   public void testUpdateUser() {
     // Arrange
@@ -178,8 +176,11 @@ class UserServiceTest {
     verify(userRepository, times(1)).save(any());
   }
 
-  /*
-   * Test the updateUser method with a user not found.
+  /**
+   * Test the updateUser method with a user not found. It verifies that the method throws a
+   * UserNotFoundException.
+   *
+   * @throws UserNotFoundException if the user is not found
    */
   @Test
   public void testUpdateUser_UserNotFound() {
@@ -198,9 +199,7 @@ class UserServiceTest {
     verify(userRepository, never()).save(any());
   }
 
-  /*
-   * Test the getQuizzesByUserId method.
-   */
+  /** Test the getQuizzesByUserId method. It verifies that the method returns a set of quizzes. */
   @Test
   public void testGetQuizzesByUserId() {
     // Arrange
@@ -228,8 +227,11 @@ class UserServiceTest {
     assertEquals(2, result.size());
   }
 
-  /*
-   * Test the getQuizzesByUserId method with a user not found.
+  /**
+   * Test the getQuizzesByUserId method with a user not found. It verifies that the method throws a
+   * UserNotFoundException.
+   *
+   * @throws UserNotFoundException if the user is not found
    */
   @Test
   public void testGetQuizzesByUserId_UserNotFound() {
@@ -243,9 +245,7 @@ class UserServiceTest {
     verify(userRepository, times(1)).findById(userId);
   }
 
-  /*
-   * Test the getQuizzesByUserId method with a user with no quizzes.
-   */
+  /** Test the save method. It verifies that the method saves a user to the database. */
   @Test
   public void testSave() {
     // Arrange
@@ -266,9 +266,7 @@ class UserServiceTest {
     assertEquals(Collections.emptyList(), savedUser.getQuizzes());
   }
 
-  /*
-   * Test the getUserByIdDTO method.
-   */
+  /** Test the getUserById method. It verifies that the method returns a user. */
   @Test
   public void testGetUserByIdDTO() {
     // Arrange
@@ -289,8 +287,9 @@ class UserServiceTest {
     assertEquals(Collections.emptyList(), result.get().getQuizzes());
   }
 
-  /*
-   * Test the getUserByIdDTO method with a user not found.
+  /**
+   * Test the getUserById method with a user not found. It verifies that the method returns an empty
+   * optional.
    */
   @Test
   public void testGetUserByIdDTO_UserNotFound() {
@@ -306,9 +305,7 @@ class UserServiceTest {
     assertFalse(result.isPresent());
   }
 
-  /*
-   * Test the getUserByUsernameDTO method.
-   */
+  /** Test the getUserByUsername method. It verifies that the method returns a user. */
   @Test
   public void testSuccessfulLogin() {
     // Arrange
@@ -339,8 +336,11 @@ class UserServiceTest {
     assertEquals("Token", result);
   }
 
-  /*
-   * Test the login method with an invalid user.
+  /**
+   * Test the login method with an invalid user. It verifies that the method throws an
+   * InvalidCredentialsException.
+   *
+   * @throws InvalidCredentialsException if the user is invalid
    */
   @Test
   public void testLogin_InvalidUser() {
@@ -353,8 +353,11 @@ class UserServiceTest {
     assertThrows(InvalidCredentialsException.class, () -> userService.login(user));
   }
 
-  /*
-   * Test the login method with invalid credentials.
+  /**
+   * Test the login method with invalid credentials. It verifies that the method throws an
+   * InvalidCredentialsException.
+   *
+   * @throws InvalidCredentialsException if the credentials are invalid
    */
   @Test
   public void testLogin_InvalidCredentials() {
@@ -373,9 +376,7 @@ class UserServiceTest {
     assertThrows(InvalidCredentialsException.class, () -> userService.login(user));
   }
 
-  /*
-   * Test the userExists method.
-   */
+  /** Test the getUserById method. It verifies that the method returns the expected user. */
   @Test
   public void getUserById() {
     // Arrange
@@ -394,9 +395,7 @@ class UserServiceTest {
     assertEquals("testUser", result.getUsername());
   }
 
-  /*
-   * Test the getUserByUsername method.
-   */
+  /** Test the getUserByUsername method. It verifies that the method returns the expected user. */
   @Test
   public void getUserByUsername() {
     // Arrange

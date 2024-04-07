@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/** The QuestionRepositoryTests class is a test class that tests the QuestionRepository class. */
 @DataJpaTest
 class QuestionRepositoryTests {
   @Autowired private QuestionRepository questionRepository;
@@ -44,6 +45,10 @@ class QuestionRepositoryTests {
     questionRepository.save(multipleChoiceQuestion);
   }
 
+  /**
+   * This method tests that saved questions can be retrieved by quiz id. It verifies that the method
+   * returns the correct question.
+   */
   @Test
   void savedQuestionsCanBeRetrievedByQuizId() {
     Optional<Question> retrievedQuestion =
@@ -53,6 +58,10 @@ class QuestionRepositoryTests {
         multipleChoiceQuestion.getQuestionText(), retrievedQuestion.get().getQuestionText());
   }
 
+  /**
+   * This method tests that multiple choice questions are saved properly. It verifies that the
+   * method returns the correct question.
+   */
   @Test
   void multipleChoiceQuestionsAreSavedProperly() {
     Optional<Question> retrievedQuestion =
@@ -68,6 +77,10 @@ class QuestionRepositoryTests {
             .getAlternativeText());
   }
 
+  /**
+   * This method tests that true or false questions are saved properly. It verifies that the method
+   * returns the correct question.
+   */
   @Test
   void trueOrFalseQuestionsAreSavedProperly() {
     TrueOrFalseQuestion question = new TrueOrFalseQuestion();

@@ -1,6 +1,7 @@
 package com.idatt2105.backend.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import com.idatt2105.backend.repository.QuestionRepository;
 import com.idatt2105.backend.repository.QuizRepository;
 import com.idatt2105.backend.util.InvalidIdException;
 
+import jakarta.transaction.Transactional;
+
 /** Service for handling operations related to questions. */
 @Service
 public class QuestionService {
@@ -24,12 +27,6 @@ public class QuestionService {
   private final QuizRepository quizRepository;
   private final AlternativeRepository alternativeRepository;
 
-  /**
-   * Constructor for the QuestionService class.
-   *
-   * @param questionRepository (QuestionRepository) Repository for handling operations on questions.
-   * @param quizRepository (QuizRepository) Repository for handling operations on quizzes.
-   */
   @Autowired
   public QuestionService(
       QuestionRepository questionRepository,
@@ -192,5 +189,87 @@ public class QuestionService {
       throw new IllegalArgumentException("Id parameter cannot be null.");
     }
     alternativeRepository.deleteById(id);
+  }
+
+  /**
+   * Updates the alternatives for a multiple choice question.
+   *
+   * @param questionId (Long) The id of the question to update alternatives for.
+   * @param alternativeDTOs (List<AlternativeDTO>) The list of alternative DTOs containing the new
+   *     alternatives.
+   * @return (List<AlternativeDTO>) The updated list of alternatives.
+   * @throws InvalidIdException if the question with the given id is not found or is not a multiple
+   *     choice question.
+   */
+  @Transactional
+  public Set<Alternative> updateAlternatives(
+      Long questionId, List<AlternativeDTO> alternativeDTOs) {
+    if (questionId == null) {
+      throw new IllegalArgumentException("Question ID cannot be null.");
+    }
+    if (alternativeDTOs == null) {
+      throw new IllegalArgumentException("Alternative DTOs cannot be null.");
+    }
+
+    // Get the question by ID
+    Question question =
+        questionRepository
+            .findById(questionId)
+            .orElseThrow(
+                () -> new InvalidIdException("Question with id " + questionId + " not found."));
+
+    // Check if the question is a multiple choice question
+    if (!(question instanceof MultipleChoiceQuestion)) {
+      throw new InvalidIdException(
+          "Question with id " + questionId + " is not a multiple choice question.");
+    }
+
+    // Cast the question to a MultipleChoiceQuestion
+    MultipleChoiceQuestion mcQuestion = (MultipleChoiceQuestion) question;
+
+    // Update or add alternatives
+    for (AlternativeDTO alternativeDTO : alternativeDTOs) {
+      if (alternativeDTO.getId() != null) {
+        // Update existing alternative
+        Alternative existingAlternative =
+            mcQuestion.getAlternatives().stream()
+                .filter(alt -> alt.getId().equals(alternativeDTO.getId()))
+                .findFirst()
+                .orElseThrow(
+                    () ->
+                        new InvalidIdException(
+                            "Alternative with id " + alternativeDTO.getId() + " not found."));
+        existingAlternative.setAlternativeText(alternativeDTO.getAlternativeText());
+        existingAlternative.setCorrect(alternativeDTO.isCorrect());
+      } else {
+        // Add new alternative
+        Alternative newAlternative = new Alternative();
+        newAlternative.setAlternativeText(alternativeDTO.getAlternativeText());
+        newAlternative.setCorrect(alternativeDTO.isCorrect());
+        newAlternative.setQuestion(mcQuestion); // Set the question association
+        mcQuestion
+            .getAlternatives()
+            .add(newAlternative); // Add the new alternative to the question's set of alternatives
+        // Save the new alternative explicitly
+        alternativeRepository.save(newAlternative);
+      }
+    }
+
+    // Remove alternatives not present in the list
+    mcQuestion
+        .getAlternatives()
+        .removeIf(
+            existingAlternative -> {
+              Long existingAltId = existingAlternative.getId();
+              return alternativeDTOs.stream()
+                  .noneMatch(
+                      alternativeDTO ->
+                          alternativeDTO.getId() != null
+                              && existingAltId != null
+                              && alternativeDTO.getId().equals(existingAltId));
+            });
+
+    // Save the question with updated alternatives
+    return questionRepository.save(mcQuestion).getAlternatives();
   }
 }

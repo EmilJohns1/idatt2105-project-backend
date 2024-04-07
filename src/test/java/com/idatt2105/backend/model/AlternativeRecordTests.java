@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/** The AlternativeRecordTests class is a test class that tests the AlternativeRecord class. */
 class AlternativeRecordTests {
 
   private AlternativeRecord alternativeRecord;
@@ -16,8 +17,15 @@ class AlternativeRecordTests {
     alternativeRecord = new AlternativeRecord();
   }
 
+  /**
+   * The GetterTests class is a test class that tests the getters of the AlternativeRecord class.
+   */
   @Nested
   class GetterTests {
+    /**
+     * This method tests the getId method of the AlternativeRecord class. It verifies that the
+     * method returns the correct id.
+     */
     @Test
     void testGetId() {
       Long id = 1L;
@@ -25,6 +33,10 @@ class AlternativeRecordTests {
       assertEquals(id, alternativeRecord.getId());
     }
 
+    /**
+     * This method tests the getAlternativeText method of the AlternativeRecord class. It verifies
+     * that the method returns the correct alternative text.
+     */
     @Test
     void testGetAlternativeText() {
       String alternativeText = "Alternative Text";
@@ -32,6 +44,10 @@ class AlternativeRecordTests {
       assertEquals(alternativeText, alternativeRecord.getAlternativeText());
     }
 
+    /**
+     * This method tests the wasCorrect method of the AlternativeRecord class. It verifies that the
+     * method returns the correct boolean value.
+     */
     @Test
     void testWasCorrect() {
       boolean wasCorrect = true;
@@ -39,6 +55,10 @@ class AlternativeRecordTests {
       assertTrue(alternativeRecord.wasCorrect());
     }
 
+    /**
+     * This method tests the wasSelected method of the AlternativeRecord class. It verifies that the
+     * method returns the correct boolean value.
+     */
     @Test
     void testWasSelected() {
       boolean wasSelected = true;
@@ -46,6 +66,10 @@ class AlternativeRecordTests {
       assertTrue(alternativeRecord.wasSelected());
     }
 
+    /**
+     * This method tests the getQuestionAttempt method of the AlternativeRecord class. It verifies
+     * that the method returns the correct question attempt.
+     */
     @Test
     void testGetQuestionAttempt() {
       MultipleChoiceQuestionAttempt questionAttempt = new MultipleChoiceQuestionAttempt();
@@ -55,8 +79,15 @@ class AlternativeRecordTests {
     }
   }
 
+  /**
+   * The SetterTests class is a test class that tests the setters of the AlternativeRecord class.
+   */
   @Nested
   class SetterTests {
+    /**
+     * This method tests the setId method of the AlternativeRecord class. It verifies that the
+     * method sets the correct id.
+     */
     @Test
     void testSetId() {
       Long id = 1L;
@@ -64,6 +95,10 @@ class AlternativeRecordTests {
       assertEquals(id, alternativeRecord.getId());
     }
 
+    /**
+     * This method tests the setAlternativeText method of the AlternativeRecord class. It verifies
+     * that the method sets the correct alternative text.
+     */
     @Test
     void testSetAlternativeText() {
       String alternativeText = "Alternative Text";
@@ -71,6 +106,10 @@ class AlternativeRecordTests {
       assertEquals(alternativeText, alternativeRecord.getAlternativeText());
     }
 
+    /**
+     * This method tests the wasCorrect method of the AlternativeRecord class. It verifies that the
+     * method sets the correct boolean value.
+     */
     @Test
     void testSetWasCorrect() {
       boolean wasCorrect = true;
@@ -78,6 +117,10 @@ class AlternativeRecordTests {
       assertTrue(alternativeRecord.wasCorrect());
     }
 
+    /**
+     * This method tests the wasSelected method of the AlternativeRecord class. It verifies that the
+     * method sets the correct boolean value.
+     */
     @Test
     void testSetWasSelected() {
       boolean wasSelected = true;
@@ -85,6 +128,10 @@ class AlternativeRecordTests {
       assertTrue(alternativeRecord.wasSelected());
     }
 
+    /**
+     * This method tests the setQuestionAttempt method of the AlternativeRecord class. It verifies
+     * that the method sets the correct question attempt.
+     */
     @Test
     void testSetQuestionAttempt() {
       MultipleChoiceQuestionAttempt questionAttempt = new MultipleChoiceQuestionAttempt();
@@ -94,6 +141,10 @@ class AlternativeRecordTests {
     }
   }
 
+  /**
+   * This method tests the equals method of the AlternativeRecord class. It verifies that the method
+   * returns the correct boolean value.
+   */
   @Test
   void equalAlternativeRecordsGenerateTheSameHashcode() {
     AlternativeRecord alternativeRecord1 = new AlternativeRecord();

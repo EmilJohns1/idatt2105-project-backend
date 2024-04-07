@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/** The FeedbackServiceTests class is a test class that tests the FeedbackService class. */
 @SpringBootTest
 public class FeedbackServiceTests {
   @InjectMocks private FeedbackService feedbackService;
@@ -38,6 +39,10 @@ public class FeedbackServiceTests {
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
   }
 
+  /**
+   * The BasicFunctionality class is a test class that tests the basic functionality of the
+   * FeedbackService class.
+   */
   @Nested
   class BasicFunctionality {
     private FeedbackDTO dto;
@@ -57,6 +62,10 @@ public class FeedbackServiceTests {
       feedback.setLastName(lastName);
     }
 
+    /**
+     * This method tests the createFeedback method of the FeedbackService class. It verifies that
+     * the method creates a feedback with the correct first name and last name.
+     */
     @Test
     void createFeedback() {
       dto.setUserId(1L);
@@ -64,6 +73,10 @@ public class FeedbackServiceTests {
       assertEquals(dto, created);
     }
 
+    /**
+     * This method tests the updateFeedback method of the FeedbackService class. It verifies that
+     * the method updates a feedback with the correct first name and last name.
+     */
     @Test
     void updateFeedback() {
       when(feedbackRepository.findById(1L)).thenReturn(Optional.of(new Feedback()));
@@ -71,18 +84,30 @@ public class FeedbackServiceTests {
       verify(feedbackRepository).save(feedback);
     }
 
+    /**
+     * This method tests the deleteFeedback method of the FeedbackService class. It verifies that
+     * the method deletes a feedback with the correct id.
+     */
     @Test
     void deleteFeedback() {
       feedbackService.deleteFeedback(1L);
       verify(feedbackRepository).deleteById(1L);
     }
 
+    /**
+     * This method tests the getAllFeedback method of the FeedbackService class. It verifies that
+     * the method returns all feedback.
+     */
     @Test
     void getAllFeedback() {
       when(feedbackRepository.findAll()).thenReturn(List.of(feedback));
       assertEquals(List.of(dto), feedbackService.getAllFeedback());
     }
 
+    /**
+     * This method tests the getFeedbackByUserId method of the FeedbackService class. It verifies
+     * that the method returns all feedback for a user.
+     */
     @Test
     void getFeedbackByUserId() {
       when(feedbackRepository.findByUserId(1L)).thenReturn(List.of(feedback));
@@ -90,13 +115,29 @@ public class FeedbackServiceTests {
     }
   }
 
+  /**
+   * The InvalidParameters class is a test class that tests the invalid parameters of the
+   * FeedbackService class.
+   */
   @Nested
   class InvalidParameters {
+    /**
+     * This method tests the createFeedback method of the FeedbackService class. It verifies that
+     * the method throws an IllegalArgumentException when the DTO parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void createFeedbackWithNullAsParameterThrowsException() {
       assertThrows(IllegalArgumentException.class, () -> feedbackService.createFeedback(null));
     }
 
+    /**
+     * This method tests the createFeedback method of the FeedbackService class. It verifies that
+     * the method throws an InvalidIdException when the user does not exist.
+     *
+     * @throws InvalidIdException if the user does not exist
+     */
     @Test
     void createFeedbackWithNonExistentUserThrowsException() {
       FeedbackDTO dto = new FeedbackDTO();
@@ -104,22 +145,46 @@ public class FeedbackServiceTests {
       assertThrows(InvalidIdException.class, () -> feedbackService.createFeedback(dto));
     }
 
+    /**
+     * This method tests the updateFeedback method of the FeedbackService class. It verifies that
+     * the method throws an IllegalArgumentException when the id parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void updateFeedbackWithNullAsIdParameterThrowsException() {
       FeedbackDTO dto = new FeedbackDTO();
       assertThrows(IllegalArgumentException.class, () -> feedbackService.updateFeedback(null, dto));
     }
 
+    /**
+     * This method tests the updateFeedback method of the FeedbackService class. It verifies that
+     * the method throws an IllegalArgumentException when the DTO parameter is null.
+     *
+     * @throws InvalidIdException if the feedback does not exist
+     */
     @Test
     void updateFeedbackWithNullAsDTOParameterThrowsException() {
       assertThrows(IllegalArgumentException.class, () -> feedbackService.updateFeedback(1L, null));
     }
 
+    /**
+     * This method tests the deleteFeedback method of the FeedbackService class. It verifies that
+     * the method throws an IllegalArgumentException when the id parameter is
+     *
+     * @throws InvalidIdException if the user id is invalid
+     */
     @Test
     void deleteFeedbackWithNullAsIdParameterThrowsException() {
       assertThrows(IllegalArgumentException.class, () -> feedbackService.deleteFeedback(null));
     }
 
+    /**
+     * This method tests the getFeedback method of the FeedbackService class. It verifies that the
+     * method throws an IllegalArgumentException when the parameter is null.
+     *
+     * @throws IllegalArgumentException if the parameter is null
+     */
     @Test
     void getFeedbackByUserIdWithNullAsParameterThrowsException() {
       assertThrows(IllegalArgumentException.class, () -> feedbackService.getFeedbackByUserId(null));

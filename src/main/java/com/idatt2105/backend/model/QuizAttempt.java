@@ -17,12 +17,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+/** Represents a quiz attempt made by a user. */
 @Entity
 @Data
 public class QuizAttempt {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  private String title;
 
   @Column(name = "attempt_time")
   private LocalDateTime attemptTime;

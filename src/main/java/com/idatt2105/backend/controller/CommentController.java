@@ -3,6 +3,8 @@ package com.idatt2105.backend.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +23,6 @@ public class CommentController {
 
   private final CommentService commentService;
 
-  /**
-   * Constructs a new CommentController with the specified CommentService.
-   *
-   * @param commentService the CommentService to be used
-   */
   @Autowired
   public CommentController(CommentService commentService) {
     this.commentService = commentService;
@@ -98,7 +95,7 @@ public class CommentController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  /*
+  /**
    * Gets comments by quiz id
    *
    * @param quizId (Long) Id of the quiz to get comments for
@@ -111,7 +108,7 @@ public class CommentController {
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
 
-  /*
+  /**
    * Gets comments by user id
    *
    * @param userId (Long) Id of the user to get comments for
@@ -121,6 +118,20 @@ public class CommentController {
   @Operation(summary = "Get comments by user id")
   public ResponseEntity<List<CommentDTO>> getCommentsByUserId(@PathVariable Long userId) {
     List<CommentDTO> comments = commentService.getCommentsByUserId(userId);
+    return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
+
+  /**
+   * Gets pageable comments by quiz id
+   *
+   * @param quizId (Long) Id of the quiz to get comments for
+   * @return Page of comments for the quiz
+   */
+  @GetMapping("/quiz/page/{quizId}")
+  @Operation(summary = "Get comments by quiz id by pages")
+  public ResponseEntity<Page<CommentDTO>> getCommentsByQuizId(
+      @PathVariable Long quizId, Pageable pageable) {
+    Page<CommentDTO> comments = commentService.getCommentsByQuizId(quizId, pageable);
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
 }

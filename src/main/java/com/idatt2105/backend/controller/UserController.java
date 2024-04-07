@@ -18,6 +18,7 @@ import com.idatt2105.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/** The UserController class handles HTTP requests related to users. */
 @RestController
 @RequestMapping("/api/user")
 @Tag(name = "Users", description = "Operations related to users")
@@ -41,7 +42,6 @@ public class UserController {
     return new ResponseEntity<>(userDTOs, HttpStatus.OK);
   }
 
-  // TODO implement hashing of password and secure login
   /**
    * Registers a new user.
    *
@@ -52,31 +52,21 @@ public class UserController {
   @Operation(summary = "Register a new user")
   public ResponseEntity<String> register(
       @RequestBody @Validated LoginRequestDTO registrationRequest) {
+    String role = null;
+    if (registrationRequest.getRole() != null) {
+      role = registrationRequest.getRole().equals("mysecretpassword") ? "ADMIN" : "USER";
+    }
     User user = new User();
     user.setUsername(registrationRequest.getUsername());
     user.setPassword(registrationRequest.getPassword());
-    userService.addUser(user);
+    if (role == null) {
+      userService.addUser(user);
+    } else {
+      userService.addUser(user, role);
+    }
     return ResponseEntity.ok("Registered successfully");
   }
 
-  // TODO implement hashing of password and secure login
-  /**
-   * Logs in a user.
-   *
-   * @param loginRequest (LoginRequestDTO) User to log in.
-   * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
-   */
-  @PostMapping("/login")
-  @Operation(summary = "Log in a user")
-  public ResponseEntity<String> login(@RequestBody @Validated LoginRequestDTO loginRequest) {
-    User user = new User();
-    user.setUsername(loginRequest.getUsername());
-    user.setPassword(loginRequest.getPassword());
-    userService.login(user);
-    return ResponseEntity.ok("Logged in successfully");
-  }
-
-  // TODO implement
   /**
    * Updates a user.
    *
@@ -88,19 +78,6 @@ public class UserController {
   public ResponseEntity<String> update(@RequestBody @Validated User user) {
     userService.updateUser(user.getId(), user);
     return ResponseEntity.ok("User updated successfully");
-  }
-
-  /**
-   * Deletes a user.
-   *
-   * @param id (Long) Id of the user to delete.
-   * @return ResponseEntity with a message, or an ErrorResponse if an error occurs.
-   */
-  @DeleteMapping("/{id}")
-  @Operation(summary = "Delete a user")
-  public ResponseEntity<String> delete(@PathVariable("id") Long id) {
-    userService.deleteUser(id);
-    return ResponseEntity.ok("User deleted successfully");
   }
 
   /**

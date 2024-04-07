@@ -3,6 +3,8 @@ package com.idatt2105.backend.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -34,6 +36,10 @@ public class User {
 
   @Column(name = "profile_picture_url")
   private String profilePictureUrl;
+
+  @Column(name = "role")
+  @JsonIgnore
+  private String role;
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   @JoinTable(

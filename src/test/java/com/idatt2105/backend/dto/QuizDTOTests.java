@@ -14,6 +14,7 @@ import com.idatt2105.backend.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/** The QuizDTOTests class is a test class that tests the QuizDTO class. */
 class QuizDTOTests {
 
   private QuizDTO quizDTO;
@@ -23,8 +24,13 @@ class QuizDTOTests {
     quizDTO = new QuizDTO();
   }
 
+  /** The Constructor class is a test class that tests the constructor of the QuizDTO class. */
   @Nested
   class Constructor {
+    /**
+     * This method tests the constructor of the QuizDTO class. It verifies that the object is
+     * instantiated correctly.
+     */
     @Test
     void constructorFromQuizExtractsAllValues() {
       Quiz quiz = new Quiz();
@@ -59,8 +65,13 @@ class QuizDTOTests {
     }
   }
 
+  /** The GetterTests class is a test class that tests the getters of the QuizDTO class. */
   @Nested
   class GetterTests {
+    /**
+     * This method tests the getId method of the QuizDTO class. It verifies that the method returns
+     * the correct id.
+     */
     @Test
     void testGetId() {
       Long id = 1L;
@@ -68,6 +79,10 @@ class QuizDTOTests {
       assertEquals(id, quizDTO.getId());
     }
 
+    /**
+     * This method tests the getTitle method of the QuizDTO class. It verifies that the method
+     * returns the correct title.
+     */
     @Test
     void testGetTitle() {
       String title = "Quiz Title";
@@ -75,6 +90,10 @@ class QuizDTOTests {
       assertEquals(title, quizDTO.getTitle());
     }
 
+    /**
+     * This method tests the getDescription method of the QuizDTO class. It verifies that the method
+     * returns the correct description.
+     */
     @Test
     void testGetDescription() {
       String description = "Quiz Description";
@@ -82,6 +101,10 @@ class QuizDTOTests {
       assertEquals(description, quizDTO.getDescription());
     }
 
+    /**
+     * This method tests the getCreationDate method of the QuizDTO class. It verifies that the
+     * method returns the correct creation date.
+     */
     @Test
     void testGetCreationDate() {
       LocalDateTime creationDate = LocalDateTime.now();
@@ -89,6 +112,10 @@ class QuizDTOTests {
       assertEquals(creationDate, quizDTO.getCreationDate());
     }
 
+    /**
+     * This method tests the getLastModifiedDate method of the QuizDTO class. It verifies that the
+     * method returns the correct last modified date.
+     */
     @Test
     void testGetLastModifiedDate() {
       LocalDateTime lastModifiedDate = LocalDateTime.now();
@@ -96,6 +123,10 @@ class QuizDTOTests {
       assertEquals(lastModifiedDate, quizDTO.getLastModifiedDate());
     }
 
+    /**
+     * This method tests the getTags method of the QuizDTO class. It verifies that the method
+     * returns the correct tags.
+     */
     @Test
     void testGetTags() {
       Set<Tag> tags = new HashSet<>();
@@ -107,8 +138,13 @@ class QuizDTOTests {
     }
   }
 
+  /** The SetterTests class is a test class that tests the setters of the QuizDTO class. */
   @Nested
   class SetterTests {
+    /**
+     * This method tests the setId method of the QuizDTO class. It verifies that the method sets the
+     * correct id.
+     */
     @Test
     void testSetId() {
       Long id = 1L;
@@ -116,6 +152,10 @@ class QuizDTOTests {
       assertEquals(id, quizDTO.getId());
     }
 
+    /**
+     * This method tests the setTitle method of the QuizDTO class. It verifies that the method sets
+     * the correct title.
+     */
     @Test
     void testSetTitle() {
       String title = "Quiz Title";
@@ -123,6 +163,10 @@ class QuizDTOTests {
       assertEquals(title, quizDTO.getTitle());
     }
 
+    /**
+     * This method tests the setDescription method of the QuizDTO class. It verifies that the method
+     * sets the correct description.
+     */
     @Test
     void testSetDescription() {
       String description = "Quiz Description";
@@ -130,6 +174,10 @@ class QuizDTOTests {
       assertEquals(description, quizDTO.getDescription());
     }
 
+    /**
+     * This method tests the setCreationDate method of the QuizDTO class. It verifies that the
+     * method sets the correct creation date.
+     */
     @Test
     void testSetCreationDate() {
       LocalDateTime creationDate = LocalDateTime.now();
@@ -137,6 +185,10 @@ class QuizDTOTests {
       assertEquals(creationDate, quizDTO.getCreationDate());
     }
 
+    /**
+     * This method tests the setLastModifiedDate method of the QuizDTO class. It verifies that the
+     * method sets the correct last modified date.
+     */
     @Test
     void testSetLastModifiedDate() {
       LocalDateTime lastModifiedDate = LocalDateTime.now();
@@ -144,6 +196,10 @@ class QuizDTOTests {
       assertEquals(lastModifiedDate, quizDTO.getLastModifiedDate());
     }
 
+    /**
+     * This method tests the setTags method of the QuizDTO class. It verifies that the method sets
+     * the correct tags.
+     */
     @Test
     void testSetTags() {
       Set<Tag> tags = new HashSet<>();
@@ -155,6 +211,10 @@ class QuizDTOTests {
     }
   }
 
+  /**
+   * This method tests the toEntity method of the QuizDTO class. It verifies that the method returns
+   * the correct Quiz entity.
+   */
   @Test
   void testToEntity() {
     QuizDTO quizDTO = new QuizDTO();
@@ -173,8 +233,13 @@ class QuizDTOTests {
     assertEquals(quizDTO.getLastModifiedDate(), quiz.getLastModifiedDate());
   }
 
+  /** The Builder class is a test class that tests the Builder of the QuizDTO class. */
   @Nested
   class Builder {
+    /**
+     * This method tests the Builder of the QuizDTO class. It verifies that the builder sets the
+     * correct values.
+     */
     @Test
     void testBuilder() {
       LocalDateTime creationDate = LocalDateTime.now();

@@ -9,6 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+/**
+ * Entity representing a True or False question attempt. This class extends the QuestionAttempt
+ * class
+ */
 @Entity
 @Data
 public class TrueOrFalseQuestionAttempt extends QuestionAttempt {

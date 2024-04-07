@@ -10,7 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.idatt2105.backend.service.AmazonClient;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+/** The ImageController class handles HTTP requests related to image storage. */
 @RestController
+@Tag(name = "Image", description = "Operations related to image storage")
 @RequestMapping("/api/storage")
 public class ImageController {
   private AmazonClient amazonClient;
@@ -20,7 +25,14 @@ public class ImageController {
     this.amazonClient = amazonClient;
   }
 
+  /**
+   * Uploads a file to the S3 bucket.
+   *
+   * @param file the file to upload
+   * @return a ResponseEntity containing the URL of the uploaded file
+   */
   @PostMapping("/uploadFile")
+  @Operation(summary = "Upload a file")
   public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
     try {
       String imageUrl = this.amazonClient.uploadFile(file);
@@ -30,9 +42,20 @@ public class ImageController {
     }
   }
 
+  /**
+   * Deletes a file from the S3 bucket.
+   *
+   * @param payload the URL of the file to delete
+   * @return a message indicating if the file was deleted successfully
+   */
   @DeleteMapping("/deleteFile")
+  @Operation(summary = "Delete a file")
   public String deleteFile(@RequestBody Map<String, String> payload) {
-    String fileUrl = payload.get("url");
-    return this.amazonClient.deleteFileFromS3Bucket(fileUrl);
+    try {
+      this.amazonClient.deleteFileFromS3Bucket(payload.get("fileUrl"));
+      return "File deleted successfully";
+    } catch (Exception e) {
+      return "File deletion failed";
+    }
   }
 }

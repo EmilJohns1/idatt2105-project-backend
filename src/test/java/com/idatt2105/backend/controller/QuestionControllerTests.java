@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,12 +35,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+/** The QuestionControllerTests class is a test class that tests the QuestionController class. */
+@WebMvcTest(QuestionController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class QuestionControllerTests {
   @Autowired MockMvc mockMvc;
   @MockBean private QuestionService questionService;
 
+  /**
+   * The BasicFunctionalityTests class is a test class that tests the basic functionality of the
+   * QuestionController class.
+   */
   @Nested
   class BasicFunctionalityTests {
     QuestionDTO mCQuestionDTO;
@@ -74,6 +79,14 @@ class QuestionControllerTests {
       doNothing().when(questionService).deleteAlternative(1L);
     }
 
+    /**
+     * This method tests the behavior of the addQuestion endpoint with a valid body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 201 Created when the question
+     * is successfully created.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void addQuestionReturnsCreated() throws Exception {
       mockMvc
@@ -85,6 +98,14 @@ class QuestionControllerTests {
           .andExpect(status().isCreated());
     }
 
+    /**
+     * This method tests the behavior of the getQuestionById endpoint with a valid question ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when a question with
+     * the specified ID exists.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void getQuestionByIdReturnsOkAndQuestion() throws Exception {
       mockMvc
@@ -93,11 +114,27 @@ class QuestionControllerTests {
           .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * This method tests the behavior of the deleteQuestionById endpoint with a valid question ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the question is
+     * successfully deleted.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void deleteQuestionByIdReturnsOk() throws Exception {
       mockMvc.perform(delete("/api/question/delete/1").secure(true)).andExpect(status().isOk());
     }
 
+    /**
+     * This method tests the behavior of the updateQuestion endpoint with a valid body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the question is
+     * successfully updated.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void updateQuestionReturnsOk() throws Exception {
       mockMvc
@@ -110,6 +147,14 @@ class QuestionControllerTests {
           .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * This method tests the behavior of the getQuestionsByQuizId endpoint with a valid quiz ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the questions are
+     * successfully retrieved.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void getQuestionsByQuizIdReturnsOkAndQuestions() throws Exception {
       mockMvc
@@ -119,6 +164,14 @@ class QuestionControllerTests {
           .andExpect(jsonPath("$[1].id").value(2));
     }
 
+    /**
+     * This method tests the behavior of the addAlternative endpoint with a valid body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 201 Created when the
+     * alternative is successfully added.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void addAlternativeReturnsCreatedAndAlternative() throws Exception {
       mockMvc
@@ -131,6 +184,14 @@ class QuestionControllerTests {
           .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * This method tests the behavior of the deleteAlternative endpoint with a valid alternative ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the alternative
+     * is successfully deleted.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void deleteAlternativeReturnsOk() throws Exception {
       mockMvc
@@ -138,6 +199,14 @@ class QuestionControllerTests {
           .andExpect(status().isOk());
     }
 
+    /**
+     * This method tests the behavior of the updateTrueOrFalseQuestion endpoint with a valid body.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 200 OK when the question is
+     * successfully updated.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void updateTrueOrFalseQuestionReturnsOkAndQuestion() throws Exception {
       mockMvc
@@ -150,6 +219,14 @@ class QuestionControllerTests {
           .andExpect(jsonPath("$.id").value(2));
     }
 
+    /**
+     * Test the getQuestionById endpoint with a non-existent ID.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 404 Not Found when a question
+     * with the specified ID does not exist.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void getQuestionByIdWithNonExistentIdReturns404() throws Exception {
       when(questionService.getQuestionById(any())).thenThrow(InvalidIdException.class);
@@ -158,6 +235,14 @@ class QuestionControllerTests {
           .andExpect(status().isNotFound());
     }
 
+    /**
+     * Test the addQuestion endpoint with an invalid type.
+     *
+     * <p>It verifies that the endpoint returns an HTTP status code of 400 Bad Request when the type
+     * is invalid.
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     void addQuestionWithInvalidTypeReturns400() throws Exception {
       when(questionService.addQuestion(any(QuestionDTO.class)))
@@ -173,6 +258,12 @@ class QuestionControllerTests {
     }
   }
 
+  /**
+   * This method converts an object to a JSON string.
+   *
+   * @param obj the object to convert
+   * @return the JSON string
+   */
   public static String asJsonString(final Object obj) {
     try {
       return new ObjectMapper().writeValueAsString(obj);

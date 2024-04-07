@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+/** Entity representing an alternative record in a Multiple Choice question attempt. */
 @Entity
 @Data
 @NoArgsConstructor
@@ -39,6 +40,24 @@ public class AlternativeRecord {
   @JoinColumn(name = "attempt_id", nullable = false)
   private MultipleChoiceQuestionAttempt questionAttempt;
 
+  public boolean
+      getWasCorrect() { // Must also have regular setter/getter to make jackson work properly
+    return wasCorrect;
+  }
+
+  public void setWasCorrect(boolean wasCorrect) {
+    this.wasCorrect = wasCorrect;
+  }
+
+  public boolean
+      getWasSelected() { // Must also have regular setter/getter to make jackson work properly
+    return wasSelected;
+  }
+
+  public void setWasSelected(boolean wasSelected) {
+    this.wasSelected = wasSelected;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -57,5 +76,20 @@ public class AlternativeRecord {
   @Override
   public int hashCode() {
     return Objects.hash(id, alternativeText, wasCorrect, wasSelected);
+  }
+
+  @Override
+  public String toString() {
+    return "AlternativeRecord{"
+        + "id="
+        + id
+        + ", alternativeText='"
+        + alternativeText
+        + '\''
+        + ", wasCorrect="
+        + wasCorrect
+        + ", wasSelected="
+        + wasSelected
+        + '}';
   }
 }
