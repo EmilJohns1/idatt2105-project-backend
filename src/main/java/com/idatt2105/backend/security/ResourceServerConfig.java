@@ -118,12 +118,16 @@ public class ResourceServerConfig {
                         // of request,
                         // so two checks are required.
                         var cachedRequest = requestCache.getRequest(request, response);
+                        String alternativeRedirect =
+                            cachedRequest == null
+                                ? "https://localhost:5173/"
+                                : cachedRequest.getRedirectUrl();
                         String authorizeRequestUrl =
                             (String) request.getSession().getAttribute("ORIGINAL_REQUEST_URL");
                         response.sendRedirect(
                             authorizeRequestUrl != null
                                 ? authorizeRequestUrl
-                                : cachedRequest.getRedirectUrl());
+                                : alternativeRedirect);
                       });
             })
         .oauth2ResourceServer(
