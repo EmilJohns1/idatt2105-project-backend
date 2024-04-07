@@ -45,6 +45,17 @@ The backend is set up to fill the database with placeholder quizzes when it runs
 
 To run the project you only need to set the KEYSTORE_PASSWORD environment variable, however you won't be able to upload pictures or send emails for password retrieval. To do this, you need to set the remaining environment variables. We created a simple guide on how to set this up for your own project [here](https://github.com/1Cezzo/idatt2105-project-backend/wiki/Amazon-S3-bucket-and-SMTP-server-integration). The guide is simple to follow and it won't take long before you have these services set up for your own project!
 
+## Further Development
+
+For a comprehensive understanding of the project's architecture and relationships between backend entities, we recommend reviewing the following resources:
+
+- [Architecture Sketch](https://github.com/1Cezzo/idatt2105-project-backend/wiki/Project-architecture) - This sketch provides an overview of our project's frontend and backend architecture, including data flow and authorization processes.
+
+- [Class Diagram](https://github.com/1Cezzo/idatt2105-project-backend/wiki/Class-diagram) - Our class diagram illustrates the structure and relationships of various classes in the backend codebase.
+
+These resources will help you gain a deeper insight into our project's design and implementation.
+
+
 # API-doc:
 For API documentation, run the project using the above guide, and then navigate to `localhost:8443/swagger-ui/index.html` in your browser. Log in with username:`admin` and password: `password` You will land on this page:
 
