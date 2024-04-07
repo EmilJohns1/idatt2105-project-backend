@@ -1,6 +1,9 @@
 package com.idatt2105.backend.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -187,6 +190,28 @@ class QuestionServiceTests {
 
       // Assert
       assertInstanceOf(MultipleChoiceQuestion.class, question);
+    }
+
+    /**
+     * The updateAlternatives method tests the updateAlternatives method of the QuestionService
+     * class. It verifies that the method updates alternatives.
+     */
+    @Test
+    void testUpdateAlternatives() {
+      Long questionId = 1L;
+      List<AlternativeDTO> alternativeDTOs = new ArrayList<>();
+
+      MultipleChoiceQuestion question = new MultipleChoiceQuestion();
+      when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+
+      when(alternativeRepository.save(any(Alternative.class))).thenReturn(new Alternative());
+
+      QuestionService questionService =
+          new QuestionService(questionRepository, null, alternativeRepository);
+      Set<Alternative> updatedAlternatives =
+          questionService.updateAlternatives(questionId, alternativeDTOs);
+
+      assertEquals(0, updatedAlternatives.size());
     }
   }
 
