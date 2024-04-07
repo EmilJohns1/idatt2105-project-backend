@@ -1,5 +1,7 @@
 package com.idatt2105.backend.service;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.idatt2105.backend.dto.QuizDTO;
@@ -468,5 +471,153 @@ public class QuizServiceTests {
           IllegalArgumentException.class,
           () -> quizService.getQuizzesByTag(null, Pageable.ofSize(1)));
     }
+  }
+
+  /**
+   * This method tests the getQuizzesByTags method of the QuizService class. It verifies that the
+   * method returns the correct quizzes.
+   */
+  @Test
+  public void testGetQuizzesByTags() {
+    Tag tag1 = new Tag("Tag1");
+    Tag tag2 = new Tag("Tag2");
+    List<String> tags = Arrays.asList("Tag1", "Tag2");
+    Collection<Tag> tagCollection = Arrays.asList(tag1, tag2);
+    Pageable pageable = PageRequest.of(0, 10);
+    Quiz quiz1 = new Quiz();
+    quiz1.setId(1L);
+    quiz1.addTags(tagCollection);
+    Quiz quiz2 = new Quiz();
+    quiz2.setId(2L);
+    quiz2.addTags(tagCollection);
+    Page<Quiz> quizzesPage = new PageImpl<>(Arrays.asList(quiz1, quiz2));
+
+    when(tagRepository.findByTagName("Tag1")).thenReturn(Optional.of(tag1));
+    when(tagRepository.findByTagName("Tag2")).thenReturn(Optional.of(tag2));
+    when(quizRepository.findByTagsContainsAndIsPublicIsTrue(tag1, pageable))
+        .thenReturn(quizzesPage);
+    when(quizRepository.findByTagsContainsAndIsPublicIsTrue(tag2, pageable))
+        .thenReturn(quizzesPage);
+
+    Page<QuizDTO> resultPage = quizService.getQuizzesByTags(tags, pageable);
+
+    assertEquals(2, resultPage.getTotalElements());
+    assertTrue(resultPage.toList().stream().anyMatch(q -> q.getId() == 1L));
+    assertTrue(resultPage.toList().stream().anyMatch(q -> q.getId() == 2L));
+  }
+
+  /**
+   * This method tests the updateTags method of the QuizService class. It verifies that the method
+   * updates the tags of a quiz.
+   */
+  @Test
+  public void testUpdateTags() {
+    // Mock data
+    Long quizId = 1L;
+    List<Tag> updatedTags = Arrays.asList(new Tag("Tag1"), new Tag("Tag2"));
+    Quiz quiz = new Quiz();
+    when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
+
+    // Call service method
+    QuizDTO updatedQuizDTO = quizService.updateTags(quizId, updatedTags);
+
+    // Assertions
+    assertEquals(updatedTags.size(), updatedQuizDTO.getTags().size());
+    assertTrue(updatedQuizDTO.getTags().contains(new Tag("Tag1")));
+    assertTrue(updatedQuizDTO.getTags().contains(new Tag("Tag2")));
+  }
+
+  /**
+   * This method tests the removeUserFromQuiz method of the QuizService class. It verifies that the
+   * method removes a user from a quiz.
+   */
+  @Test
+  public void testRemoveUserFromQuiz() {
+    // Mock data
+    Long userId = 1L;
+    Long quizId = 1L;
+    Quiz quiz = new Quiz();
+    User user = new User();
+    user.setId(userId);
+    when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
+    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+    // Call service method
+    quizService.removeUserFromQuiz(userId, quizId);
+
+    // Assertions
+    assertFalse(quiz.getUsers().contains(user));
+    assertFalse(user.getQuizzes().contains(quiz));
+  }
+
+  /**
+   * This method tests the getQuizzesByCategory method of the QuizService class. It verifies that
+   * the method throws an IllegalArgumentException when given null as a parameter.
+   */
+  @Test
+  public void testGetAllTags() {
+    // Mock data
+    List<Tag> tags = Arrays.asList(new Tag("Tag1"), new Tag("Tag2"), new Tag("Tag3"));
+    when(tagRepository.findAll()).thenReturn(tags);
+
+    // Call service method
+    List<Tag> result = quizService.getAllTags();
+
+    // Assertions
+    assertEquals(tags.size(), result.size());
+    for (int i = 0; i < tags.size(); i++) {
+      assertEquals(tags.get(i).getTagName(), result.get(i).getTagName());
+    }
+  }
+
+  /**
+   * This method tests the getQuizzesByCategory method of the QuizService class. It verifies that
+   * the method throws an IllegalArgumentException when given null as a parameter.
+   */
+  @Test
+  public void testGetQuizzesByCategory() {
+    // Mock data
+    String categoryName = "Category";
+    Category category = new Category();
+    category.setName(categoryName);
+    Quiz quiz1 = new Quiz();
+    quiz1.setId(1L);
+    Quiz quiz2 = new Quiz();
+    quiz2.setId(2L);
+    Page<Quiz> quizzesPage = new PageImpl<>(Arrays.asList(quiz1, quiz2));
+    when(categoryRepository.findByName(categoryName)).thenReturn(Optional.of(category));
+    when(quizRepository.findByCategoryAndIsPublicIsTrue(category, Pageable.unpaged()))
+        .thenReturn(quizzesPage);
+
+    // Call service method
+    Page<QuizDTO> resultPage = quizService.getQuizzesByCategory(categoryName, Pageable.unpaged());
+
+    // Assertions
+    assertEquals(2, resultPage.getTotalElements());
+    assertTrue(resultPage.toList().stream().anyMatch(q -> q.getId() == 1L));
+    assertTrue(resultPage.toList().stream().anyMatch(q -> q.getId() == 2L));
+  }
+
+  /**
+   * This method tests the getAllPublicQuizzes method of the QuizService class. It verifies that the
+   * method returns all public quizzes.
+   */
+  @Test
+  public void testGetAllPublicQuizzes() {
+    // Mock data
+    Quiz quiz1 = new Quiz();
+    quiz1.setId(1L);
+    Quiz quiz2 = new Quiz();
+    quiz2.setId(2L);
+    Page<Quiz> quizzesPage = new PageImpl<>(Arrays.asList(quiz1, quiz2));
+    when(quizRepository.findByIsPublicIsTrue(Pageable.unpaged())).thenReturn(quizzesPage);
+
+    // Call service method
+    Page<QuizDTO> resultPage = quizService.getAllPublicQuizzes(Pageable.unpaged());
+
+    // Assertions
+    assertEquals(2, resultPage.getTotalElements());
+    assertTrue(resultPage.toList().stream().anyMatch(q -> q.getId() == 1L));
+    assertTrue(resultPage.toList().stream().anyMatch(q -> q.getId() == 2L));
   }
 }
