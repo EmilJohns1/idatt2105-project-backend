@@ -88,6 +88,8 @@ public class ResourceServerConfig {
                   .permitAll()
                   .requestMatchers(HttpMethod.GET, commentApiPath + "/quiz/*")
                   .permitAll()
+                  .requestMatchers(HttpMethod.GET, commentApiPath + "/quiz/page/*")
+                  .permitAll()
                   .requestMatchers(HttpMethod.GET, commentApiPath + "/user/*")
                   .permitAll()
                   .requestMatchers("/api/sendEmail")
