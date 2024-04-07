@@ -52,3 +52,7 @@ For API documentation, run the project using the above guide, and then navigate 
 
 # Testing
 The project uses JUnit tests, which can be run with Maven from the commandline with `mvn clean test`
+To see the test coverage - head to target > site > jacoco > index.html
+
+As of version 1.2, the test coverage looks like [this:](https://github.com/1Cezzo/idatt2105-project-backend/wiki/Test-coverage)
+The missing 15% of coverage is due to some of the built in `lamba functions` of the service classes in Spring Boot, which we don't use, and due to the `equals`, `toString` and `hashcode` methods that get automatically implemented when you use Lombok's Data annotation.
